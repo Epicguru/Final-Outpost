@@ -9,3 +9,10 @@ subprojects{
 	}
 	
 }
+
+task copyFinalOutpost(type: Copy){
+    from ('FinalOutpost/build/libs/'){
+        include '**/*.zip'
+    }
+    into 'Engine/plugins'
+}
