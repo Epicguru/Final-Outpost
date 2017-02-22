@@ -1,5 +1,7 @@
 apply plugin: 'application'
 
+mainClassName = 'co.uk.epicguru.main.FOE'
+
 dependencies{
 	compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
     compile "com.kotcrab.vis:vis-ui:1.2.4"
@@ -9,7 +11,7 @@ dependencies{
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.4"
     compile "com.badlogicgames.gdx:gdx-platform:1.9.4:natives-desktop"
     compile "com.badlogicgames.gdx:gdx-tools:1.9.4"
-    compile "ro.fortsoft.pf4j:pf4j:0.13.1"
+    compile "ro.fortsoft.pf4j:pf4j:1.1.1"
     compile "org.reflections:reflections:0.9.9-RC1"
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
     
