@@ -1,8 +1,7 @@
 
 subprojects{
 
-	apply plugin: 'java'
-	
+	// APPLIED TO ALL PLUGINS INCLUDING FinalOutpost
 	repositories{
 		mavenCentral()
 		mavenLocal()
@@ -10,6 +9,7 @@ subprojects{
 	
 }
 
+// COPIES THE COMPILED PLUGIN DATA
 task copyFinalOutpost(type: Copy){
     from ('FinalOutpost/build/libs/'){
         include '**/*.zip'
