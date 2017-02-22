@@ -13,10 +13,24 @@ subprojects{
 	
 }
 
-// COPIES THE COMPILED PLUGIN DATA
-task copyFinalOutpost(type: Copy){
-    from ('FinalOutpost/build/libs/'){
-        include '**/*.zip'
-    }
-    into 'Engine/plugins'
+
+task copyPlugins(){
+	doLast{
+	
+		delete 'Engine/plugins'
+		mkdir 'Engine/plugins'
+		
+		subprojects.each { p -> 
+			//println(p.name)
+			if(!p.name.equals("Engine")){
+			
+				System.out.println("Copying plugin from " + p.path)
+				copy{
+					from p.projectDir.toString() + "/build/libs"
+					into "Engine/plugins"
+					include "*.zip"
+				}
+			}
+		}
+	}
 }

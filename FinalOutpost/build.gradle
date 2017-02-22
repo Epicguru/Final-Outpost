@@ -1,3 +1,48 @@
-dependencies{
-	compile project(":Engine")
+
+// Plugin properties
+project.ext.pluginName = "FinalOutpost"
+project.ext.pluginVersion = "0.0.0"
+project.ext.pluginProvider = "Epicguru"
+project.ext.pluginClass = "co.uk.epicguru.finaloutpost.main.Main"
+
+configurations{
+	extraLibs
 }
+
+dependencies{
+
+	// Compilation only (Not export)
+	compileOnly project(":Engine")
+	
+	// Included temporary (Needed for export)
+	compile 'ro.fortsoft.pf4j:pf4j:1.1.1'
+	
+	// Dependencies to be included in export
+    extraLibs 'ro.fortsoft.pf4j:pf4j:1.1.1'
+}
+
+jar{
+	baseName = "${pluginName}"
+	version = "${pluginVersion}"
+	
+	manifest {
+        attributes 'Plugin-Class' : "${pluginClass}",
+        'Plugin-Id' : "${pluginName}",
+        'Plugin-Version' : "${pluginVersion}",
+        'Plugin-Provider' : "${pluginProvider}"
+    }
+}
+
+task plugin(type: Jar) {
+    baseName = "${pluginName}"
+    version = "${pluginVersion}"
+    into('classes'){
+         with jar
+    }   
+    into('lib'){
+        from configurations.extraLibs
+    }
+    extension('zip')
+}
+
+assemble.dependsOn plugin

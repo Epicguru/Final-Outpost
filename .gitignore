@@ -14,3 +14,5 @@ gradle-app.setting
 *.FO_Log
 \Game Data/
 \.settings/
+
+\plugins/
