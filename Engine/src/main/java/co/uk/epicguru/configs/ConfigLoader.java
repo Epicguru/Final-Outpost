@@ -44,7 +44,6 @@ public final class ConfigLoader {
 	 */
 	public static void loadConfigsFor(String pluginID){
 		
-		FOE.loadingSubText = pluginID;
 		
 		// Start timer
 		U.startTimer(pluginID + " - Loading config");
@@ -72,6 +71,7 @@ public final class ConfigLoader {
 					Log.error(TAG, "The plugin '" + pluginID + "' did not manage to process the config " + config.getName());
 				}
 				
+				FOE.loadingSubText = pluginID + ":\n" + config.getName();
 				names.add(config.getName());
 				
 			} catch (JLIOException e) {

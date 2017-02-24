@@ -3,3 +3,4 @@
 3. Make an asset manager in FOE and make hooks for loading assets within plugins.
 4. Make FOE load basic assets.
 5. Make Main Menu.
+6. Make JLineIO not actually be 'lines'. Use ':' as a line ender instead.

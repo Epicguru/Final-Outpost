@@ -32,7 +32,7 @@ public class Config extends Base{
 		// Add all variables to list.
 		for(String key : reader.getLoadedValues().keySet()){
 			Object object = null;
-			if(oldMap.containsKey(key)){
+			if(oldMap != null && oldMap.containsKey(key)){
 				object = oldMap.get(key).getDefaultValue();
 			}
 			add(key, object);
