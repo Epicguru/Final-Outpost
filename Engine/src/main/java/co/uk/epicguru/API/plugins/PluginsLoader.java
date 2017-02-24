@@ -93,6 +93,7 @@ public final class PluginsLoader extends DefaultPluginManager{
 	 * @see {@link #getAllPlugins()}.
 	 */
 	public void saveAllConfigs(){
+		Log.info(TAG, "Saving all configs...");
 		for(FinalOutpostPlugin plugin : getAllPlugins()){
 			plugin.saveConfigs();
 		}
