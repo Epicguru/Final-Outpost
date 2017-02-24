@@ -1,6 +1,7 @@
 package co.uk.epicguru.configs;
 
 import co.uk.epicguru.API.Base;
+import co.uk.epicguru.IO.JLineReader;
 
 public class ConfigVariable extends Base implements Cloneable{
 
@@ -15,6 +16,17 @@ public class ConfigVariable extends Base implements Cloneable{
 	
 	public ConfigVariable clone(){
 		return new ConfigVariable(this.getKey(), this.getDefaultValue()).setValue(getValue());
+	}
+	
+	/**
+	 * Assumes that the variable is in the buffer at the time of passing the JLineReader.
+	 */
+	public void load(JLineReader reader){
+		if(reader.isValueLoaded(getKey())){
+			setValue(reader.read(getKey()));
+		}else{
+			setValue(getDefaultValue());
+		}
 	}
 	
 	public void setDefault(){

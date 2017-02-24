@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.utils.Disposable;
+
 import co.uk.epicguru.API.Base;
 import co.uk.epicguru.IO.parsers.JLineParser;
 
@@ -14,21 +16,22 @@ import co.uk.epicguru.IO.parsers.JLineParser;
  * The Input class in the Final Outpost engine. Takes a file to read from to and reads lines of JCode.
  * @author James Billy
  */
-public class JLineReader extends Base {
+public class JLineReader extends Base implements Disposable{
 
 	private int currentLine = -1;
 	private String[] lines;
 	private HashMap<String, Object> variables = new HashMap<String, Object>();
+	private File file;
 	
 	/**
 	 * Creates a new JLineReader used to read data from a file.
 	 * @param file The file to read from. Must not be null.
 	 * @throws JLIOException If any of the following: 
-	 * 1. The file is null.
-	 * 2. The file does not exist.
-	 * 3. The file cannot be read from.
-	 * 4. The reader for the file could not be opened (internal).
-	 * 5. There was an error reading lines from reader (internal).
+	 * <li>1. The file is null.
+	 * <li>2. The file does not exist.
+	 * <li>3. The file cannot be read from.
+	 * <li>4. The reader for the file could not be opened (internal).
+	 * <li>5. There was an error reading lines from reader (internal).
 	 */
 	public JLineReader(File file) throws JLIOException{
 		if(file == null){
@@ -40,6 +43,8 @@ public class JLineReader extends Base {
 		if(!file.canRead()){
 			throw new JLIOException("Application does not have read access to file!. -" + file.getAbsolutePath());
 		}
+		
+		this.file = file;
 		
 		BufferedReader reader = null;
 		
@@ -76,6 +81,13 @@ public class JLineReader extends Base {
 	}
 	
 	/**
+	 * Gets the file that this reader reads from.
+	 */
+	public File getFile(){
+		return file;
+	}
+	
+	/**
 	 * Creates a new JLineReader from multiple lines of JCode.
 	 * @param fileContents The contents of a JCode file. (Or any valid JCode)
 	 */
@@ -86,14 +98,15 @@ public class JLineReader extends Base {
 	
 	private void setLines(final String[] lines){
 		this.lines = lines;
-		nextLine();
+		if(this.lines.length > 0)
+			nextLine();
 	}
 
 	/**
 	 * The other end of JLineWriter.write(key, object).
 	 * Reads a variable from the currently loaded variables using a JLineParser.
 	 * @param key The key of the variable to load. Same as JLineWriter.write() key.
-	 * @return The object the was written. Cast to the correct type.
+	 * @return The object the was written, or null if not found. Cast to the correct type.
 	 */
 	public Object read(final String key){
 		return variables.get(key.trim());
@@ -194,7 +207,7 @@ public class JLineReader extends Base {
 	}
 	
 	/**
-	 * Gets all loaded and decompiled variables in a HashMap where the Key is the one used
+	 * Gets all loaded and decompiled variables (the buffer) in a HashMap where the Key is the one used
 	 * when saving the variable and the Value is the object saved (need to cast).
 	 */
 	public HashMap<String, Object> getLoadedValues(){
@@ -211,6 +224,20 @@ public class JLineReader extends Base {
 		for(int i = start; i < end; i++){
 			readLine(i);
 		}
+	}
+	
+	/**
+	 * Checks if a variable is in the buffer.
+	 * @param key The key to look for.
+	 * @return True if the key was found in the currently loaded buffer.
+	 * @see {@link #getLoadedValues()}
+	 */
+	public boolean isValueLoaded(final String key){
+		for(String key2 : variables.keySet()){
+			if(key2.equals(key))
+				return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -262,5 +289,15 @@ public class JLineReader extends Base {
 	 */
 	public int getLineCount(){
 		return getLinesRaw().length;
+	}
+
+
+	/**
+	 * Disposes the reader.
+	 */
+	public void dispose() {
+		variables.clear();
+		variables = null;
+		lines = null;
 	}
 }

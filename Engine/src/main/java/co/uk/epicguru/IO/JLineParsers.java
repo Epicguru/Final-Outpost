@@ -60,6 +60,7 @@ public final class JLineParsers {
 		}
 		
 		if(temps.isEmpty()){
+			Log.error("", o.getClass().getName());
 			throw new JLIOException("No parser found for class " + o.getClass().getName());
 		}
 		

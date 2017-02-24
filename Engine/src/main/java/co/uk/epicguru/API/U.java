@@ -152,6 +152,21 @@ public final class U {
 	}
 	
 	/**
+	 * Gets the name of a file or asset from a final path, excluding the file extension.
+	 */
+	public static String nameFromPathNoExtension(String path, char c){
+		String s = nameFromPath(path, c);
+		return s.substring(0, s.lastIndexOf('.'));
+	}
+	
+	/**
+	 * Gets the name of a file or asset from a final path, excluding the file extension.
+	 */
+	public static String nameFromPathNoExtension(String path){
+		return nameFromPathNoExtension(path, '/');
+	}
+	
+	/**
 	 * Gets the current operation of a ZipFile.
 	 */
 	public static String getCurrentOperation(ZipFile zip){

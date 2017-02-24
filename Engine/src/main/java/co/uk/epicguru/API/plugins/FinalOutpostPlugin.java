@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginWrapper;
@@ -14,6 +16,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	
 	/**
 	 * The base class that all plugins should implement as a main class.
+	 * Use start to create and save configuration files.
 	 * <p>
 	 * Things that ARE auto loaded : 
 	 * <ul>
@@ -36,6 +39,20 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 
 	/**
+	 * Starts a new config. Remember to Save the config for later use.
+	 */
+	public Config newConfig(){
+		return new Config();
+	}
+	
+	/**
+	 * Loads all configs that are saved on the disk.
+	 */
+	public void loadConfigs(){
+		ConfigLoader.loadConfigsFor(getWrapper().getPluginId());
+	}
+	
+	/**
 	 * Gets the display name.
 	 */
 	public String getDisplayName(){
@@ -47,6 +64,15 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 */
 	public String getDisplayVersion(){
 		return displayVersion;
+	}
+	
+	/**
+	 * Called when a config is loaded from disk.
+	 * @param config The auto-loaded config.
+	 * @return True if the config was loaded properly. False if not managed.
+	 */
+	public boolean config(Config config){
+		return false;
 	}
 	
 	/**
