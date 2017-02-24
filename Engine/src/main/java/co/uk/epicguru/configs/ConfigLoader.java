@@ -1,8 +1,12 @@
 package co.uk.epicguru.configs;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import co.uk.epicguru.API.U;
+import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
+import co.uk.epicguru.IO.JLIOException;
+import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 
@@ -10,6 +14,7 @@ public final class ConfigLoader {
 	private ConfigLoader() {}
 	
 	private static final String TAG = "Config Loader";
+	private static ArrayList<String> names = new ArrayList<>();
 	private static File root;
 	
 	/**
@@ -39,14 +44,62 @@ public final class ConfigLoader {
 	 */
 	public static void loadConfigsFor(String pluginID){
 		
+		
 		// Start timer
 		U.startTimer(pluginID + " - Loading config");
+		
+		// Get plugin (counts as check)
+		FinalOutpostPlugin plugin = FOE.pluginsLoader.getFOPlugin(pluginID);
+		if(plugin == null){
+			Log.error(TAG, "Could not load plugins for '" + pluginID + "' because the plugin is not loaded.");
+			return;
+		}
 		
 		// Get files
 		File[] files = U.getFilesWithEnding(new File(root.getAbsoluteFile() + "\\" + pluginID), FOE.configsExtension);
 		Log.info(TAG, '[' + pluginID + "] Found " + files.length + " configs.");
 		
-		// TODO load config in plugin.
+		names.clear();		
+		
+		// Load configs into plugin.
+		for(File file : files){
+			try {
+				JLineReader reader = new JLineReader(file);
+				Config config = new Config(reader, plugin);
+				boolean worked = plugin.config(config);
+				if(!worked){
+					Log.error(TAG, "The plugin '" + pluginID + "' did not manage to process the config " + config.getName());
+				}
+				
+				FOE.loadingSubText = pluginID + ":\n" + config.getName();
+				names.add(config.getName());
+				
+			} catch (JLIOException e) {
+				Log.error(TAG, "Could not open reader!", e);
+				continue;
+			}
+		}
+		
+		// Make sure all requested configs were loaded
+		// If one was not found on disk then load the local version.
+		for(Config c : plugin.getRegisteredConfigs()){
+			boolean found = false;
+			for(String s : names){
+				if(c.is(s)){
+					found = true;
+					continue;
+				}
+			}
+			
+			if(!found){
+				// Load local copy
+				Log.info(TAG, "Could not find local config '" + c.getName() + "', loading a local copy.");
+				c.setDefault(); // Apply defaults if not explicitly set.
+				plugin.config(c);
+			}
+		}
+		
+		names.clear();
 		
 		// End timer
 		Log.info(TAG, '[' + pluginID + "] Took " + U.endTimer(pluginID + " - Loading config") + " seconds.");
@@ -65,7 +118,10 @@ public final class ConfigLoader {
 			}else{
 				Log.debug(TAG, "Unknown loose file in config folder -" + file.getName());
 			}
-		}		
+		}	
+		
+		// A little cleanup
+		System.gc();
 	}
 	
 	/**

@@ -89,6 +89,17 @@ public final class PluginsLoader extends DefaultPluginManager{
 	}
 	
 	/**
+	 * Saves all registered configs for all plugins.
+	 * @see {@link #getAllPlugins()}.
+	 */
+	public void saveAllConfigs(){
+		Log.info(TAG, "Saving all configs...");
+		for(FinalOutpostPlugin plugin : getAllPlugins()){
+			plugin.saveConfigs();
+		}
+	}
+	
+	/**
 	 * Extracts the assets for all resolved plugins.
 	 * @see {@link #getAllPlugins()}
 	 */

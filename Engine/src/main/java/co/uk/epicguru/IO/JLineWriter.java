@@ -43,7 +43,7 @@ public class JLineWriter extends Base{
 		if(!file.exists()){
 			boolean worked = createFile();
 			if(!worked){
-				throw new JLIOException("File did not exist and could not be created. -" + file.getAbsolutePath());
+				throw new JLIOException("File did not exist (" + !file.exists() + ") and could not be created. -" + file.getAbsolutePath());
 			}
 		}
 		
@@ -160,6 +160,8 @@ public class JLineWriter extends Base{
 			return false;
 		}
 		boolean a = new File(this.file.getParent()).mkdirs();
+		if(new File(this.file.getParent()).exists())
+			a = true;
 		boolean b = false;
 		try{
 			b = this.file.createNewFile();			
@@ -192,6 +194,22 @@ public class JLineWriter extends Base{
 		parser.writeInternal(value, key.trim(), this);
 		
 		return true;		
+	}
+	
+	/**
+	 * Writes a new variable to the current line of JCode.
+	 * Then creates a new blank line.
+	 * @param key The name of the variable to save. This is used when loading the variable.
+	 * @param value The value to save. This is saved by finding a valid parser using {@code JLineParsers.getParser(Object)}.
+	 * @return True if a valid parser could be found. Note that if a perfect parser could not be found then a superclass parser 
+	 * my be used. Check the output for more information.
+	 */
+	public boolean writeLine(String key, Object value){
+		boolean worked = write(key, value);
+		if(worked){
+			newLine();
+		}
+		return worked;
 	}
 	
 	/**

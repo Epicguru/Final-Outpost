@@ -104,9 +104,14 @@ public class FOE extends Game{
 			JLineParsers.loadParsers();
 			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
 			
+			
 			// Load configs
 			loading("Loading configs", "...");
 			ConfigLoader.loadConfigs();		
+			
+			// Save configs (For any changes or for default values)
+			loading("Saving configs", "...");
+			pluginsLoader.saveAllConfigs();
 			
 			// Init
 			loading("Initialising plugins", "...");
@@ -160,7 +165,8 @@ public class FOE extends Game{
 
 	public void dispose(){
 		batch.dispose();		
-		pluginsLoader.stopPlugins();		
+		pluginsLoader.saveAllConfigs();
+		pluginsLoader.stopPlugins();	
 		super.dispose();
 		
 		Log.saveLog();

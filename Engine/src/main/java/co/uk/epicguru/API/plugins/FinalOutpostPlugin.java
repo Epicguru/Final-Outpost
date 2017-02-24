@@ -1,9 +1,12 @@
 package co.uk.epicguru.API.plugins;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginWrapper;
@@ -11,9 +14,11 @@ import ro.fortsoft.pf4j.PluginWrapper;
 public abstract class FinalOutpostPlugin extends Plugin{
 
 	private String displayName, displayVersion;
+	private ArrayList<Config> configs = new ArrayList<>();
 	
 	/**
 	 * The base class that all plugins should implement as a main class.
+	 * Use start to create and save configuration files.
 	 * <p>
 	 * Things that ARE auto loaded : 
 	 * <ul>
@@ -36,6 +41,60 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 
 	/**
+	 * Starts a new config. This config will be automatically saved when necessary.
+	 */
+	public Config newConfig(String name){
+		Config config = new Config(name);
+		configs.add(config);
+		return config;
+	}
+	
+	/**
+	 * Gets all local configs.
+	 */
+	public ArrayList<Config> getRegisteredConfigs(){
+		return configs;
+	}
+	
+	/**
+	 * Gets a config given its name.
+	 */
+	public Config getConfig(String name){
+		for(Config config : configs){
+			if(config.is(name))
+				return config;
+		}
+		return null;
+	}
+	
+	/**
+	 * Loads all configs that are saved on the disk.
+	 */
+	public void loadConfigs(){
+		ConfigLoader.loadConfigsFor(getWrapper().getPluginId());
+	}
+	
+	/**
+	 * Loads all configs without reading from file. (as in those registered with {@link #newConfig(String)}).
+	 * Not recommended as erroneous data may crop up. ONLY USE IF YOU KNOW WHAT YOU ARE DOING.
+	 */
+	public void loadConfigsLocal(){
+		for(Config config : configs){
+			config(config);
+		}
+	}
+	
+	/**
+	 * Saves all configs registered with {@link #newConfig(String)}.
+	 */
+	public void saveConfigs(){
+		for(Config config : configs){
+			FOE.loadingSubText = getWrapper().getPluginId() + " : " + config.getName();
+			config.save(this);
+		}
+	}
+	
+	/**
 	 * Gets the display name.
 	 */
 	public String getDisplayName(){
@@ -47,6 +106,15 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 */
 	public String getDisplayVersion(){
 		return displayVersion;
+	}
+	
+	/**
+	 * Called when a config is loaded from disk.
+	 * @param config The auto-loaded config.
+	 * @return True if the config was loaded properly. False if not managed.
+	 */
+	public boolean config(Config config){
+		return false;
 	}
 	
 	/**
