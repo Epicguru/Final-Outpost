@@ -1,11 +1,13 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import com.badlogic.gdx.graphics.Color;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
+@Extension
 public class ColorParser extends JLineParser<Color> {
 
 	private static StringBuilder stringBuilder = new StringBuilder();

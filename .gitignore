@@ -1,18 +1,10 @@
-.gradle
-build/
-
-# Ignore Gradle GUI 
-config
-gradle-app.setting
-
- # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-
-!gradle-wrapper.jar
-
+\.gradle/
+\build/
+!graddle-wrapper.jar
 \bin/
 *.class
 *.FO_Log
 \Game Data/
 \.settings/
 
-\plugins/
+*.mp4

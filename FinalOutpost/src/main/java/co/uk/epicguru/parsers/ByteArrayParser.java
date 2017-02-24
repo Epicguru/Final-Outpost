@@ -1,23 +1,25 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
-public class FloatArrayParser extends JLineParser<float[]> {
+@Extension
+public class ByteArrayParser extends JLineParser<byte[]> {
 
 	public static StringBuilder stringBuilder = new StringBuilder();
 	
-	public FloatArrayParser() {
-		super(float[].class, "f\"");
+	public ByteArrayParser() {
+		super(byte[].class, "b\"");
 	}
 
-	public void write(float[] object, String key, JLineWriter writer) {
+	public void write(byte[] object, String key, JLineWriter writer) {
 		stringBuilder.setLength(0);
 		
 		int index = 0;
-		for(float f : object){
-			stringBuilder.append(f);
+		for(byte b : object){
+			stringBuilder.append(b);
 			if(index != object.length - 1)
 				stringBuilder.append(',');
 			index++;
@@ -27,13 +29,13 @@ public class FloatArrayParser extends JLineParser<float[]> {
 	}
 
 	@Override
-	public float[] read(String key, String content, JLineReader reader) {
+	public byte[] read(String key, String content, JLineReader reader) {
 		String[] array = content.split(",");
 		
-		float[] array2 = new float[array.length];
+		byte[] array2 = new byte[array.length];
 		int index = 0;
 		for(String string : array){
-			array2[index++] = Float.parseFloat(string);
+			array2[index++] = Byte.parseByte(string);
 		}
 		
 		return array2;

@@ -17,8 +17,8 @@ subprojects{
 task copyPlugins(){
 	doLast{
 	
-		delete 'Engine/plugins'
-		mkdir 'Engine/plugins'
+		delete 'Engine/Game Data/Plugins'
+		mkdir 'Engine/Game Data/Plugins'
 		
 		subprojects.each { p -> 
 			//println(p.name)
@@ -27,9 +27,12 @@ task copyPlugins(){
 				System.out.println("Copying plugin from " + p.path)
 				copy{
 					from p.projectDir.toString() + "/build/libs"
-					into "Engine/plugins"
+					into "Engine/Game Data/Plugins"
 					include "*.zip"
 				}
+									
+					
+							
 			}
 		}
 	}

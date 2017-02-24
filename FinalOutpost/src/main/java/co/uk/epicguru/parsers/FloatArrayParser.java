@@ -1,23 +1,25 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
-public class BooleanArrayParser extends JLineParser<boolean[]> {
+@Extension
+public class FloatArrayParser extends JLineParser<float[]> {
 
 	public static StringBuilder stringBuilder = new StringBuilder();
 	
-	public BooleanArrayParser() {
-		super(boolean[].class, "B\"");
+	public FloatArrayParser() {
+		super(float[].class, "f\"");
 	}
 
-	public void write(boolean[] object, String key, JLineWriter writer) {
+	public void write(float[] object, String key, JLineWriter writer) {
 		stringBuilder.setLength(0);
 		
 		int index = 0;
-		for(boolean b : object){
-			stringBuilder.append(b);
+		for(float f : object){
+			stringBuilder.append(f);
 			if(index != object.length - 1)
 				stringBuilder.append(',');
 			index++;
@@ -27,13 +29,13 @@ public class BooleanArrayParser extends JLineParser<boolean[]> {
 	}
 
 	@Override
-	public boolean[] read(String key, String content, JLineReader reader) {
+	public float[] read(String key, String content, JLineReader reader) {
 		String[] array = content.split(",");
 		
-		boolean[] array2 = new boolean[array.length];
+		float[] array2 = new float[array.length];
 		int index = 0;
 		for(String string : array){
-			array2[index++] = Boolean.parseBoolean(string);
+			array2[index++] = Float.parseFloat(string);
 		}
 		
 		return array2;

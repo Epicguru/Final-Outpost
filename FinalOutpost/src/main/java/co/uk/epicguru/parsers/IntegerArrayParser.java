@@ -1,9 +1,11 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
+@Extension
 public class IntegerArrayParser extends JLineParser<int[]> {
 
 	public static StringBuilder stringBuilder = new StringBuilder();

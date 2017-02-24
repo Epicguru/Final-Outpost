@@ -1,23 +1,25 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
-public class ByteArrayParser extends JLineParser<byte[]> {
+@Extension
+public class LongArrayParser extends JLineParser<long[]> {
 
 	public static StringBuilder stringBuilder = new StringBuilder();
 	
-	public ByteArrayParser() {
-		super(byte[].class, "b\"");
+	public LongArrayParser() {
+		super(long[].class, "l\"");
 	}
 
-	public void write(byte[] object, String key, JLineWriter writer) {
+	public void write(long[] object, String key, JLineWriter writer) {
 		stringBuilder.setLength(0);
 		
 		int index = 0;
-		for(byte b : object){
-			stringBuilder.append(b);
+		for(long l : object){
+			stringBuilder.append(l);
 			if(index != object.length - 1)
 				stringBuilder.append(',');
 			index++;
@@ -27,13 +29,13 @@ public class ByteArrayParser extends JLineParser<byte[]> {
 	}
 
 	@Override
-	public byte[] read(String key, String content, JLineReader reader) {
+	public long[] read(String key, String content, JLineReader reader) {
 		String[] array = content.split(",");
 		
-		byte[] array2 = new byte[array.length];
+		long[] array2 = new long[array.length];
 		int index = 0;
 		for(String string : array){
-			array2[index++] = Byte.parseByte(string);
+			array2[index++] = Long.parseLong(string);
 		}
 		
 		return array2;

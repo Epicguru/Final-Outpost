@@ -3,8 +3,10 @@ package co.uk.epicguru.IO;
 import java.util.ArrayList;
 
 import co.uk.epicguru.API.U;
+import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.IO.parsers.JLineParser;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.main.FOE;
 
 public final class JLineParsers {
 	
@@ -26,11 +28,12 @@ public final class JLineParsers {
 		
 		clearParsers();
 		
-		// TODO with plugins.
-		
-		Object[] objects =  U.getClassInstances("co.uk.epicguru", JLineParser.class);
-		for(Object object : objects){
-			parsers.add((JLineParser<?>) object);
+		int old = 0;
+		for(FinalOutpostPlugin plugin : FOE.pluginsLoader.getAllPlugins()){
+			for(Object o : FOE.pluginsLoader.getExtensions(JLineParser.class, plugin.getWrapper().getPluginId())){
+				parsers.add((JLineParser<?>)o);
+			}
+			Log.debug("Parsers", "Plugin '" + plugin.getWrapper().getPluginId() + "' added " + (parsers.size() - old) + " parsers.");
 		}
 		
 		Log.info("Parsers", "Loaded Parsers : [" + U.prettify(parsers.toArray(new JLineParser<?>[parsers.size()])) + "]");

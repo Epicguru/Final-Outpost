@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 
 import co.uk.epicguru.logging.Log;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.progress.ProgressMonitor;
 
 public final class U {
 	private U() {}	
@@ -132,6 +134,49 @@ public final class U {
 		return objects;
 	}
 
+	/**
+	 * Gets the name of a file or asset from a final path.
+	 */
+	public static String nameFromPath(String path, char c){
+		if(path == null)
+			return null;
+		int index = path.lastIndexOf(c);
+		return path.substring(index == -1 ? 0 : index + 1, path.length());
+	}
+	
+	/**
+	 * Gets the name of a file or asset from a final path.
+	 */
+	public static String nameFromPath(String path){
+		return nameFromPath(path, '/');
+	}
+	
+	/**
+	 * Gets the current operation of a ZipFile.
+	 */
+	public static String getCurrentOperation(ZipFile zip){
+		
+		if(zip == null)
+			return "Unknown";
+		
+		switch(zip.getProgressMonitor().getCurrentOperation()){
+			case ProgressMonitor.OPERATION_EXTRACT:
+				return "Extracting";
+			case ProgressMonitor.OPERATION_ADD:
+				return "Adding";
+			case ProgressMonitor.OPERATION_MERGE:
+				return "Merging";
+			case ProgressMonitor.OPERATION_REMOVE:
+				return "Removing";
+			case ProgressMonitor.OPERATION_CALC_CRC:
+				return "CALC_CRC"; // What the hell is this xD
+			case ProgressMonitor.OPERATION_NONE:
+				return "None";
+		}
+		
+		return "Unknown";
+	}
+	
 	/**
 	 * Starts a new timer called timerName.
 	 */

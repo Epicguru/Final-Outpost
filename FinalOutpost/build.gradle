@@ -3,7 +3,7 @@
 project.ext.pluginName = "FinalOutpost"
 project.ext.pluginVersion = "0.0.0"
 project.ext.pluginProvider = "Epicguru"
-project.ext.pluginClass = "co.uk.epicguru.finaloutpost.main.Main"
+project.ext.pluginClass = "co.uk.epicguru.main.Main"
 
 configurations{
 	extraLibs
@@ -13,9 +13,6 @@ dependencies{
 
 	// Compilation only (Not export)
 	compileOnly project(":Engine")
-	
-	// Included temporary (Needed for export)
-	compile 'ro.fortsoft.pf4j:pf4j:1.1.1'
 	
 	// Dependencies to be included in export
     extraLibs 'ro.fortsoft.pf4j:pf4j:1.1.1'
@@ -41,6 +38,9 @@ task plugin(type: Jar) {
     }   
     into('lib'){
         from configurations.extraLibs
+    }
+    into('assets'){
+    	from 'assets'
     }
     extension('zip')
 }

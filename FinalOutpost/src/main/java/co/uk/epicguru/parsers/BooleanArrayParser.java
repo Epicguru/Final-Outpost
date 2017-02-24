@@ -1,23 +1,25 @@
-package co.uk.epicguru.IO.parsers.temp;
+package co.uk.epicguru.parsers;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import ro.fortsoft.pf4j.Extension;
 
-public class LongArrayParser extends JLineParser<long[]> {
+@Extension
+public class BooleanArrayParser extends JLineParser<boolean[]> {
 
 	public static StringBuilder stringBuilder = new StringBuilder();
 	
-	public LongArrayParser() {
-		super(long[].class, "l\"");
+	public BooleanArrayParser() {
+		super(boolean[].class, "B\"");
 	}
 
-	public void write(long[] object, String key, JLineWriter writer) {
+	public void write(boolean[] object, String key, JLineWriter writer) {
 		stringBuilder.setLength(0);
 		
 		int index = 0;
-		for(long l : object){
-			stringBuilder.append(l);
+		for(boolean b : object){
+			stringBuilder.append(b);
 			if(index != object.length - 1)
 				stringBuilder.append(',');
 			index++;
@@ -27,13 +29,13 @@ public class LongArrayParser extends JLineParser<long[]> {
 	}
 
 	@Override
-	public long[] read(String key, String content, JLineReader reader) {
+	public boolean[] read(String key, String content, JLineReader reader) {
 		String[] array = content.split(",");
 		
-		long[] array2 = new long[array.length];
+		boolean[] array2 = new boolean[array.length];
 		int index = 0;
 		for(String string : array){
-			array2[index++] = Long.parseLong(string);
+			array2[index++] = Boolean.parseBoolean(string);
 		}
 		
 		return array2;
