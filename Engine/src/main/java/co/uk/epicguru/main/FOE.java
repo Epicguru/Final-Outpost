@@ -13,6 +13,7 @@ import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
+import co.uk.epicguru.API.screens.core.MainMenu;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
@@ -122,6 +123,9 @@ public class FOE extends Game{
 			// End timer
 			Log.info(TAG, "Finished thread creation in " + U.endTimer(all) + " seconds.");
 			loaded = true;
+			
+			// Set main menu
+			setScreen(new MainMenu());
 		}).start();
 		
 		super.setScreen(new LoadingScreen());		
