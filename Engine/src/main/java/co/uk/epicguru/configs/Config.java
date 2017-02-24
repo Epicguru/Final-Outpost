@@ -1,10 +1,7 @@
 package co.uk.epicguru.configs;
 
-import co.uk.epicguru.IO.JLineReader;
+import co.uk.epicguru.API.Base;
 
-public abstract class Config {
-
-	public abstract void load(JLineReader reader);
-	public abstract void save(JLineReader reader);
+public abstract class Config extends Base{
 	
 }

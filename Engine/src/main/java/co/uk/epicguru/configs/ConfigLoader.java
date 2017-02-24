@@ -39,6 +39,8 @@ public final class ConfigLoader {
 	 */
 	public static void loadConfigsFor(String pluginID){
 		
+		FOE.loadingSubText = pluginID;
+		
 		// Start timer
 		U.startTimer(pluginID + " - Loading config");
 		
@@ -47,6 +49,7 @@ public final class ConfigLoader {
 		Log.info(TAG, '[' + pluginID + "] Found " + files.length + " configs.");
 		
 		// TODO load config in plugin.
+		
 		
 		// End timer
 		Log.info(TAG, '[' + pluginID + "] Took " + U.endTimer(pluginID + " - Loading config") + " seconds.");
