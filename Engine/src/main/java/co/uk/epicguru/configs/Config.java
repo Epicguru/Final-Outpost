@@ -11,6 +11,9 @@ import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.main.FOE;
 
+/**
+ * A config local to one plugin that is saved and loaded using JLineIO.
+ */
 public class Config extends Base{
 	
 	private HashMap<String, ConfigVariable> map = new HashMap<>();
@@ -63,10 +66,17 @@ public class Config extends Base{
 		return newMap;
 	}
 	
+	/**
+	 * Gets the name of this config, as specified in the constructor OR as loaded from file.
+	 * @return
+	 */
 	public String getName(){
 		return this.name;
 	}
 	
+	/**
+	 * Sets all variables to their default values IF the variables are null.
+	 */
 	public void setDefault(){
 		for(ConfigVariable var : map.values()){
 			if(var.getValue() == null)
@@ -74,16 +84,38 @@ public class Config extends Base{
 		}
 	}
 	
+	/**
+	 * Shorthand for <code>getName().eqauls(name)</code>
+	 */
 	public boolean is(String name){
 		return getName().equals(name);
 	}
 	
+	/**
+	 * Creates a new local config called <code>name</code>
+	 */
 	public Config(String name) { this.name = name; }
 	
+	/**
+	 * Adds a new variable to this config.
+	 * The value and default value of all variables must have JLineIO parsers. See JLineIO for more info.
+	 * @param key The key (name) of the variable.
+	 * @param defaultValue The default value that this variable will have. Use {@link #set(String, Object)} to set the value.
+	 * @see {@link #read(String)}, {@link #set(String, Object)}
+	 */
 	public void add(String key, Object defaultValue){
-		map.put(key, new ConfigVariable(key, defaultValue));
+		if(!map.containsKey(key))
+			map.put(key, new ConfigVariable(key, defaultValue));
 	}
 	
+	/**
+	 * Sets the real value of a variable. Use this when the variable needs changing, for example
+	 * when the user changes something that needs to be saved in the config.
+	 * @param key The key of the variable to change.
+	 * @param newValue The value that will be set.
+	 * @return True if the variable exists.
+	 * @see {@link #add(String, Object)}
+	 */
 	public boolean set(String key, Object newValue){
 		ConfigVariable config = map.get(key);
 		if(config == null)
@@ -93,14 +125,24 @@ public class Config extends Base{
 		return true;
 	}
 	
+	/**
+	 * Reads a variables REAL value.
+	 * @param key The key of the variable.
+	 */
 	public Object read(String key){
 		return map.get(key).getValue();
 	}
 	
+	/**
+	 * Gets the underlying HashMap.
+	 */
 	public HashMap<String, ConfigVariable> getMap(){
 		return map;
 	}
 	
+	/**
+	 * Gets all keys, made pretty for your precious eyes. :D
+	 */
 	public String getKeysPretty(){
 		StringBuilder str = new StringBuilder();
 		for(String key : getMap().keySet()){
@@ -110,14 +152,26 @@ public class Config extends Base{
 		return str.toString();
 	}
 	
+	/**
+	 * Saves the config to disk.
+	 * @param plugin The plugin to save as.
+	 */
 	public void save(FinalOutpostPlugin plugin){
 		save(FOE.gameDirectory + FOE.configsDirectory + plugin.getWrapper().getPluginId() + "/" + getName() + FOE.configsExtension);
 	}
 	
+	/**
+	 * Saves the config to disk.
+	 * @param path The path of the file to save to.
+	 */
 	public void save(String path){
 		save(new File(path));
 	}
 	
+	/**
+	 * Saves the config to disk.
+	 * @param file The file to save to.
+	 */
 	public void save(File file){
 		try {
 			JLineWriter writer = new JLineWriter(file);
@@ -160,11 +214,17 @@ public class Config extends Base{
 		}
 	}
 	
+	/**
+	 * Gets the names of all keys registered with {@link #add(String, Object)}.
+	 */
 	public String[] getKeys(){
 		return getKeysPretty().split("\n");
 	}
 	
-	public Object getValue(String key){
+	/**
+	 * Gets an underlying ConfigVariable given a key.
+	 */
+	public Object getVariable(String key){
 		if(!map.containsKey(key)){
 			error("Unable to find value for key '" + key + "' (Loaded " + map.size() + " vars)");
 			return null;

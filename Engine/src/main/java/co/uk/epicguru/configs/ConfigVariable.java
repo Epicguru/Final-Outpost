@@ -14,6 +14,9 @@ public class ConfigVariable extends Base implements Cloneable{
 		this.defaultValue = defaultValue;
 	}
 	
+	/**
+	 * Clones the config variable, including value, default value and key.
+	 */
 	public ConfigVariable clone(){
 		return new ConfigVariable(this.getKey(), this.getDefaultValue()).setValue(getValue());
 	}
@@ -29,27 +32,47 @@ public class ConfigVariable extends Base implements Cloneable{
 		}
 	}
 	
+	/**
+	 * Sets the value to the default value.
+	 */
 	public void setDefault(){
 		this.value = defaultValue;
 	}
 	
+	/**
+	 * Sets the value of this variable.
+	 * @param value The new value.
+	 * @return This object.
+	 */
 	public ConfigVariable setValue(Object value){
 		this.value = value;
 		return this;
 	}
 	
+	/**
+	 * Gets the default value.
+	 */
 	public Object getDefaultValue(){
 		return defaultValue;
 	}
 	
+	/**
+	 * Gets the current REAL value.
+	 */
 	public Object getValue(){
 		return value;
 	}
 	
+	/**
+	 * Gets the key (the name) of this variable.
+	 */
 	public String getKey(){
 		return key;
 	}
 	
+	/**
+	 * Same as getKey()
+	 */
 	public String toString(){
 		return key;
 	}	
