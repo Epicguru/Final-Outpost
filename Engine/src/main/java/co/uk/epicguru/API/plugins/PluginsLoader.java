@@ -200,6 +200,7 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 			this.zip = zip;
 			
 			FileHeader[] headers = getHeaders(zip, "assets/");
+			Log.info(TAG, '[' + pluginID + ']' + "Found " + headers.length + " assets.");
 			
 			for(FileHeader file : headers){
 				zip.extractFile(file, extractionPluginFolder.getAbsolutePath());
