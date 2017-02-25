@@ -52,6 +52,7 @@ public final class JLineParsers {
 			if(parser.isClass(o)){
 				if(parser.isClassExact(o)){
 					// Done.
+					// Log.error("Parsers", "Found exact : " + parser.getPrefix() + " for object " + o.getClass().getSimpleName());
 					return parser;
 				}else{
 					temps.add(parser);

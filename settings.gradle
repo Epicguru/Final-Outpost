@@ -19,3 +19,4 @@ rootProject.name = 'Game'
 
 include 'Engine'
 include 'FinalOutpost'
+include 'ExamplePlugin'

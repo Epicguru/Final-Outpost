@@ -11,7 +11,7 @@ import ro.fortsoft.pf4j.Extension;
 public class Vector3Parser extends JLineParser<Vector3> {
 
 	public Vector3Parser() {
-		super(Vector3.class, "V2");
+		super(Vector3.class, "V3");
 	}
 
 	public void write(Vector3 object, String key, JLineWriter writer) {
