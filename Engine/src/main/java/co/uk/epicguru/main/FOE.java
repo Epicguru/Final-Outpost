@@ -13,6 +13,7 @@ import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
+import co.uk.epicguru.API.screens.core.MainMenu;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
@@ -40,6 +41,7 @@ public class FOE extends Game{
 	public static String loadingText = "PLACEHOLDER";
 	public static String loadingSubText = "Something Goes Here!";
 	public static boolean loaded = false;
+	public static boolean postDone = false;
 	
 	public static PluginsLoader pluginsLoader;
 	
@@ -56,6 +58,9 @@ public class FOE extends Game{
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Final Outpost : Loading");
 		new Lwjgl3Application(INSTANCE, config);
+		
+		System.gc();
+		
 		// Done
 		System.exit(0);
 	}
@@ -104,10 +109,23 @@ public class FOE extends Game{
 			JLineParsers.loadParsers();
 			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
 			
+			postDone = false;
 			
 			// Load configs
 			loading("Loading configs", "...");
-			ConfigLoader.loadConfigs();		
+			Gdx.app.postRunnable(() -> {
+				ConfigLoader.loadConfigs();	
+				postDone = true;
+			}); 
+			
+			while(!postDone){
+				// Wait, but do not eat up all of CPU
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// Ignored
+				}
+			}
 			
 			// Save configs (For any changes or for default values)
 			loading("Saving configs", "...");
@@ -119,9 +137,21 @@ public class FOE extends Game{
 			loading("Post-Initialising plugins", "...");
 			pluginsLoader.postInitAllPlugins();
 			
+			while(!postDone){
+				// Wait, but do not eat up all of CPU
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// Ignored
+				}
+			}
+			
 			// End timer
 			Log.info(TAG, "Finished thread creation in " + U.endTimer(all) + " seconds.");
 			loaded = true;
+			
+			// Set main menu
+			setScreen(new MainMenu());
 		}).start();
 		
 		super.setScreen(new LoadingScreen());		
@@ -167,6 +197,13 @@ public class FOE extends Game{
 		batch.dispose();		
 		pluginsLoader.saveAllConfigs();
 		pluginsLoader.stopPlugins();	
+		pluginsLoader.dispose();
+		pluginsLoader = null;
+		
+		System.gc();
+		
+		PluginsLoader.cleanDirectory();
+		
 		super.dispose();
 		
 		Log.saveLog();

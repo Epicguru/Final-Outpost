@@ -3,6 +3,11 @@ package co.uk.epicguru.API.plugins;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.apache.commons.io.FilenameUtils;
+
+import com.badlogic.gdx.utils.Disposable;
+
+import co.uk.epicguru.API.U;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import net.lingala.zip4j.core.ZipFile;
@@ -10,10 +15,11 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 import ro.fortsoft.pf4j.DefaultPluginManager;
 import ro.fortsoft.pf4j.Plugin;
+import ro.fortsoft.pf4j.PluginClassLoader;
 import ro.fortsoft.pf4j.PluginWrapper;
 import ro.fortsoft.pf4j.util.FileUtils;
 
-public final class PluginsLoader extends DefaultPluginManager{
+public final class PluginsLoader extends DefaultPluginManager implements Disposable{
 
 	public static final String TAG = "Plugin Loader";
 	private static FinalOutpostPlugin[] _plugins;
@@ -78,6 +84,20 @@ public final class PluginsLoader extends DefaultPluginManager{
 		return true;
 	}
 
+	/**
+	 * Cleans up the plugin directory of loose plugin folder that are left from where this plugin loader extracted them.
+	 */
+	public static  void cleanDirectory(){
+		Log.info(TAG, "Cleaing plugin directory");
+		for(File file : U.getFilesWithEnding(new File(FOE.gameDirectory + FOE.pluginsDirectory), ".zip")){
+			FOE.loadingSubText = file.getName();
+			String newPath = FilenameUtils.getFullPath(file.getAbsolutePath()) + FilenameUtils.getBaseName(file.getAbsolutePath());
+			File toDelete = new File(newPath);
+			boolean worked = FileUtils.delete(toDelete);	
+			Log.info(TAG, "Cleaning " + toDelete.getName() + ", Worked = " + worked);
+		}
+	}
+	
 	/**
 	 * Stops all plugins.
 	 */
@@ -147,8 +167,11 @@ public final class PluginsLoader extends DefaultPluginManager{
 	 * @param pluginID The ID of the plugin, as in plugin.getWrapper().getPluginId().
 	 * @return The FinalOutpostPlugin class of the plugin.
 	 */
-	public FinalOutpostPlugin getFOPlugin(String pluginID){		
-		return (FinalOutpostPlugin) getPlugin(pluginID).getPlugin();
+	public FinalOutpostPlugin getFOPlugin(String pluginID){
+		if(getPlugin(pluginID) != null)
+			return (FinalOutpostPlugin) getPlugin(pluginID).getPlugin();
+		else
+			return null;
 	}
 
 	/**
@@ -216,6 +239,19 @@ public final class PluginsLoader extends DefaultPluginManager{
 	}
 	
 	/**
+	 * Disposes all assets loaded by this plugin manager.
+	 */
+	public void dispose(){
+		_plugins = null;
+		errorPlugins = null;
+		for(PluginClassLoader clazz : super.pluginClassLoaders.values()){
+			clazz.dispose();
+		}
+		super.pluginClassLoaders = null;
+		zip = null;
+	}
+	
+	/**
 	 * Only for debug purposes.
 	 */
 	public ZipFile getCurrentZip(){
@@ -226,6 +262,7 @@ public final class PluginsLoader extends DefaultPluginManager{
 	 * Gets all resolved and running plugins.
 	 */
 	public FinalOutpostPlugin[] getAllPlugins(){
+		if(_plugins == null) _plugins = new FinalOutpostPlugin[0];
 		return _plugins;
 	}
 }
