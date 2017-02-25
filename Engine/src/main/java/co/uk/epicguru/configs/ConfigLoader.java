@@ -51,7 +51,7 @@ public final class ConfigLoader {
 		// Get plugin (counts as check)
 		FinalOutpostPlugin plugin = FOE.pluginsLoader.getFOPlugin(pluginID);
 		if(plugin == null){
-			Log.error(TAG, "Could not load plugins for '" + pluginID + "' because the plugin is not loaded.");
+			Log.error(TAG, "Could not load configs for '" + pluginID + "' because the plugin is not loaded.");
 			return;
 		}
 		

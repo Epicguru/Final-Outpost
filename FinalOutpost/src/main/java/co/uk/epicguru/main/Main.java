@@ -26,7 +26,13 @@ public class Main extends FinalOutpostPlugin{
 		Config launch = newConfig("Launch");
 		
 		launch.add("Title", "Final Outpost by Epicguru");
-		launch.add("Screen Size", new Vector2(900, 500));	
+		
+		// Graphics config
+		Config graphics = newConfig("Graphics");
+		
+		graphics.add("Windowed Resolution", new Vector2(900, 500));	
+		graphics.add("Fullscreen", false);
+		graphics.add("VSync", false);
 	}
 	
 	public boolean config(Config config){
@@ -35,8 +41,17 @@ public class Main extends FinalOutpostPlugin{
 			
 			Gdx.graphics.setTitle((String)config.read("Title"));
 			
-			Vector2 size = (Vector2)config.read("Screen Size");
+		}
+		if(config.is("Graphics")){
+			Gdx.graphics.setVSync((boolean)config.read("VSync"));
+			
+			Vector2 size = (Vector2)config.read("Windowed Resolution");
 			Gdx.graphics.setWindowedMode((int)size.x, (int)size.y);
+			
+			if((boolean)config.read("Fullscreen")){
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+				Log.info(TAG, "Started up in fullscreen mode, @ (" + Gdx.graphics.getWidth() + "x" + Gdx.graphics.getHeight() + ")");
+			}
 		}
 		
 		return true;
