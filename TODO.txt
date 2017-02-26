@@ -1,4 +1,4 @@
-2. Test another plugin. No need to commit.
 3. Make an asset manager in FOE and make hooks for loading assets within plugins.
 4. Make FOE load basic assets.
 6. Make JLineIO not actually be 'lines'. Use ':' as a line ender instead.
+7. Prettify MainMenu using the new utilites.

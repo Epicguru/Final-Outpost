@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.main.FOE;
@@ -114,6 +115,15 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @return True if the config was loaded properly. False if not managed.
 	 */
 	public boolean config(Config config){
+		return false;
+	}
+	
+	/**
+	 * Called when a certain type of assets should be loaded.
+	 * @param type The type of assets needed to be loaded.
+	 * @return True if some assets were loaded.
+	 */
+	public boolean loadAssets(AssetLoadType type){
 		return false;
 	}
 	
