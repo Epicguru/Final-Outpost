@@ -15,6 +15,9 @@ import ro.fortsoft.pf4j.PluginWrapper;
  */
 public class Main extends FinalOutpostPlugin {
 
+	// Technically optional, but a very good idea.
+	public static Main INSTANCE;
+	
 	// Optional, used when debugging.
 	public static final String TAG = "Example Plugin";
 	
@@ -23,6 +26,9 @@ public class Main extends FinalOutpostPlugin {
 		// First String is the name of this plugin that the user sees.
 		// The second one is the user-friendly version of this plugin. 
 		// You can type whatever you want in either of these fields.
+		
+		// Optional, but useful.
+		INSTANCE = this;
 	}
 
 	@Override
