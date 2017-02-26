@@ -42,6 +42,7 @@ public class FOE extends Game{
 	
 	public static String loadingText = "PLACEHOLDER";
 	public static String loadingSubText = "Something Goes Here!";
+	
 	public static boolean loaded = false;
 	public static boolean postDone = false;
 	
@@ -137,18 +138,23 @@ public class FOE extends Game{
 			
 			// Load initial content before init and post init.
 			U.startTimer(assetsLoad);
-			loading("Loading core content", "...");
+			loading("Loading core content", "");
 			pluginsAssetsLoader = new PluginAssetLoader();
 			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
 			
 			postDone = false;
 			while(!postDone){
+				float multi = 1f;
+				int millis = (int)((1f / 60f) * 1000f * multi);
 				Gdx.app.postRunnable(() -> {
-					if(pluginsAssetsLoader.update((int)(1000f * (1f / 60f)))){
+					if(pluginsAssetsLoader.update(millis)){
 						postDone = true;
 					}
 					FOE.loadingSubText = (int)(pluginsAssetsLoader.getProgress() * 100f) + "%";
-				});
+				});				
+				try {
+					Thread.sleep(millis);
+				} catch (InterruptedException e) { }				
 			}
 			
 			Log.info(TAG, "Loaded " + pluginsAssetsLoader.getLoadedAssets() + " assets in " + U.endTimer(assetsLoad) + " seconds.");
@@ -158,15 +164,6 @@ public class FOE extends Game{
 			pluginsLoader.initAllPlugins();
 			loading("Post-Initialising plugins", "...");
 			pluginsLoader.postInitAllPlugins();
-			
-			while(!postDone){
-				// Wait, but do not eat up all of CPU
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// Ignored
-				}
-			}
 			
 			// End timer
 			Log.info(TAG, "Finished thread creation in " + U.endTimer(all) + " seconds.");
