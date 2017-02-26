@@ -130,7 +130,12 @@ public class Config extends Base{
 	 * @param key The key of the variable.
 	 */
 	public Object read(String key){
-		return map.get(key).getValue();
+		if(map.containsKey(key))
+			return map.get(key).getValue();
+		else{
+			error("Could not find variable of name '" + key + "'! Check spelling...");
+			return null;
+		}
 	}
 	
 	/**

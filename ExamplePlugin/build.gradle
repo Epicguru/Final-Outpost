@@ -1,0 +1,48 @@
+
+// Plugin properties
+project.ext.pluginName = "ExamplePlugin"
+project.ext.pluginVersion = "0.0.0"
+project.ext.pluginProvider = "You"
+project.ext.pluginClass = "com.example.main.Main"
+
+configurations{
+	extraLibs
+}
+
+dependencies{
+
+	// Compilation only (Not export)
+	compileOnly project(":Engine")
+	
+	// Dependencies to be included in export
+    extraLibs 'ro.fortsoft.pf4j:pf4j:1.1.1'
+}
+
+jar{
+	baseName = "${pluginName}"
+	version = "${pluginVersion}"
+	
+	manifest {
+        attributes 'Plugin-Class' : "${pluginClass}",
+        'Plugin-Id' : "${pluginName}",
+        'Plugin-Version' : "${pluginVersion}",
+        'Plugin-Provider' : "${pluginProvider}"
+    }
+}
+
+task plugin(type: Jar) {
+    baseName = "${pluginName}"
+    version = "${pluginVersion}"
+    into('classes'){
+         with jar
+    }   
+    into('lib'){
+        from configurations.extraLibs
+    }
+    into('assets'){
+    	from 'assets'
+    }
+    extension('zip')
+}
+
+assemble.dependsOn plugin

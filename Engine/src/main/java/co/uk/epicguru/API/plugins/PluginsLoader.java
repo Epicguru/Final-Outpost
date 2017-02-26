@@ -33,6 +33,7 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	public static void setupDirectory(String directory){
 		System.setProperty("pf4j.pluginsDir", new File(directory).getAbsolutePath());
 		Log.info(TAG, "Plugin directory is now " + System.getProperty("pf4j.pluginsDir"));
+		new File(directory).mkdirs();
 	}
 
 	/**
@@ -199,6 +200,7 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 			this.zip = zip;
 			
 			FileHeader[] headers = getHeaders(zip, "assets/");
+			Log.info(TAG, '[' + pluginID + ']' + "Found " + headers.length + " assets.");
 			
 			for(FileHeader file : headers){
 				zip.extractFile(file, extractionPluginFolder.getAbsolutePath());
