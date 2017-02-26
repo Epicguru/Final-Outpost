@@ -1,9 +1,15 @@
 package co.uk.epicguru.main;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
+import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
 import ro.fortsoft.pf4j.PluginException;
@@ -62,8 +68,27 @@ public class Main extends FinalOutpostPlugin{
 		Log.info(TAG, "Stopping plugin");
 	}
 	
+	@Override
+	public boolean loadAssets(PluginAssetLoader loader, AssetLoadType type) {
+		
+		switch(type){
+		case GAME_START:
+			
+			break;
+		case INIT_CORE:
+			
+			// TEMP TEST - Load all
+			String assetsFolder = getAssetsFolder();
+			for(File file : U.getFilesWithEnding(new File(assetsFolder), ".png")){
+				loadAsset(loader, file.getAbsolutePath().replace(assetsFolder, ""), Texture.class);
+			}
+			break;		
+		}	
+		
+		return true;
+	}
+
 	public void contentLoaded(){
 		// TODO
-		// FileHandle d = getAsset("Example.png");
 	}
 }

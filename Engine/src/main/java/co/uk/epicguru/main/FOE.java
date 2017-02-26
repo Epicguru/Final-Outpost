@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
+import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.MainMenu;
@@ -44,6 +46,7 @@ public class FOE extends Game{
 	public static boolean postDone = false;
 	
 	public static PluginsLoader pluginsLoader;
+	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static void main(String... args){
 		
@@ -76,6 +79,7 @@ public class FOE extends Game{
 		final String parsers = "Parsers";
 		final String plugins = "Plugins";
 		final String pluginsExtraction = "Plugins - Extraction";
+		final String assetsLoad = "Assets Load";
 		
 		loading("Loading Final Outpost Engine", "Hello there!");
 		
@@ -130,6 +134,24 @@ public class FOE extends Game{
 			// Save configs (For any changes or for default values)
 			loading("Saving configs", "...");
 			pluginsLoader.saveAllConfigs();
+			
+			// Load initial content before init and post init.
+			U.startTimer(assetsLoad);
+			loading("Loading core content", "...");
+			pluginsAssetsLoader = new PluginAssetLoader();
+			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
+			
+			postDone = false;
+			while(!postDone){
+				Gdx.app.postRunnable(() -> {
+					if(pluginsAssetsLoader.update((int)(1000f * (1f / 60f)))){
+						postDone = true;
+					}
+					FOE.loadingSubText = (int)(pluginsAssetsLoader.getProgress() * 100f) + "%";
+				});
+			}
+			
+			Log.info(TAG, "Loaded " + pluginsAssetsLoader.getLoadedAssets() + " assets in " + U.endTimer(assetsLoad) + " seconds.");
 			
 			// Init
 			loading("Initialising plugins", "...");

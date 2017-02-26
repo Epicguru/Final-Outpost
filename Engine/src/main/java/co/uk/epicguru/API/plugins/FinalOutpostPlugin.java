@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.files.FileHandle;
 
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.main.FOE;
@@ -123,7 +124,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @param type The type of assets needed to be loaded.
 	 * @return True if some assets were loaded.
 	 */
-	public boolean loadAssets(AssetLoadType type){
+	public boolean loadAssets(PluginAssetLoader loader, AssetLoadType type){
 		return false;
 	}
 	
@@ -149,11 +150,28 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	public void postInit() {
 
 	}
+	
+	/**
+	 * Gets the assets folder for an extracted assets directory.
+	 */
+	public String getAssetsFolder(){
+		return new File(FOE.gameDirectory + FOE.gamePluginsExtracted + getWrapper().getPluginId() + "/assets/").getAbsolutePath();
+	}
 
+	/**
+	 * Loads an asset for the whole prgram, that is able to be used my this plugin.
+	 * @param loader The asset loader.
+	 * @param path The path or name of the asset within the ./assets folder.
+	 * @param clazz The type of asset.
+	 */
+	public void loadAsset(PluginAssetLoader loader, String path, Class<?> clazz){
+		loader.load(getFileHandle(path).file().getAbsolutePath(), clazz);
+	}
+	
 	/**
 	 * Used to load plugin assets. To load assets/Thing.png, do getAsset("Thing.png").
 	 */
-	public FileHandle getAsset(String path){
+	public FileHandle getFileHandle(String path){
 		return new FileHandle(new File(FOE.gameDirectory + FOE.gamePluginsExtracted + getWrapper().getPluginId() + "/assets/" + path).getAbsolutePath());
 	}	
 }

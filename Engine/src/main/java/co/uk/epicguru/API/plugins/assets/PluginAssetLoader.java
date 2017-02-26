@@ -8,6 +8,7 @@ import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
+import ro.fortsoft.pf4j.Plugin;
 
 public class PluginAssetLoader extends AssetManager {
 	
@@ -43,8 +44,17 @@ public class PluginAssetLoader extends AssetManager {
 		
 		for(FinalOutpostPlugin plugin : pluginLoader.getAllPlugins()){
 			temp = getQueuedAssets();
-			plugin.loadAssets(type);
+			plugin.loadAssets(this, type);
 			Log.info(TAG, "Plugin '" + plugin.getWrapper().getPluginId() + "' requested to load " + (getQueuedAssets() - temp) + " assets.");
+		}
+	}
+	
+	/**
+	 * Gives the contentLoaded message to all plugins.
+	 */
+	public void passMessage(PluginsLoader pluginLoader){
+		for(Plugin plugin : pluginLoader.getAllPlugins()){
+			pluginLoader.getFOPlugin(plugin.getWrapper().getPluginId()).contentLoaded();
 		}
 	}
 }
