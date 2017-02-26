@@ -70,6 +70,14 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 	
 	/**
+	 * Gets the class through which assets are loaded into memory for use.
+	 * Same as <code>FOE.pluginsAssetsLoader;</code>
+	 */
+	public PluginAssetLoader getAssetLoader(){
+		return FOE.pluginsAssetsLoader;
+	}
+	
+	/**
 	 * Loads all configs that are saved on the disk.
 	 */
 	public void loadConfigs(){

@@ -12,16 +12,20 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 public class Main extends FinalOutpostPlugin{
 
+	public static Main INSTANCE;
+	
 	public static final String version = "0.0.0";
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Final Outpost Core", version);
+		INSTANCE = this;
 	}
 
 	@Override
@@ -87,8 +91,8 @@ public class Main extends FinalOutpostPlugin{
 		
 		return true;
 	}
-
-	public void contentLoaded(){
-		// TODO
+	
+	public void postInit(){
+		FOE.INSTANCE.setScreen(new MainMenu());
 	}
 }
