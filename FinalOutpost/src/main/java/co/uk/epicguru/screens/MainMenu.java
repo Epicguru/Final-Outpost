@@ -11,7 +11,7 @@ public final class MainMenu extends GameScreen {
 	public Texture texture;
 	
 	public MainMenu(){
-		this.texture = Main.INSTANCE.getAssetLoader().get("Background.png", Texture.class);
+		this.texture = Main.INSTANCE.getAsset("Background.png", Texture.class);
 	}
 	
 	public void show(){

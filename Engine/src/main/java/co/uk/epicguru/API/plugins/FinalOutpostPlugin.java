@@ -17,6 +17,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 
 	private String displayName, displayVersion;
 	private ArrayList<Config> configs = new ArrayList<>();
+	private String assetsFolder;
 	
 	/**
 	 * The base class that all plugins should implement as a main class.
@@ -40,6 +41,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 		super(wrapper);
 		this.displayName = displayName;
 		this.displayVersion = displayVersion;
+		this.assetsFolder = new File(FOE.gameDirectory + FOE.gamePluginsExtracted + wrapper.getPluginId() + "/assets/").getAbsolutePath();
 	}
 
 	/**
@@ -129,6 +131,10 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	
 	/**
 	 * Called when a certain type of assets should be loaded.
+	 * <li>
+	 * IMPORTANT : Not to be confused with {@link #loadAsset(PluginAssetLoader, String, Class)} which loads an individual asset.
+	 * <li>
+	 * NOTE : This does not load an asset. It is a plugin callback which by default does nothing.
 	 * @param type The type of assets needed to be loaded.
 	 * @return True if some assets were loaded.
 	 */
@@ -167,7 +173,23 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 
 	/**
-	 * Loads an asset for the whole prgram, that is able to be used my this plugin.
+	 * Gets an asset that has been loaded using {@link #loadAsset(PluginAssetLoader, String, Class)};
+	 * @param name The name of the asset. For example to get "thing/foo.png" do <code>getAsset("thing/foo.png", Texture.class)</code>
+	 * @param type The type of asset to load.
+	 * @return A new instance of the already loaded asset.
+	 * @see {@link #loadAsset(PluginAssetLoader, String, Class)}
+	 */
+	public <T> T getAsset(String name, Class<T> type){
+		return getAssetLoader().get(this.assetsFolder, type);
+	}
+	
+	/**
+	 * Loads an asset for the whole program, that is able to be used my this plugin.
+	 * <li>
+	 * NOTE : This DOES NOT get the asset to you, it only loads it ready for use. This should be done in the {@link #loadAssets(PluginAssetLoader, AssetLoadType)}.
+	 * <li>
+	 * IMPORTANT : Not to be confused with {@link #loadAssets(PluginAssetLoader, AssetLoadType)} which is a plugin callback.
+	 * @see {@link #getAsset(String, Class)} for getting a loaded asset.
 	 * @param loader The asset loader.
 	 * @param path The path or name of the asset within the ./assets folder.
 	 * @param clazz The type of asset.
