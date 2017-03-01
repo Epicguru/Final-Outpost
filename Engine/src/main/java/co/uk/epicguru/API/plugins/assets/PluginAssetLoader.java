@@ -47,7 +47,6 @@ public class PluginAssetLoader extends AssetManager {
 			temp = getQueuedAssets();
 			plugin.loadAssets(this, type);
 			Log.info(TAG, "Plugin '" + plugin.getWrapper().getPluginId() + "' requested to load " + (getQueuedAssets() - temp) + " assets.");
-			Log.info(TAG, super.getDiagnostics());
 		}
 	}
 }
