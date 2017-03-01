@@ -2,6 +2,7 @@ package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -175,6 +176,18 @@ public class FOE extends Game{
 	public void loading(String title, String sub){
 		FOE.loadingText = title;
 		FOE.loadingSubText = sub;
+	}
+	
+	public void setScreen(Screen screen){
+		
+		// Custom implementation (WIP)
+		
+		if (this.screen != null) this.screen.hide();
+		this.screen = screen;
+		if (this.screen != null) {
+			this.screen.show();
+			this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		}		
 	}
 	
 	public void update(float delta){
