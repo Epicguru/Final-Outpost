@@ -3,12 +3,12 @@ package co.uk.epicguru.API.plugins.assets;
 import java.io.File;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
-import ro.fortsoft.pf4j.Plugin;
 
 public class PluginAssetLoader extends AssetManager {
 	
@@ -19,6 +19,7 @@ public class PluginAssetLoader extends AssetManager {
 	 * Assumes that plugins assets have been extracted using the PluginLoader.
 	 */
 	public PluginAssetLoader(){
+		super(new ExternalFileHandleResolver());
 		root = new File(FOE.gameDirectory + FOE.gamePluginsExtracted);
 		
 		if(!root.exists()){
@@ -46,15 +47,7 @@ public class PluginAssetLoader extends AssetManager {
 			temp = getQueuedAssets();
 			plugin.loadAssets(this, type);
 			Log.info(TAG, "Plugin '" + plugin.getWrapper().getPluginId() + "' requested to load " + (getQueuedAssets() - temp) + " assets.");
-		}
-	}
-	
-	/**
-	 * Gives the contentLoaded message to all plugins.
-	 */
-	public void passMessage(PluginsLoader pluginLoader){
-		for(Plugin plugin : pluginLoader.getAllPlugins()){
-			pluginLoader.getFOPlugin(plugin.getWrapper().getPluginId()).contentLoaded();
+			Log.info(TAG, super.getDiagnostics());
 		}
 	}
 }

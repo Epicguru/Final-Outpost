@@ -1,12 +1,10 @@
 package co.uk.epicguru.main;
 
-import java.io.File;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 
-import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
@@ -82,10 +80,8 @@ public class Main extends FinalOutpostPlugin{
 		case INIT_CORE:
 			
 			// TEMP TEST - Load all
-			String assetsFolder = getAssetsFolder();
-			for(File file : U.getFilesWithEnding(new File(assetsFolder), ".png")){
-				loadAsset(loader, file.getAbsolutePath().replace(assetsFolder, ""), Texture.class);
-			}
+			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
+			loadAsset("Fonts/Title.fnt", BitmapFont.class);
 			break;		
 		}	
 		

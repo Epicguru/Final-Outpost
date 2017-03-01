@@ -127,7 +127,6 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	public void extractAllAssets(){
 		for(Plugin plugin : getAllPlugins()){
 			extractAssetsFor(plugin.getWrapper().getPluginId());
-			getFOPlugin(plugin.getWrapper().getPluginId()).contentLoaded();
 		}
 	}
 	

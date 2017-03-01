@@ -3,6 +3,7 @@ package co.uk.epicguru.API.plugins;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
@@ -41,7 +42,8 @@ public abstract class FinalOutpostPlugin extends Plugin{
 		super(wrapper);
 		this.displayName = displayName;
 		this.displayVersion = displayVersion;
-		this.assetsFolder = new File(FOE.gameDirectory + FOE.gamePluginsExtracted + wrapper.getPluginId() + "/assets/").getAbsolutePath();
+		this.assetsFolder = new File(FOE.gameDirectory + FOE.gamePluginsExtracted + wrapper.getPluginId() + "/assets/").getAbsolutePath() + '\\';
+		this.assetsFolder = this.assetsFolder.replace(Gdx.files.getExternalStoragePath(), "");
 	}
 
 	/**
@@ -143,13 +145,6 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 	
 	/**
-	 * Called when the content has been loaded for this plugin.
-	 */
-	public void contentLoaded(){
-		
-	}
-	
-	/**
 	 * Called after ALL plugins have been loaded and ALL content has been loaded and ALL configs have been loaded.
 	 * This allows for interaction between plugins at start up if required.
 	 */
@@ -180,7 +175,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @see {@link #loadAsset(PluginAssetLoader, String, Class)}
 	 */
 	public <T> T getAsset(String name, Class<T> type){
-		return getAssetLoader().get(this.assetsFolder, type);
+		return getAssetLoader().get(this.assetsFolder.replaceAll("\\\\", "/") + name.replaceAll("\\\\", "/"), type);
 	}
 	
 	/**
@@ -190,18 +185,17 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * <li>
 	 * IMPORTANT : Not to be confused with {@link #loadAssets(PluginAssetLoader, AssetLoadType)} which is a plugin callback.
 	 * @see {@link #getAsset(String, Class)} for getting a loaded asset.
-	 * @param loader The asset loader.
 	 * @param path The path or name of the asset within the ./assets folder.
 	 * @param clazz The type of asset.
 	 */
-	public void loadAsset(PluginAssetLoader loader, String path, Class<?> clazz){
-		loader.load(getFileHandle(path).file().getAbsolutePath(), clazz);
+	public void loadAsset(String path, Class<?> clazz){
+		getAssetLoader().load(assetsFolder + path.replaceAll("/", "\\\\"), clazz);
 	}
 	
 	/**
 	 * Used to load plugin assets. To load assets/Thing.png, do getAsset("Thing.png").
 	 */
 	public FileHandle getFileHandle(String path){
-		return new FileHandle(new File(FOE.gameDirectory + FOE.gamePluginsExtracted + getWrapper().getPluginId() + "/assets/" + path).getAbsolutePath());
+		return new FileHandle(FOE.gameDirectory + FOE.gamePluginsExtracted + getWrapper().getPluginId() + "/assets/" + path);
 	}	
 }
