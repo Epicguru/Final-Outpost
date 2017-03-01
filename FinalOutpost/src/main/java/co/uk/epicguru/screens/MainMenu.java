@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Main;
 
 public final class MainMenu extends GameScreen {
@@ -36,7 +37,15 @@ public final class MainMenu extends GameScreen {
 		// Background
 		float hw = getScreenWidth() / 2f;
 		float hh = getScreenHeight() / 2f;
-		super.renderToSize(batch, texture, hw, hh, getScreenWidth(), getScreenHeight());
+		
+		float m = 1.4f;
+		float addX = Input.getMouseX() - hw;
+		float addY = getScreenHeight() - Input.getMouseY() - hh;
+		
+		addX *= 0.1f;
+		addY *= 0.1f;
+		
+		super.renderToSize(batch, texture, hw + addX, hh + addY, getScreenWidth() * m, getScreenHeight() * m);
 		
 		// Title
 		font.draw(batch, "Final Outpost", getScreenWidth() / 2f, getScreenHeight() - 10, 0, 1, false);

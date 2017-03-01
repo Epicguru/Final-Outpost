@@ -81,6 +81,8 @@ public class Main extends FinalOutpostPlugin{
 			
 			// TEMP TEST - Load all
 			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
+			loadAsset("Fonts/Default.fnt", BitmapFont.class);
+			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
 			break;		
 		}	
