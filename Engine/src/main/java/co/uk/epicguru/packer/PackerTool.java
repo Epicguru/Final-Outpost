@@ -31,8 +31,7 @@ public class PackerTool extends Game{
 	private boolean done;
 	private TextureData[] textures;
 	private AssetManager assets;
-	private Vector2 mouseStart = new Vector2();
-	private boolean oldPress;
+	private Vector2 oldMouse = new Vector2();
 	private boolean press;
 	
 	public static void main(String[] args) {
@@ -135,26 +134,20 @@ public class PackerTool extends Game{
 		Input.update();
 		
 		if(loading == null){
-			Log.info(TAG, "LALALDS" + press);
-			press = Gdx.input.isButtonPressed(Buttons.RIGHT);
-			if(!oldPress && press){
-				mouseStart.set(Input.getMouseWorldPos(cam));
-			}
-			
-			oldPress = Gdx.input.isButtonPressed(Buttons.MIDDLE);
-		}else{
-			mouseStart.set(0, 0);
+			press = Gdx.input.isButtonPressed(Buttons.MIDDLE);
 		}
 		
 		cam.update();
+		
+		if(press){
+			cam.position.add(oldMouse.x - Input.getMouseWorldX(cam), oldMouse.y - Input.getMouseWorldY(cam), 0);
+		}
+		
+		oldMouse.set(Input.getMouseWorldPos(cam));
 	}
 	
 	public void resize(int width, int height){
-		cam.setToOrtho(false, width, height);
-		if(press){
-			Log.info(TAG, "asd");
-			cam.position.add(Input.getMouseWorldX(cam) - mouseStart.x, Input.getMouseWorldY(cam) - mouseStart.x, 0);
-		}
+		cam.setToOrtho(false, width, height);		
 	}
 	
 	public void render(){
@@ -172,7 +165,8 @@ public class PackerTool extends Game{
 			if(textures != null){
 				int top = 0;
 				for(TextureData texture : textures){
-					spr.draw(texture.texture, top += texture.texture.getWidth(), 0);
+					spr.draw(texture.texture, top, 0);
+					top += texture.texture.getWidth();
 				}
 			}
 		}
