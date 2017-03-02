@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisList;
 import com.kotcrab.vis.ui.widget.VisTree;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
