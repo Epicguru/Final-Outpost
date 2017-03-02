@@ -1,21 +1,29 @@
 package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
+import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 public class Main extends FinalOutpostPlugin{
 
+	public static Main INSTANCE;
+	
 	public static final String version = "0.0.0";
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Final Outpost Core", version);
+		INSTANCE = this;
 	}
 
 	@Override
@@ -62,8 +70,27 @@ public class Main extends FinalOutpostPlugin{
 		Log.info(TAG, "Stopping plugin");
 	}
 	
-	public void contentLoaded(){
-		// TODO
-		// FileHandle d = getAsset("Example.png");
+	@Override
+	public boolean loadAssets(PluginAssetLoader loader, AssetLoadType type) {
+		
+		switch(type){
+		case GAME_START:
+			
+			break;
+		case INIT_CORE:
+			
+			// TEMP TEST - Load all
+			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
+			loadAsset("Fonts/Default.fnt", BitmapFont.class);
+			loadAsset("Fonts/Small.fnt", BitmapFont.class);
+			loadAsset("Fonts/Title.fnt", BitmapFont.class);
+			break;		
+		}	
+		
+		return true;
+	}
+	
+	public void postInit(){
+		FOE.INSTANCE.setScreen(new MainMenu());
 	}
 }

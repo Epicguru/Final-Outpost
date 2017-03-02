@@ -2,6 +2,7 @@ package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -11,9 +12,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
+import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
-import co.uk.epicguru.API.screens.core.MainMenu;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
@@ -40,10 +42,12 @@ public class FOE extends Game{
 	
 	public static String loadingText = "PLACEHOLDER";
 	public static String loadingSubText = "Something Goes Here!";
+	
 	public static boolean loaded = false;
 	public static boolean postDone = false;
 	
 	public static PluginsLoader pluginsLoader;
+	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static void main(String... args){
 		
@@ -76,6 +80,7 @@ public class FOE extends Game{
 		final String parsers = "Parsers";
 		final String plugins = "Plugins";
 		final String pluginsExtraction = "Plugins - Extraction";
+		final String assetsLoad = "Assets Load";
 		
 		loading("Loading Final Outpost Engine", "Hello there!");
 		
@@ -131,27 +136,38 @@ public class FOE extends Game{
 			loading("Saving configs", "...");
 			pluginsLoader.saveAllConfigs();
 			
+			// Load initial content before init and post init.
+			U.startTimer(assetsLoad);
+			loading("Loading core content", "");
+			pluginsAssetsLoader = new PluginAssetLoader();
+			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
+			
+			postDone = false;
+			while(!postDone){
+				float multi = 1f;
+				int millis = (int)((1f / 60f) * 1000f * multi);
+				Gdx.app.postRunnable(() -> {
+					if(pluginsAssetsLoader.update(millis)){
+						postDone = true;
+					}
+					FOE.loadingSubText = (int)(pluginsAssetsLoader.getProgress() * 100f) + "%";
+				});				
+				try {
+					Thread.sleep(millis);
+				} catch (InterruptedException e) { }				
+			}
+			
+			Log.info(TAG, "Loaded " + pluginsAssetsLoader.getLoadedAssets() + " assets in " + U.endTimer(assetsLoad) + " seconds.");
+			
 			// Init
 			loading("Initialising plugins", "...");
 			pluginsLoader.initAllPlugins();
 			loading("Post-Initialising plugins", "...");
 			pluginsLoader.postInitAllPlugins();
 			
-			while(!postDone){
-				// Wait, but do not eat up all of CPU
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// Ignored
-				}
-			}
-			
 			// End timer
 			Log.info(TAG, "Finished thread creation in " + U.endTimer(all) + " seconds.");
 			loaded = true;
-			
-			// Set main menu
-			setScreen(new MainMenu());
 		}).start();
 		
 		super.setScreen(new LoadingScreen());		
@@ -160,6 +176,18 @@ public class FOE extends Game{
 	public void loading(String title, String sub){
 		FOE.loadingText = title;
 		FOE.loadingSubText = sub;
+	}
+	
+	public void setScreen(Screen screen){
+		
+		// Custom implementation (WIP)
+		
+		if (this.screen != null) this.screen.hide();
+		this.screen = screen;
+		if (this.screen != null) {
+			this.screen.show();
+			this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		}		
 	}
 	
 	public void update(float delta){

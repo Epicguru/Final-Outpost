@@ -2,6 +2,7 @@ package co.uk.epicguru.API;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -80,6 +81,39 @@ public final class U {
 		}
 		File[] newFiles = new File[files.size()];
 		return files.toArray(newFiles);
+	}
+	
+	public static File[] getAssetFolders(File root){
+		if(root == null){
+			Log.error(TAG, "Root to scan was null!");
+			return null;
+		}
+		if(!root.exists()){
+			Log.error(TAG, "Root to scan does not exist -" + root.getAbsolutePath());
+			return null;
+		}
+		if(!root.isDirectory()){
+			Log.error(TAG, "Root to scan was not a directory! -" + root.getAbsolutePath());
+			return null;
+		}
+		
+		ArrayList<File> files = new ArrayList<>();
+		
+		for(File file : root.listFiles()){
+			if(!file.isDirectory())
+				continue;
+			String[] names = file.list();
+			if(names == null)
+					continue;
+			for(String name : names){
+				if(name.equals("assets")){
+					files.add(new File(file.getAbsolutePath() + '\\' + name));
+					continue;
+				}
+			}
+		}
+		
+		return files.toArray(new File[files.size()]);
 	}
 	
 	/**
