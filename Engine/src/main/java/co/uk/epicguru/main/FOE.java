@@ -60,13 +60,15 @@ public class FOE extends Game{
 		INSTANCE = new FOE();
 		
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setTitle("Final Outpost : Loading");
+		config.setTitle("Final Outpost - Loading...");
+		
+		System.out.println("This is you game engine speaking, today we will be running on a nice " + Lwjgl3ApplicationConfiguration.getPrimaryMonitor().name);
 		new Lwjgl3Application(INSTANCE, config);
 		
-		System.gc();
+		//System.gc();
 		
 		// Done
-		System.exit(0);
+		//System.exit(0);
 	}
 	
 	public void create() {
@@ -84,8 +86,20 @@ public class FOE extends Game{
 		
 		loading("Loading Final Outpost Engine", "Hello there!");
 		
+//		loading("Finding game icons", "Only be a sec!\n(If you can read me then you have a potato PC)");
+//		Pixmap mid = new Pixmap(Gdx.files.internal("assets/32.png"));
+//		Pixmap small = new Pixmap(Gdx.files.internal("assets/32.png"));
+//		ByteBuffer[] icons = new ByteBuffer[] {
+//				mid.getPixels(),
+//				small.getPixels()
+//		};
+//		Display.setIcon(icons);
+		
 		U.startTimer(all);
 		new Thread(() -> {
+			
+			// Icon
+			
 			
 			// Load plugins
 			U.startTimer(plugins);
@@ -101,7 +115,6 @@ public class FOE extends Game{
 			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
 					
 			// Load assets
-			// TODO Better place (or implementation) for this?
 			U.startTimer(pluginsExtraction);
 			loading("Loading plugin assets", "...");
 			pluginsLoader.extractAllAssets();	
@@ -193,6 +206,8 @@ public class FOE extends Game{
 	public void update(float delta){
 		
 		camera.update();
+		
+		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
 		
 		if(getScreen() != null && getScreen() instanceof GameScreen) ((GameScreen)getScreen()).update(delta);
 	}

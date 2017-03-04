@@ -7,8 +7,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,9 +41,9 @@ public class PackerTool extends Game{
 	public static void main(String[] args) {
 		Game instance = new PackerTool();
 		
-		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setTitle("Final Outpost - Packer tool");
-		new Lwjgl3Application(instance, config);
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Final Outpost - Packer tool";
+		new LwjglApplication(instance, config);
 		
 		System.exit(0);
 	}
