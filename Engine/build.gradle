@@ -9,6 +9,7 @@ dependencies{
 
     // Compile for desktop
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.4"
+    //compile "com.badlogicgames.gdx:gdx-backend-lwjgl:1.9.4"
     compile "com.badlogicgames.gdx:gdx-platform:1.9.4:natives-desktop"
     compile "com.badlogicgames.gdx:gdx-tools:1.9.4"
     compile "ro.fortsoft.pf4j:pf4j:1.1.1"
