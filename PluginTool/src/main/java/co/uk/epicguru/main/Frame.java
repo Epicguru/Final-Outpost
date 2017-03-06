@@ -1,41 +1,45 @@
 package co.uk.epicguru.main;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.JCheckBoxMenuItem;
-import java.awt.Color;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.JSplitPane;
+import javax.swing.JLabel;
 
 public class Frame extends JFrame {
 
 	public static final long serialVersionUID = -3853677044691076714L;
 	public JPanel contentPane;
-	public JTextField pluginID;
-	public JTextField pluginProvider;
-	public JTextField pluginVersion;
-	public JTree tree;
 	public JMenuItem fromFileMenu;
 	public JMenuItem saveMenuButton;
 	public JCheckBoxMenuItem autoSave;
 	public JMenu recentMenu;
 	public JMenuItem newMenuButton;
+	private JTree paths;
+	private JTextPane codeInfo;
 
 	/**
 	 * Launch the application.
@@ -75,6 +79,7 @@ public class Frame extends JFrame {
 		setContentPane(contentPane);
 		
 		JButton refresh = new JButton("");
+		refresh.setToolTipText("Refresh All");
 		refresh.setBounds(10, 36, 26, 20);
 		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -83,40 +88,6 @@ public class Frame extends JFrame {
 		refresh.setIcon(new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
 		contentPane.setLayout(null);
 		contentPane.add(refresh);
-		
-		JLabel lbPluginID = new JLabel("Plugin ID");
-		lbPluginID.setBounds(10, 67, 97, 14);
-		contentPane.add(lbPluginID);
-		
-		pluginID = new JTextField();
-		pluginID.setToolTipText("The non changeable, string ID for your plugin.");
-		pluginID.setColumns(10);
-		pluginID.setBounds(141, 67, 86, 20);
-		contentPane.add(pluginID);
-		
-		JLabel lbPluginProvider = new JLabel("Plugin Provider");
-		lbPluginProvider.setBounds(10, 97, 97, 14);
-		contentPane.add(lbPluginProvider);
-		
-		pluginProvider = new JTextField();
-		pluginProvider.setToolTipText("Your name here :D ");
-		pluginProvider.setColumns(10);
-		pluginProvider.setBounds(141, 94, 86, 20);
-		contentPane.add(pluginProvider);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 153, 217, 254);
-		contentPane.add(scrollPane);
-		
-		tree = new JTree();
-		scrollPane.setViewportView(tree);
-		tree.setModel(new DefaultTreeModel(
-			new DefaultMutableTreeNode("TEMP") {
-				{
-					
-				}
-			}
-		));
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
@@ -148,15 +119,50 @@ public class Frame extends JFrame {
 		newMenuButton = new JMenuItem("New Plugin");
 		newMenu.add(newMenuButton);
 		
-		JLabel lbPluginVersion = new JLabel("Plugin Game Version");
-		lbPluginVersion.setBounds(10, 125, 121, 14);
-		contentPane.add(lbPluginVersion);
+		JTabbedPane container = new JTabbedPane(JTabbedPane.TOP);
+		container.setBounds(10, 67, 667, 340);
+		contentPane.add(container);
 		
-		pluginVersion = new JTextField();
-		pluginVersion.setToolTipText("The GAME VERSION that the plugin is built for");
-		pluginVersion.setColumns(10);
-		pluginVersion.setBounds(141, 122, 86, 20);
-		contentPane.add(pluginVersion);
+		JTabbedPane basics = new JTabbedPane(JTabbedPane.TOP);
+		basics.setToolTipText("Basic Info");
+		container.addTab("", new ImageIcon(Frame.class.getResource("/javax/swing/plaf/metal/icons/ocean/info.png")), basics, null);
+		
+		JPanel panel = new JPanel();
+		basics.addTab("Basic Info", null, panel, null);
+		panel.setLayout(null);
+		
+		JLabel lblPluginId = new JLabel("Plugin ID");
+		lblPluginId.setBounds(10, 11, 82, 14);
+		panel.add(lblPluginId);
+		
+		JTabbedPane code = new JTabbedPane(JTabbedPane.TOP);
+		code.setToolTipText("Code & Analysis");
+		container.addTab("", new ImageIcon(Frame.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")), code, null);
+		
+		JPanel codePanel = new JPanel();
+		codePanel.setToolTipText("");
+		code.addTab("Code & Analysis", null, codePanel, null);
+		codePanel.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 0, 329, 266);
+		codePanel.add(scrollPane);
+		
+		paths = new JTree();
+		paths.setBorder(new LineBorder(new Color(255, 255, 255), 0));
+		paths.setModel(new DefaultTreeModel(
+			new DefaultMutableTreeNode("Plugin Root") {
+				{
+				}
+			}
+		));
+		scrollPane.setViewportView(paths);
+		
+		codeInfo = new JTextPane();
+		codeInfo.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
+		codeInfo.setEditable(false);
+		codeInfo.setBounds(328, 0, 329, 266);
+		codePanel.add(codeInfo);
 		
 		Code.run(this);
 	}

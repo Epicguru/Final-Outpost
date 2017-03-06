@@ -68,12 +68,13 @@ public class Code {
 		try {
 			File props = new File("Plugin Helper/Properties.txt");
 			JLineWriter writer = new JLineWriter(props);
-			writer.writeLine("Auto Save", frame.autoSave.isSelected());
 			String[] strings = new String[frame.recentMenu.getItemCount()];
 			for(int i = 0; i < strings.length; i++){
 				strings[i] = frame.recentMenu.getItem(i).getText();
 			}
+			writer.writeLine("Auto Save", frame.autoSave.isSelected());
 			writer.writeLine("Recent", strings);
+			writer.save();
 
 			System.out.println("Exit");
 		} catch (Exception e) {
