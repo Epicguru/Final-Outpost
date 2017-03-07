@@ -22,7 +22,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,8 +36,9 @@ public class Frame extends JFrame {
 	public JCheckBoxMenuItem autoSave;
 	public JMenu recentMenu;
 	public JMenuItem newMenuButton;
-	private JTree paths;
-	private JTextPane codeInfo;
+	public JTree paths;
+	public JTextPane codeInfo;
+	public JButton refresh;
 
 	/**
 	 * Launch the application.
@@ -84,7 +84,7 @@ public class Frame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JButton refresh = new JButton("");
+		refresh = new JButton("");
 		refresh.setToolTipText("Refresh All");
 		refresh.setBounds(10, 36, 26, 20);
 		refresh.addActionListener(new ActionListener() {
@@ -129,29 +129,21 @@ public class Frame extends JFrame {
 		container.setBounds(10, 67, 667, 340);
 		contentPane.add(container);
 		
-		JTabbedPane basics = new JTabbedPane(JTabbedPane.TOP);
-		basics.setToolTipText("Basic Info");
-		container.addTab("", new ImageIcon(Frame.class.getResource("/javax/swing/plaf/metal/icons/ocean/info.png")), basics, null);
-		
-		JPanel panel = new JPanel();
-		basics.addTab("Basic Info", null, panel, null);
-		panel.setLayout(null);
+		JPanel basicPanel = new JPanel();
+		container.addTab("Basic", new ImageIcon(Frame.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")), basicPanel, null);
+		basicPanel.setLayout(null);
 		
 		JLabel lblPluginId = new JLabel("Plugin ID");
 		lblPluginId.setBounds(10, 11, 82, 14);
-		panel.add(lblPluginId);
-		
-		JTabbedPane code = new JTabbedPane(JTabbedPane.TOP);
-		code.setToolTipText("Code & Analysis");
-		container.addTab("", new ImageIcon(Frame.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")), code, null);
+		basicPanel.add(lblPluginId);
 		
 		JPanel codePanel = new JPanel();
+		container.addTab("New tab", null, codePanel, null);
 		codePanel.setToolTipText("");
-		code.addTab("Code & Analysis", null, codePanel, null);
 		codePanel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 329, 266);
+		scrollPane.setBounds(0, 0, 329, 310);
 		codePanel.add(scrollPane);
 		
 		paths = new JTree();
@@ -167,7 +159,7 @@ public class Frame extends JFrame {
 		codeInfo = new JTextPane();
 		codeInfo.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
 		codeInfo.setEditable(false);
-		codeInfo.setBounds(328, 0, 329, 266);
+		codeInfo.setBounds(328, 0, 334, 310);
 		codePanel.add(codeInfo);
 		
 		Code.run(this);
