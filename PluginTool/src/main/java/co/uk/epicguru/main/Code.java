@@ -4,9 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+
+import org.apache.commons.io.FileUtils;
 
 import co.uk.epicguru.IO.JLIOException;
 import co.uk.epicguru.IO.JLineParsers;
@@ -132,8 +141,96 @@ public class Code {
 		}else{
 			frame.saveMenuButton.setEnabled(true);
 			frame.refresh.setEnabled(true);
+			frame.paths.setModel(new DefaultTreeModel(addNodes(new DefaultMutableTreeNode(), currentPlugin)));
+			for(TreeSelectionListener listener : frame.paths.getListeners(TreeSelectionListener.class)){
+				frame.paths.removeTreeSelectionListener(listener);
+			}
+			frame.paths.addTreeSelectionListener(new TreeSelectionListener() {
+				public void valueChanged(TreeSelectionEvent e) {
+					
+					if(currentPlugin == null){
+						return;
+					}
+					
+					TreeNode[] path = ((DefaultMutableTreeNode)e.getPath().getLastPathComponent()).getPath();
+					StringBuilder stringBuilder = new StringBuilder();
+					stringBuilder.append(currentPlugin.getAbsolutePath() + '\\');
+					int index = -1;
+					for(TreeNode node : path){
+						index++;
+						if(index < 2){
+							continue;
+						}
+						stringBuilder.append(node.toString());
+						if(!node.toString().equals(e.getPath().getLastPathComponent().toString()))
+							stringBuilder.append('\\');
+					}
+					System.out.println(stringBuilder.toString());
+					File file = new File(stringBuilder.toString());
+					
+					frame.codeInfo.setText("");
+					
+					if(!file.exists()){
+						frame.codeInfo.setText("File or folder could not be found!");
+						return;
+					}
+					
+					if(file.isDirectory()){
+						StringBuilder str = new StringBuilder();
+						str.append("Directory '");
+						str.append(file.getName());
+						str.append('\'');
+						str.append('\n');
+						
+						frame.codeInfo.setText(str.toString());					
+						
+					}else{
+						frame.codeInfo.setText("File '" + file.getName() + "'\n" + FileUtils.sizeOf(file) / (float)FileUtils.ONE_MB + " megabytes.");
+					}
+				}
+			});
 		}
 	}
+	
+	public static int getFiles(Frame frame, File file, String name){
+		if(frame.folderStats.isSelected())
+			return FileUtils.listFiles(file, new String[]{name}, true).size();
+		else
+			return -1;
+	}
+	
+	 @SuppressWarnings({ "unchecked", "rawtypes" })
+ 	public static DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
+		    String curPath = dir.getPath();
+		    DefaultMutableTreeNode curDir = new DefaultMutableTreeNode(dir.getName());
+		    if (curTop != null) { // should only be null at root
+		      curTop.add(curDir);
+		    }
+		    Vector ol = new Vector();
+		    String[] tmp = dir.list();
+		    for (int i = 0; i < tmp.length; i++)
+		      ol.addElement(tmp[i]);
+		    Collections.sort(ol, String.CASE_INSENSITIVE_ORDER);
+		    File f;
+		    Vector files = new Vector();
+		    // Make two passes, one for Dirs and one for Files. This is #1.
+		    for (int i = 0; i < ol.size(); i++) {
+		      String thisObject = (String) ol.elementAt(i);
+		      String newPath;
+		      if (curPath.equals("."))
+		        newPath = thisObject;
+		      else
+		        newPath = curPath + File.separator + thisObject;
+		      if ((f = new File(newPath)).isDirectory())
+		        addNodes(curDir, f);
+		      else
+		        files.addElement(thisObject);
+		    }
+		    // Pass two: for files.
+		    for (int fnum = 0; fnum < files.size(); fnum++)
+		      curDir.add(new DefaultMutableTreeNode(files.elementAt(fnum)));
+		    return curDir;
+		  }
 	
 	public static void recent(String file, Frame frame){
 		File file2 = new File(file);

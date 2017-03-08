@@ -39,6 +39,7 @@ public class Frame extends JFrame {
 	public JTree paths;
 	public JTextPane codeInfo;
 	public JButton refresh;
+	public JCheckBoxMenuItem folderStats;
 
 	/**
 	 * Launch the application.
@@ -107,9 +108,6 @@ public class Frame extends JFrame {
 		saveMenuButton = new JMenuItem("Save");
 		saveMenu.add(saveMenuButton);
 		
-		autoSave = new JCheckBoxMenuItem("Auto Save");
-		saveMenu.add(autoSave);
-		
 		JMenu openMenu = new JMenu("Open");
 		menuBar.add(openMenu);
 		
@@ -125,6 +123,16 @@ public class Frame extends JFrame {
 		newMenuButton = new JMenuItem("New Plugin");
 		newMenu.add(newMenuButton);
 		
+		JMenu optionsMenu = new JMenu("Options");
+		menuBar.add(optionsMenu);
+		
+		autoSave = new JCheckBoxMenuItem("Auto Save");
+		optionsMenu.add(autoSave);
+		
+		folderStats = new JCheckBoxMenuItem("Folder stats");
+		folderStats.setSelected(true);
+		optionsMenu.add(folderStats);
+		
 		JTabbedPane container = new JTabbedPane(JTabbedPane.TOP);
 		container.setBounds(10, 67, 667, 340);
 		contentPane.add(container);
@@ -138,7 +146,7 @@ public class Frame extends JFrame {
 		basicPanel.add(lblPluginId);
 		
 		JPanel codePanel = new JPanel();
-		container.addTab("New tab", null, codePanel, null);
+		container.addTab("Code", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), codePanel, null);
 		codePanel.setToolTipText("");
 		codePanel.setLayout(null);
 		
@@ -151,6 +159,7 @@ public class Frame extends JFrame {
 		paths.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("Plugin Root") {
 				{
+					add(new DefaultMutableTreeNode("Load a plugin"));
 				}
 			}
 		));
