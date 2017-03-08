@@ -26,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.JTextField;
 
 public class Frame extends JFrame {
 
@@ -40,6 +41,15 @@ public class Frame extends JFrame {
 	public JTextPane codeInfo;
 	public JButton refresh;
 	public JCheckBoxMenuItem folderStats;
+	public JTextPane codeText;
+	public JLabel pluginName;
+	public JTextField pluginID;
+	public JLabel lbPluginVersion;
+	public JTextField pluginVersion;
+	public JLabel lbPluginProvider;
+	public JTextField pluginProvider;
+	public JLabel lbPluginClass;
+	public JTextField pluginClass;
 
 	/**
 	 * Launch the application.
@@ -145,6 +155,38 @@ public class Frame extends JFrame {
 		lblPluginId.setBounds(10, 11, 82, 14);
 		basicPanel.add(lblPluginId);
 		
+		pluginID = new JTextField();
+		pluginID.setBounds(99, 11, 198, 20);
+		basicPanel.add(pluginID);
+		pluginID.setColumns(10);
+		
+		lbPluginVersion = new JLabel("Plugin Version");
+		lbPluginVersion.setBounds(10, 39, 82, 14);
+		basicPanel.add(lbPluginVersion);
+		
+		pluginVersion = new JTextField();
+		pluginVersion.setColumns(10);
+		pluginVersion.setBounds(99, 39, 198, 20);
+		basicPanel.add(pluginVersion);
+		
+		lbPluginProvider = new JLabel("Plugin Provider");
+		lbPluginProvider.setBounds(10, 67, 82, 14);
+		basicPanel.add(lbPluginProvider);
+		
+		pluginProvider = new JTextField();
+		pluginProvider.setColumns(10);
+		pluginProvider.setBounds(99, 67, 198, 20);
+		basicPanel.add(pluginProvider);
+		
+		lbPluginClass = new JLabel("Plugin Main Class");
+		lbPluginClass.setBounds(10, 95, 82, 14);
+		basicPanel.add(lbPluginClass);
+		
+		pluginClass = new JTextField();
+		pluginClass.setColumns(10);
+		pluginClass.setBounds(99, 95, 198, 20);
+		basicPanel.add(pluginClass);
+		
 		JPanel codePanel = new JPanel();
 		container.addTab("Code", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), codePanel, null);
 		codePanel.setToolTipText("");
@@ -159,17 +201,34 @@ public class Frame extends JFrame {
 		paths.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("Plugin Root") {
 				{
-					add(new DefaultMutableTreeNode("Load a plugin"));
+					add(new DefaultMutableTreeNode(""));
 				}
 			}
 		));
 		scrollPane.setViewportView(paths);
 		
 		codeInfo = new JTextPane();
+		codeInfo.setBounds(328, 0, 334, 310);
 		codeInfo.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
 		codeInfo.setEditable(false);
-		codeInfo.setBounds(328, 0, 334, 310);
 		codePanel.add(codeInfo);
+		
+		JPanel preview = new JPanel();
+		container.addTab("Preview", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Background-Color-Black.png")), preview, null);
+		preview.setLayout(null);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(0, 0, 662, 310);
+		preview.add(scrollPane_1);
+		
+		codeText = new JTextPane();
+		codeText.setContentType("text/code");
+		scrollPane_1.setViewportView(codeText);
+		codeText.setEditable(false);
+		
+		pluginName = new JLabel("Load a plugin using Open> From File...");
+		pluginName.setBounds(46, 36, 247, 20);
+		contentPane.add(pluginName);
 		
 		Code.run(this);
 	}

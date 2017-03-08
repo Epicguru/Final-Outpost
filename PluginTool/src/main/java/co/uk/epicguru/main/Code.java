@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -16,6 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import co.uk.epicguru.IO.JLIOException;
 import co.uk.epicguru.IO.JLineParsers;
@@ -50,9 +53,11 @@ public class Code {
 		reader.readAllLines();
 
 		boolean autoSave = reader.read("Auto Save") == null ? false : (boolean)reader.read("Auto Save");
+		boolean fileStats = reader.read("File Stats") == null ? true : (boolean)reader.read("File Stats");
 		String[] recent = reader.read("Recent") == null ? new String[0] : (String[])reader.read("Recent");
 
 		frame.autoSave.setSelected(autoSave);
+		frame.folderStats.setSelected(fileStats);
 		
 		frame.recentMenu.removeAll();
 		for(String string : recent){
@@ -72,6 +77,14 @@ public class Code {
 			});
 			
 		}
+		
+		frame.saveMenuButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(currentPlugin != null){
+					save(frame);
+				}
+			}
+		});		
 		
 		refresh(frame);
 
@@ -97,6 +110,7 @@ public class Code {
 					String result = load(browser.getSelectedFile());
 					System.out.println("Result : " + (result == null ? "Good!" : result));
 					if(result == null){
+						save(frame);
 						currentPlugin = browser.getSelectedFile();
 						frame.recentMenu.add(new JMenuItem(browser.getSelectedFile().getAbsolutePath())).addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
@@ -130,6 +144,8 @@ public class Code {
 	}
 	
 	public static void refresh(Frame frame){
+		frame.codeInfo.setText("");
+		frame.codeText.setText("");
 		if(frame.recentMenu.getItemCount() == 0){
 			frame.recentMenu.setEnabled(false);
 		}else{
@@ -138,13 +154,20 @@ public class Code {
 		if(currentPlugin == null){
 			frame.saveMenuButton.setEnabled(false);
 			frame.refresh.setEnabled(false);
+			frame.paths.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Root - Unable to load...")));
 		}else{
+			boolean worked = getPluginInfo(frame);
+			if(!worked){
+				currentPlugin = null;
+				refresh(frame);
+				return;
+			}
 			frame.saveMenuButton.setEnabled(true);
 			frame.refresh.setEnabled(true);
-			frame.paths.setModel(new DefaultTreeModel(addNodes(new DefaultMutableTreeNode(), currentPlugin)));
 			for(TreeSelectionListener listener : frame.paths.getListeners(TreeSelectionListener.class)){
 				frame.paths.removeTreeSelectionListener(listener);
 			}
+			frame.paths.setModel(new DefaultTreeModel(addNodes(new DefaultMutableTreeNode(currentPlugin.getName()), currentPlugin)));
 			frame.paths.addTreeSelectionListener(new TreeSelectionListener() {
 				public void valueChanged(TreeSelectionEvent e) {
 					
@@ -176,6 +199,7 @@ public class Code {
 					}
 					
 					if(file.isDirectory()){
+						frame.codeText.setText("");
 						StringBuilder str = new StringBuilder();
 						str.append("Directory '");
 						str.append(file.getName());
@@ -230,7 +254,44 @@ public class Code {
 						frame.codeInfo.setText(str.toString());					
 						
 					}else{
-						frame.codeInfo.setText("File '" + file.getName() + "'\n" + String.format("%.2f", (FileUtils.sizeOf(file) / (float)FileUtils.ONE_MB)) + " megabytes.");
+						StringBuilder str = new StringBuilder();
+						str.append("File '");
+						str.append(file.getName());
+						str.append('\'');
+						str.append('\n');
+						str.append("Size : ");
+						str.append(String.format("%.2f", (FileUtils.sizeOf(file) / (float)FileUtils.ONE_MB)));
+						str.append(" MB.");
+						str.append('\n');
+						frame.codeInfo.setText("Hey!");
+						if(FilenameUtils.isExtension(file.getPath(), "png")){
+							str.append("TEXTURE FILE");
+							str.append('\n');
+						}
+						else if(FilenameUtils.isExtension(file.getPath(), "java") || FilenameUtils.isExtension(file.getPath(), "txt") || FilenameUtils.isExtension(file.getPath(), "gradle")){
+							str.append("SOURCE FILE");
+							str.append('\n');
+							try {
+								frame.codeText.setText(FileUtils.readFileToString(file, Charset.defaultCharset()));
+							} catch (IOException e1) {
+								e1.printStackTrace();
+								StringBuilder str2 = new StringBuilder();
+								str2.append(e.getClass().getSimpleName());
+								str2.append(" - ");
+								str2.append(e1.getMessage());
+								str2.append('\n');
+								for(StackTraceElement stackTraceElement : e1.getStackTrace()){
+									str2.append('\t');
+									str2.append(stackTraceElement.toString());
+								}
+								frame.codeText.setText(str2.toString());
+							}
+						}
+						else if(FilenameUtils.isExtension(file.getPath(), "CLASS")){
+							str.append("BINARY FILE");
+							str.append('\n');
+						}
+						frame.codeInfo.setText(str.toString());
 					}
 				}
 			});
@@ -249,6 +310,65 @@ public class Code {
 			return FileUtils.listFiles(file, new String[]{name}, true).size();
 		else
 			return -1;
+	}
+	
+	public static boolean getPluginInfo(Frame frame){
+		String whereItShouldBe = currentPlugin.getAbsolutePath() + File.separator + "build.gradle";
+		File file = new File(whereItShouldBe);
+		
+		frame.pluginName.setText("Editing - Unable to load :(");
+		
+		if(!file.exists())
+			return false;
+		if(file.isDirectory())
+			return false;
+		if(!file.canRead())
+			return false;
+		
+		try {
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			String name = null;
+			String version = null;
+			String provider = null;
+			String pluginClass = null;
+			for(String line : lines){
+				if(line.contains("project.ext.pluginName")){
+					System.out.print("Found plugin name : ");
+					name = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+					System.out.println(name);
+				}else if(line.contains("project.ext.pluginVersion")){
+					System.out.print("Found plugin version : ");
+					version = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+					System.out.println(version);
+				}
+				else if(line.contains("project.ext.pluginProvider")){
+					System.out.print("Found plugin provider : ");
+					provider = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+					System.out.println(provider);
+				}
+				else if(line.contains("project.ext.pluginClass")){
+					System.out.print("Found plugin main class : ");
+					pluginClass = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+					System.out.println(pluginClass);
+				}
+			}
+			
+			if(name == null || version == null || provider == null || pluginClass == null)
+				return false;
+			
+			// TODO
+			frame.pluginName.setText("Editing - " + name);
+			frame.pluginID.setText(name);
+			frame.pluginProvider.setText(provider);
+			frame.pluginVersion.setText(version);
+			frame.pluginClass.setText(pluginClass);
+			
+			
+		} catch (IOException e) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -285,6 +405,9 @@ public class Code {
 		  }
 	
 	public static void recent(String file, Frame frame){
+		
+		save(frame);
+		
 		File file2 = new File(file);
 		System.out.println("Opening recent..." + file2.getAbsolutePath());
 		
@@ -315,7 +438,7 @@ public class Code {
 	}
 
 	public static void save(Frame frame){
-		if(currentPlugin == null)
+		if(currentPlugin == null || !currentPlugin.exists())
 			return;
 
 		// END
@@ -327,9 +450,38 @@ public class Code {
 				strings[i] = frame.recentMenu.getItem(i).getText();
 			}
 			writer.writeLine("Auto Save", frame.autoSave.isSelected());
+			writer.writeLine("File Stats", frame.folderStats.isSelected());
 			writer.writeLine("Recent", strings);
 			writer.save();
 
+			String whereItShouldBe = currentPlugin.getAbsolutePath() + File.separator + "build.gradle";
+			File file = new File(whereItShouldBe);
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			int[] indexes = new int[4];
+
+			int i = 0;
+			for(String line : lines){
+				if(line.contains("project.ext.pluginName")){
+					indexes[0] = i;
+				}else if(line.contains("project.ext.pluginVersion")){
+					indexes[1] = i;
+				}
+				else if(line.contains("project.ext.pluginProvider")){
+					indexes[2] = i;
+				}
+				else if(line.contains("project.ext.pluginClass")){
+					indexes[3] = i;
+				}
+				i++;
+			}
+			
+			lines.set(indexes[0], "project.ext.pluginName = \"" + frame.pluginID.getText().trim() + '"');
+			lines.set(indexes[1], "project.ext.pluginVersion = \"" + frame.pluginVersion.getText().trim() + '"');
+			lines.set(indexes[2], "project.ext.pluginProvider = \"" + frame.pluginProvider.getText().trim() + '"');
+			lines.set(indexes[3], "project.ext.pluginClass = \"" + frame.pluginClass.getText().trim() + '"');
+
+			FileUtils.writeLines(file, lines, false);
+			
 			System.out.println("Exit");
 		} catch (Exception e) {
 			e.printStackTrace();

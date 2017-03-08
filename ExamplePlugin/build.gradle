@@ -2,7 +2,7 @@
 // Plugin properties
 project.ext.pluginName = "ExamplePlugin"
 project.ext.pluginVersion = "0.0.0"
-project.ext.pluginProvider = "You"
+project.ext.pluginProvider = "You, or your company!"
 project.ext.pluginClass = "com.example.main.Main"
 
 configurations{
