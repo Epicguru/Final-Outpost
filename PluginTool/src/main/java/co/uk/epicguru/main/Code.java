@@ -50,7 +50,7 @@ public class Code {
 		reader.readAllLines();
 
 		boolean autoSave = reader.read("Auto Save") == null ? false : (boolean)reader.read("Auto Save");
-		String[] recent = reader.read("Recent") == null ? null : ((String[])reader.read("Recent")).length == 0 ? null : (String[])reader.read("Recent");
+		String[] recent = reader.read("Recent") == null ? new String[0] : (String[])reader.read("Recent");
 
 		frame.autoSave.setSelected(autoSave);
 		
@@ -182,14 +182,66 @@ public class Code {
 						str.append('\'');
 						str.append('\n');
 						
+						str.append("Size : ");
+						str.append(String.format("%.2f", (FileUtils.sizeOfDirectory(file) / (float)FileUtils.ONE_MB)));
+						str.append(" MB.");
+						str.append('\n');
+						
+						int javaFiles = getFiles(frame, file, "java");
+						int classFiles = getFiles(frame, file, "class");
+						int textureFiles = getFiles(frame, file, "png");
+						boolean doneOne = false;
+						
+						if(javaFiles > 0){
+							str.append(javaFiles);
+							str.append(" java files.");
+							str.append('\n');
+							doneOne = true;
+						}
+						if(classFiles > 0){
+							str.append(classFiles);
+							str.append(" binary files.");
+							str.append('\n');
+							doneOne = true;
+						}
+						if(textureFiles > 0){
+							str.append(textureFiles);
+							str.append(" texture files.");
+							str.append('\n');
+							doneOne = true;
+						}
+						
+						int total = getAllFiles(frame, file);
+						int types = javaFiles + classFiles + textureFiles;
+						int remainder = total - types;
+						if(doneOne && remainder > 0 && total > 0){
+							str.append(remainder);
+							str.append(" other files.");
+							str.append('\n');
+							str.append("TOTAL FILES : ");
+							str.append(total);
+							str.append('\n');
+						}else{
+							str.append("TOTAL FILES : ");
+							str.append(total);
+							str.append('\n');
+						}
+						
 						frame.codeInfo.setText(str.toString());					
 						
 					}else{
-						frame.codeInfo.setText("File '" + file.getName() + "'\n" + FileUtils.sizeOf(file) / (float)FileUtils.ONE_MB + " megabytes.");
+						frame.codeInfo.setText("File '" + file.getName() + "'\n" + String.format("%.2f", (FileUtils.sizeOf(file) / (float)FileUtils.ONE_MB)) + " megabytes.");
 					}
 				}
 			});
 		}
+	}
+	
+	public static int getAllFiles(Frame frame, File file){
+		if(frame.folderStats.isSelected())
+			return FileUtils.listFiles(file, null, true).size();
+		else
+			return -1;
 	}
 	
 	public static int getFiles(Frame frame, File file, String name){
