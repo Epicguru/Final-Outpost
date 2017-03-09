@@ -2,11 +2,19 @@ package co.uk.epicguru.IO;
 
 import java.util.ArrayList;
 
-import co.uk.epicguru.API.U;
-import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.IO.parsers.JLineParser;
-import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.main.FOE;
+import co.uk.epicguru.IO.parsers.instances.BooleanArrayParser;
+import co.uk.epicguru.IO.parsers.instances.BooleanParser;
+import co.uk.epicguru.IO.parsers.instances.ByteArrayParser;
+import co.uk.epicguru.IO.parsers.instances.ByteParser;
+import co.uk.epicguru.IO.parsers.instances.FloatArrayParser;
+import co.uk.epicguru.IO.parsers.instances.FloatParser;
+import co.uk.epicguru.IO.parsers.instances.IntegerArrayParser;
+import co.uk.epicguru.IO.parsers.instances.IntegerParser;
+import co.uk.epicguru.IO.parsers.instances.LongArrayParser;
+import co.uk.epicguru.IO.parsers.instances.LongParser;
+import co.uk.epicguru.IO.parsers.instances.StringArrayParser;
+import co.uk.epicguru.IO.parsers.instances.StringParser;
 
 public final class JLineParsers {
 	
@@ -18,7 +26,6 @@ public final class JLineParsers {
 	 */
  	public static void clearParsers(){
 		parsers.clear();
-		Log.debug("Parsers", "Cleared parsers");
 	}
 	
  	/**
@@ -27,16 +34,19 @@ public final class JLineParsers {
 	public static void loadParsers(){
 		
 		clearParsers();
+		parsers.add(new BooleanArrayParser());
+		parsers.add(new BooleanParser());
+		parsers.add(new ByteArrayParser());
+		parsers.add(new ByteParser());
+		parsers.add(new FloatArrayParser());
+		parsers.add(new FloatParser());
+		parsers.add(new IntegerArrayParser());
+		parsers.add(new IntegerParser());
+		parsers.add(new LongArrayParser());
+		parsers.add(new LongParser());
+		parsers.add(new StringArrayParser());
+		parsers.add(new StringParser());
 		
-		int old = 0;
-		for(FinalOutpostPlugin plugin : FOE.pluginsLoader.getAllPlugins()){
-			for(Object o : FOE.pluginsLoader.getExtensions(JLineParser.class, plugin.getWrapper().getPluginId())){
-				parsers.add((JLineParser<?>)o);
-			}
-			Log.info("Parsers", "Plugin '" + plugin.getWrapper().getPluginId() + "' added " + (parsers.size() - old) + " parsers.");
-		}
-		
-		Log.info("Parsers", "Loaded Parsers : [" + U.prettify(parsers.toArray(new JLineParser<?>[parsers.size()])) + "]");
 	}
 	
 	/**
@@ -61,12 +71,10 @@ public final class JLineParsers {
 		}
 		
 		if(temps.isEmpty()){
-			Log.error("", o.getClass().getName());
 			throw new JLIOException("No parser found for class " + o.getClass().getName());
 		}
 		
 		JLineParser<?> value = temps.get(0);
-		Log.error("Parsers", "Could not find perfect match for class " + o.getClass().getName() + ", using " + value.getType().getName() + " as a substitute.");
 		temps.clear();
 		return value;
 	}

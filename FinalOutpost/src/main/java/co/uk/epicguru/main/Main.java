@@ -22,7 +22,7 @@ public class Main extends FinalOutpostPlugin{
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public Main(PluginWrapper wrapper) {
-		super(wrapper, "Final Outpost Core", version);
+		super(wrapper, "Core", version);
 		INSTANCE = this;
 	}
 
