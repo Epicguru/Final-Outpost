@@ -33,7 +33,7 @@ public final class JLineParsers {
 			for(Object o : FOE.pluginsLoader.getExtensions(JLineParser.class, plugin.getWrapper().getPluginId())){
 				parsers.add((JLineParser<?>)o);
 			}
-			Log.debug("Parsers", "Plugin '" + plugin.getWrapper().getPluginId() + "' added " + (parsers.size() - old) + " parsers.");
+			Log.info("Parsers", "Plugin '" + plugin.getWrapper().getPluginId() + "' added " + (parsers.size() - old) + " parsers.");
 		}
 		
 		Log.info("Parsers", "Loaded Parsers : [" + U.prettify(parsers.toArray(new JLineParser<?>[parsers.size()])) + "]");
