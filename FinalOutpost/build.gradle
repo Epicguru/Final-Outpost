@@ -33,8 +33,6 @@ jar{
 task plugin(type: Jar) {
     baseName = "${pluginName}"
     version = "${pluginVersion}"
-    System.out.println("Called from " + project.path + "/build/libs");
-    delete project.path + "/build/libs"
     into('classes'){
          with jar
     }   
@@ -47,4 +45,4 @@ task plugin(type: Jar) {
     extension('zip')
 }
 
-//assemble.dependsOn plugin
+assemble.dependsOn plugin

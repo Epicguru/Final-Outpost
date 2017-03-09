@@ -25,14 +25,16 @@ task copyPlugins(){
 			if(!p.name.equals("Engine")){
 			
 				System.out.println("Copying plugin from " + p.path)
+				if(!file('/' + p.name + '/build/libs/' + p.ext.pluginName + "-" + p.ext.pluginVersion + ".zip").exists()){
+					System.out.println("ERROR! Plugin's current version is unbuilt! Run task 'plugin' to build the plugin!")
+					throw new GradleException("The plugin's current version was not built! (" + p.name + ", " + p.ext.pluginVersion + ") Run the 'plugin' task to build all plugins.'")
+				}
 				copy{
 					from p.projectDir.toString() + "/build/libs"
 					into "Engine/Game Data/Plugins"
-					include "*.zip"
+					include p.ext.pluginName + "-" + p.ext.pluginVersion + ".zip"
 				}
-									
-					
-							
+				System.out.println(p.ext.pluginVersion);							
 			}
 		}
 	}
