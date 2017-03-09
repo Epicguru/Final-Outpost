@@ -146,6 +146,7 @@ public class Code {
 	public static void refresh(Frame frame){
 		frame.codeInfo.setText("");
 		frame.codeText.setText("");
+
 		if(frame.recentMenu.getItemCount() == 0){
 			frame.recentMenu.setEnabled(false);
 		}else{
@@ -155,6 +156,14 @@ public class Code {
 			frame.saveMenuButton.setEnabled(false);
 			frame.refresh.setEnabled(false);
 			frame.paths.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Root - Unable to load...")));
+			//frame.pluginName.setText("Unable to load plugin - Invalid syntax?");
+			frame.pluginClass.setText("");
+			frame.pluginID.setText("");
+			frame.pluginProvider.setText("");
+			frame.pluginUserName.setText("");
+			frame.pluginVersion.setText("");
+			frame.pluginUserVersion.setText("");
+			System.out.println("YAY");
 		}else{
 			boolean worked = getPluginInfo(frame);
 			if(!worked){
@@ -192,6 +201,7 @@ public class Code {
 					File file = new File(stringBuilder.toString());
 					
 					frame.codeInfo.setText("");
+					frame.codeText.setText("");
 					
 					if(!file.exists()){
 						frame.codeInfo.setText("File or folder could not be found!");
@@ -264,16 +274,31 @@ public class Code {
 						str.append(" MB.");
 						str.append('\n');
 						frame.codeInfo.setText("Hey!");
+						
+						boolean doIt = true;
+						
 						if(FilenameUtils.isExtension(file.getPath(), "png")){
 							str.append("TEXTURE FILE");
 							str.append('\n');
+							doIt = false;
 						}
 						else if(FilenameUtils.isExtension(file.getPath(), "java") || FilenameUtils.isExtension(file.getPath(), "txt") || FilenameUtils.isExtension(file.getPath(), "gradle")){
 							str.append("SOURCE FILE");
 							str.append('\n');
+						}
+						else if(FilenameUtils.isExtension(file.getPath(), "CLASS")){
+							str.append("BINARY FILE");
+							str.append('\n');
+							doIt = false;
+						}
+						
+						if(doIt){
 							try {
 								frame.codeText.setText(FileUtils.readFileToString(file, Charset.defaultCharset()));
-							} catch (IOException e1) {
+								frame.scrollPane_1.getVerticalScrollBar().repaint();
+								frame.scrollPane_1.getVerticalScrollBar().setValue(0);
+
+							} catch (Exception e1) {
 								e1.printStackTrace();
 								StringBuilder str2 = new StringBuilder();
 								str2.append(e.getClass().getSimpleName());
@@ -287,10 +312,7 @@ public class Code {
 								frame.codeText.setText(str2.toString());
 							}
 						}
-						else if(FilenameUtils.isExtension(file.getPath(), "CLASS")){
-							str.append("BINARY FILE");
-							str.append('\n');
-						}
+						
 						frame.codeInfo.setText(str.toString());
 					}
 				}
@@ -310,6 +332,45 @@ public class Code {
 			return FileUtils.listFiles(file, new String[]{name}, true).size();
 		else
 			return -1;
+	}
+	
+	public static boolean getMainClassData(Frame frame){
+		String dotty = frame.pluginClass.getText().trim();
+		dotty = dotty.replace('.', '\\') + ".java";
+		String path = currentPlugin.getAbsolutePath() + File.separator +  "src\\main\\java" + File.separator + dotty;
+		
+		File file = new File(path);
+		
+		if(!file.exists())
+			return false;
+		if(!file.canRead())
+			return false;
+		
+		try {
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			
+			for(String line : lines){
+				if(line.contains("super(")){
+					// Found line!
+					System.out.println("Found " + line);
+					String superName = line.substring(line.indexOf(',') + 1, line.lastIndexOf(',')).trim();
+					String superVersion = line.substring(line.lastIndexOf(',') + 1, line.lastIndexOf(')')).trim();
+					
+					System.out.println(superName);
+					System.out.println(superVersion);
+					
+					frame.pluginUserName.setText(superName);
+					frame.pluginUserVersion.setText(superVersion);
+					
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public static boolean getPluginInfo(Frame frame){
@@ -367,6 +428,8 @@ public class Code {
 		} catch (IOException e) {
 			return false;
 		}
+		
+		getMainClassData(frame);
 		
 		return true;
 	}
@@ -486,6 +549,35 @@ public class Code {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
+		
+		try{
+			String dotty = frame.pluginClass.getText().trim();
+			dotty = dotty.replace('.', '\\') + ".java";
+			String path = currentPlugin.getAbsolutePath() + File.separator +  "src\\main\\java" + File.separator + dotty;
+			
+			File file = new File(path);
+			
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			
+			int i = 0;
+			int index = -1;
+			for(String s : lines){
+				if(s.contains("super(")){
+					index = i;
+				}
+				i++;
+			}
+			
+			if(index == -1)
+				return;
+			
+			lines.set(index, "		super(wrapper, " + frame.pluginUserName.getText().trim() + ", " + frame.pluginUserVersion.getText().trim() + ");");
+			
+			FileUtils.writeLines(file, lines);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

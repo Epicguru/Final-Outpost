@@ -50,6 +50,10 @@ public class Frame extends JFrame {
 	public JTextField pluginProvider;
 	public JLabel lbPluginClass;
 	public JTextField pluginClass;
+	public JTextField pluginUserName;
+	private JLabel lblUserFriendlyVersion;
+	public JTextField pluginUserVersion;
+	public JScrollPane scrollPane_1;
 
 	/**
 	 * Launch the application.
@@ -156,7 +160,7 @@ public class Frame extends JFrame {
 		basicPanel.add(lblPluginId);
 		
 		pluginID = new JTextField();
-		pluginID.setBounds(99, 11, 198, 20);
+		pluginID.setBounds(113, 11, 198, 20);
 		basicPanel.add(pluginID);
 		pluginID.setColumns(10);
 		
@@ -166,7 +170,7 @@ public class Frame extends JFrame {
 		
 		pluginVersion = new JTextField();
 		pluginVersion.setColumns(10);
-		pluginVersion.setBounds(99, 39, 198, 20);
+		pluginVersion.setBounds(113, 39, 198, 20);
 		basicPanel.add(pluginVersion);
 		
 		lbPluginProvider = new JLabel("Plugin Provider");
@@ -175,7 +179,7 @@ public class Frame extends JFrame {
 		
 		pluginProvider = new JTextField();
 		pluginProvider.setColumns(10);
-		pluginProvider.setBounds(99, 67, 198, 20);
+		pluginProvider.setBounds(113, 67, 198, 20);
 		basicPanel.add(pluginProvider);
 		
 		lbPluginClass = new JLabel("Plugin Main Class");
@@ -184,8 +188,26 @@ public class Frame extends JFrame {
 		
 		pluginClass = new JTextField();
 		pluginClass.setColumns(10);
-		pluginClass.setBounds(99, 95, 198, 20);
+		pluginClass.setBounds(113, 95, 198, 20);
 		basicPanel.add(pluginClass);
+		
+		JLabel lbPluginName = new JLabel("User friendly name");
+		lbPluginName.setBounds(10, 126, 119, 14);
+		basicPanel.add(lbPluginName);
+		
+		pluginUserName = new JTextField();
+		pluginUserName.setColumns(10);
+		pluginUserName.setBounds(113, 126, 198, 20);
+		basicPanel.add(pluginUserName);
+		
+		lblUserFriendlyVersion = new JLabel("User friendly version");
+		lblUserFriendlyVersion.setBounds(10, 153, 119, 14);
+		basicPanel.add(lblUserFriendlyVersion);
+		
+		pluginUserVersion = new JTextField();
+		pluginUserVersion.setColumns(10);
+		pluginUserVersion.setBounds(113, 153, 198, 20);
+		basicPanel.add(pluginUserVersion);
 		
 		JPanel codePanel = new JPanel();
 		container.addTab("Code", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), codePanel, null);
@@ -201,7 +223,7 @@ public class Frame extends JFrame {
 		paths.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("Plugin Root") {
 				{
-					add(new DefaultMutableTreeNode(""));
+					
 				}
 			}
 		));
@@ -217,7 +239,7 @@ public class Frame extends JFrame {
 		container.addTab("Preview", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Background-Color-Black.png")), preview, null);
 		preview.setLayout(null);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(0, 0, 662, 310);
 		preview.add(scrollPane_1);
 		
