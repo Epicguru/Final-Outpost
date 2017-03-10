@@ -1,13 +1,13 @@
 package co.uk.epicguru.API.plugins;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.utils.Disposable;
 
-import co.uk.epicguru.API.U;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import net.lingala.zip4j.core.ZipFile;
@@ -17,7 +17,6 @@ import ro.fortsoft.pf4j.DefaultPluginManager;
 import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginClassLoader;
 import ro.fortsoft.pf4j.PluginWrapper;
-import ro.fortsoft.pf4j.util.FileUtils;
 
 public final class PluginsLoader extends DefaultPluginManager implements Disposable{
 
@@ -90,12 +89,15 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	 */
 	public static  void cleanDirectory(){
 		Log.info(TAG, "Cleaing plugin directory");
-		for(File file : U.getFilesWithEnding(new File(FOE.gameDirectory + FOE.pluginsDirectory), ".zip")){
-			FOE.loadingSubText = file.getName();
-			String newPath = FilenameUtils.getFullPath(file.getAbsolutePath()) + FilenameUtils.getBaseName(file.getAbsolutePath());
-			File toDelete = new File(newPath);
-			boolean worked = FileUtils.delete(toDelete);	
-			Log.info(TAG, "Cleaning " + toDelete.getName() + ", Worked = " + worked);
+		for(File file : new File(FOE.gameDirectory + FOE.pluginsDirectory).listFiles()){
+			if(file.isFile())
+				continue;
+			try {
+				Log.info(TAG, "Deleting : " + file.getName());
+				FileUtils.forceDeleteOnExit(file);
+			} catch (IOException e) {
+				Log.error(TAG, "Unable to delete file : " + file.getAbsolutePath(), e);
+			}
 		}
 	}
 	
@@ -191,7 +193,11 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 		// Log.debug(TAG, "Looking at " + root.getAbsolutePath()); // Too slow
 		
 		// Clean extraction directory 
-		FileUtils.delete(extractionPluginFolder);
+		try {
+			FileUtils.deleteDirectory(extractionPluginFolder);
+		} catch (IOException e) {
+			Log.error(TAG, "ERROR!", e);
+		}
 		//Log.debug(TAG, "Deleted " + extractionPluginFolder.getAbsolutePath() + "..."); // Too slow
 		
 		try {

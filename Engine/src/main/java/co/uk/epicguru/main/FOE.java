@@ -246,7 +246,7 @@ public class FOE extends Game{
 		System.gc();
 		
 		// WIP
-		//PluginsLoader.cleanDirectory();
+		PluginsLoader.cleanDirectory();
 		
 		super.dispose();
 		
