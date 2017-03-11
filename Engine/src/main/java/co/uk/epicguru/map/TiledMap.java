@@ -7,10 +7,11 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.API.Base;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.map.tiles.TileFactory;
 
-public class TiledMap{
+public class TiledMap extends Base{
 
 	private Tile[][] tiles;
 	private int width, height;
@@ -19,6 +20,7 @@ public class TiledMap{
 	 * Creates a blank 2D TiledMap and calls {@link #create(int, int)} to start the map.
 	 */
 	public TiledMap(int width, int height){
+		print("Created new map. It has not been started yet.");
 		create(width, height);
 	}
 	
@@ -31,6 +33,7 @@ public class TiledMap{
 		this.width = width;
 		this.height = height;
 		this.tiles = new Tile[width][height];
+		print("Started this map that is " + width + "x" + height + " (" + String.format("%.1f", (width * height) / 1000f) + "K)");
 	}
 	
 	/**
@@ -284,5 +287,6 @@ public class TiledMap{
 	 */
 	public void dispose(){
 		this.tiles = null;
+		print("Disposed");
 	}
 }

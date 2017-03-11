@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Main;
+import ro.fortsoft.pf4j.Extension;
 
+@Extension
 public final class MainMenu extends GameScreen {
 
 	public Texture texture;

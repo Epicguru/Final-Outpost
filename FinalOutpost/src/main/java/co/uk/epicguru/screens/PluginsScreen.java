@@ -9,7 +9,9 @@ import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
+import ro.fortsoft.pf4j.Extension;
 
+@Extension
 public class PluginsScreen extends GameScreen {
 
 	public BitmapFont defaultFont;

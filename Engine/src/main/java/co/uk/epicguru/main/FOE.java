@@ -223,6 +223,7 @@ public class FOE extends Game{
 				Tile.registerTiles();
 				Log.info(TAG, "Switched to game screen, loading assets...");
 				pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+				pluginsAssetsLoader.finishLoading();
 			}
 			if(screen.getClass().getName().equals(screen_Menu)){
 				if(!firstTimeMenu){
@@ -230,6 +231,7 @@ public class FOE extends Game{
 					pluginsAssetsLoader.clear();
 					System.gc();
 					pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+					pluginsAssetsLoader.finishLoading();
 				}
 				firstTimeMenu = false;
 			}

@@ -35,8 +35,8 @@ public class GameMap extends TiledMap {
 		float y = camera.position.y - camera.viewportHeight / 2f;
 		y -= 1;
 		
-		float width = camera.viewportWidth + 1;
-		float height = camera.viewportHeight + 1;
+		float width = camera.viewportWidth + 2;
+		float height = camera.viewportHeight + 2;
 		
 		// Cast variables
 		int X = (int) x;
