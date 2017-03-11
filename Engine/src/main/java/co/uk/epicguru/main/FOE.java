@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -62,16 +63,26 @@ public class FOE extends Game{
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Final Outpost - Loading...");
 		
-		System.out.println("This is you game engine speaking, today we will be running on a nice " + Lwjgl3ApplicationConfiguration.getPrimaryMonitor().name);
 		new Lwjgl3Application(INSTANCE, config);
-		
-		//System.gc();
-		
+			
 		// Done
-		//System.exit(0);
+		System.gc();
+		System.exit(0);
 	}
 	
 	public void create() {
+		
+		// DEBUG
+		try{
+			Log.info(TAG, "This is you game engine speaking, today we will be running on a nice " + Lwjgl3ApplicationConfiguration.getPrimaryMonitor().name + " monitor.");
+			Log.info(TAG, Gdx.graphics.getGL30() == null ? "We DO NOT support Gl30" : "We are running Gl30!");
+			Log.info(TAG, "GPU - " + Gdx.gl20.glGetString(GL30.GL_RENDERER).split("/")[0]);			
+			Log.info(TAG, "GPU Vendor - " + Gdx.gl20.glGetString(GL30.GL_VENDOR));	
+			Log.info(TAG, "GPU Version - " + Gdx.gl20.glGetString(GL30.GL_VERSION));
+			//Log.info(TAG, "GPU Extensions - " + Gdx.gl20.glGetString(GL30.GL_EXTENSIONS)); // Too detailed, long AF
+			Log.info(TAG, "Total memory allocated - " + Runtime.getRuntime().totalMemory() / Math.pow(1024, 2) + " MB");
+			
+		}catch(Exception e){}
 		
 		// Required...
 		batch = new SpriteBatch();
