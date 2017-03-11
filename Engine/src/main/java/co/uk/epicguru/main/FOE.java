@@ -80,9 +80,9 @@ public class FOE extends Game{
 			Log.info(TAG, "GPU Vendor - " + Gdx.gl20.glGetString(GL30.GL_VENDOR));	
 			Log.info(TAG, "GPU Version - " + Gdx.gl20.glGetString(GL30.GL_VERSION));
 			//Log.info(TAG, "GPU Extensions - " + Gdx.gl20.glGetString(GL30.GL_EXTENSIONS)); // Too detailed, long AF
-			Log.info(TAG, "Total memory allocated - " + Runtime.getRuntime().totalMemory() / Math.pow(1024, 2) + " MB");
+			Log.info(TAG, "Max memory allocated - " + String.format("%.2f", Runtime.getRuntime().maxMemory() / Math.pow(1024, 3)) + " GB");
 			
-		}catch(Exception e){}
+		}catch(Exception e){ Log.error(TAG, "Error in debug text.", e); }
 		
 		// Required...
 		batch = new SpriteBatch();
