@@ -19,18 +19,6 @@ public final class MainMenu extends GameScreen {
 		this.font = Main.INSTANCE.getAsset("Fonts/Title.fnt", BitmapFont.class);
 	}
 	
-	public void show(){
-		
-	}
-	
-	public void hide(){
-		
-	}
-	
-	public void update(float delta){
-		
-	}
-	
 	public void renderUI(float delta, Batch batch){	
 		batch.setColor(Color.WHITE);
 		
@@ -50,6 +38,9 @@ public final class MainMenu extends GameScreen {
 		// Title
 		font.draw(batch, "Final Outpost", getScreenWidth() / 2f, getScreenHeight() - 10, 0, 1, false);
 		
+		
+		// Hooks
+		super.renderUI(delta, batch);
 	}
 	
 }

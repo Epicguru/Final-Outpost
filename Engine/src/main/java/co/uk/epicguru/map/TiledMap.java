@@ -1,6 +1,7 @@
 package co.uk.epicguru.map;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,6 +34,53 @@ public class TiledMap{
 	}
 	
 	/**
+	 * Clears the entire map, replacing all tiles with null.
+	 */
+	public void wipe(){
+		for(int x = 0; x < getWidth(); x++){
+			for(int y = 0; y < getHeight(); y++){
+				clearTile(x, y);
+			}
+		}
+	}
+	
+	/**
+	 * Fills the entire map with the specified tile. If the passed object is null the the map will be wiped using {@link #wipe()}.
+	 * @param factory The factory to get the tile from.
+	 */
+	public void fill(TileFactory factory){
+		
+		if(factory == null){
+			wipe();
+			return;
+		}
+		
+		for(int x = 0; x < getWidth(); x++){
+			for(int y = 0; y < getHeight(); y++){
+				setTile(factory, x, y);
+			}
+		}
+	}
+	
+	/**
+	 * Fills the entire map with the specified tile, if the condition is met.
+	 * @param factory The factory to get the tile from.
+	 * @param predicate The predicate, where the argument passed is the position of the tile to be set.
+	 * Use {@link #getTile(Vector2)} for info on the current tile (may be null!).
+	 */
+	public void fill(TileFactory factory, Predicate<Vector2> predicate){
+		Vector2 position = new Vector2();
+		
+		for(int x = 0; x < getWidth(); x++){
+			for(int y = 0; y < getHeight(); y++){
+				position.set(x, y);
+				if(predicate.test(position))
+					setTile(factory, x, y);
+			}
+		}
+	}
+	
+	/**
 	 * Gets the width of the map in tiles.
 	 */
 	public int getWidth(){
@@ -47,6 +95,19 @@ public class TiledMap{
 	}
 	
 	/**
+	 * Sets the tile at x, y to null.
+	 * @param x The X coordinate, in tiles.
+	 * @param y The Y coordinate, in tiles.
+	 */
+	public void clearTile(int x, int y){
+		if(inBounds(x, y)){
+			//Tile old = tiles[x][y];
+			tiles[x][y] = null;
+			// WIP old.something()
+		}
+	}
+	
+	/**
 	 * Sets the tile at the given coordinates if the coordinates are within the bounds of the map.
 	 * @param tile The Tile object to set. It can be null.
 	 * @param x The X coordinate, in tiles.
@@ -55,6 +116,7 @@ public class TiledMap{
 	 */
 	public void setTile(Tile tile, int x, int y){
 		if(inBounds(x, y)){
+			clearTile(x, y);
 			Tile t = tiles[x][y] = tile;
 			t.setPosition(x, y);
 		}
@@ -86,6 +148,15 @@ public class TiledMap{
 			return tiles[x][y];
 		else
 			return null;
+	}
+	
+	/**
+	 * Gets the tile at a specific coordinate. This may return null.
+	 * @param position The position of the tile, in tiles. The x and y values are truncated to an int.
+	 * @return The Tile at the position, or null if out of bounds or if tile is null.
+	 */
+	public Tile getTile(Vector2 position){
+		return getTile((int)position.x, (int)position.y);
 	}
 	
 	/**
@@ -206,5 +277,12 @@ public class TiledMap{
 	 */
 	boolean inBounds(int x, int y){
 		return (x >=0 && x < getWidth()) && (y >= 0 && y < getHeight());
+	}
+	
+	/**
+	 * Disposes of all tiles. This renders this object unusable.
+	 */
+	public void dispose(){
+		this.tiles = null;
 	}
 }

@@ -1,6 +1,7 @@
 package co.uk.epicguru.main;
 
-import static co.uk.epicguru.main.Constants.*;
+import static co.uk.epicguru.main.Constants.PPM;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -21,6 +22,7 @@ import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.map.GameMap;
 
 public class FOE extends Game{
 
@@ -51,6 +53,8 @@ public class FOE extends Game{
 	
 	public static PluginsLoader pluginsLoader;
 	public static PluginAssetLoader pluginsAssetsLoader;
+	
+	public static GameMap map;
 	
 	public static void main(String... args){
 		
@@ -268,6 +272,7 @@ public class FOE extends Game{
 		pluginsLoader.stopPlugins();	
 		pluginsLoader.dispose();
 		pluginsLoader = null;
+		if(map != null) map.dispose();
 		
 		System.gc();
 		

@@ -33,6 +33,9 @@ public class PluginsScreen extends GameScreen {
 		if(Input.isKeyJustDown(Keys.SPACE)){
 			show();
 		}
+		
+		// For hooks, if any
+		super.update(delta);
 	}
 	
 	public void show(){
@@ -41,6 +44,9 @@ public class PluginsScreen extends GameScreen {
 			defaultFont = Main.INSTANCE.getAsset("Fonts/Default.fnt", BitmapFont.class);
 		
 		refresh();
+		
+		// For hooks, if any
+		super.show();
 	}
 	
 	public void refresh(){
@@ -69,6 +75,9 @@ public class PluginsScreen extends GameScreen {
 		for(int i = 0; i < names.length; i++){			
 			defaultFont.draw(batch, names[i], 10, positions[i], 0, -1, false);			
 		}
+		
+		// For hooks, if any
+		super.renderUI(delta, batch);
 	}
 	
 }

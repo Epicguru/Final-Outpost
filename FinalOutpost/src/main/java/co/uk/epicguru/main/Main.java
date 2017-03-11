@@ -10,7 +10,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.screens.MainMenu;
+import co.uk.epicguru.screens.InGameScreen;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -18,7 +18,7 @@ public class Main extends FinalOutpostPlugin{
 
 	public static Main INSTANCE;
 	
-	public static final String version = "0.0.0";
+	public static final String version = "0.0.1";
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public Main(PluginWrapper wrapper) {
@@ -91,6 +91,6 @@ public class Main extends FinalOutpostPlugin{
 	}
 	
 	public void postInit(){
-		FOE.INSTANCE.setScreen(new MainMenu());
+		FOE.INSTANCE.setScreen(new InGameScreen());
 	}
 }
