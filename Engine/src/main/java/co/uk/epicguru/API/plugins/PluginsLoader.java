@@ -27,7 +27,6 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	private ZipFile zip;
 
 	public PluginsLoader(){
-		
 	}
 	
 	public static void setupDirectory(String directory){
