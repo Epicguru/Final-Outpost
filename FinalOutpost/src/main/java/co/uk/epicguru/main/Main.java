@@ -76,10 +76,12 @@ public class Main extends FinalOutpostPlugin{
 		switch(type){
 		case GAME_START:
 			
+			// WIP tiled map
+			loadAsset("Textures/Map/Dirt.png", Texture.class);
 			break;
 		case INIT_CORE:
 			
-			// TEMP TEST - Load all
+			// Main menu content
 			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);

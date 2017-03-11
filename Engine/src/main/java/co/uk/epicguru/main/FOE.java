@@ -23,6 +23,7 @@ import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
+import co.uk.epicguru.map.tiles.Tile;
 
 public class FOE extends Game{
 
@@ -44,12 +45,15 @@ public class FOE extends Game{
 	public static final String configsExtension = ".FOConfig";
 	public static final String logsDirectory = "Logs/";
 	public static final String logsExtension = ".FO_Log";
+	public static final String screen_Game = "co.uk.epicguru.screens.InGameScreen";
+	public static final String screen_Menu = "co.uk.epicguru.screens.MainMenu";
 	
 	public static String loadingText = "PLACEHOLDER";
 	public static String loadingSubText = "Something Goes Here!";
 	
 	public static boolean loaded = false;
 	public static boolean postDone = false;
+	public static boolean firstTimeMenu = true;
 	
 	public static PluginsLoader pluginsLoader;
 	public static PluginAssetLoader pluginsAssetsLoader;
@@ -212,13 +216,31 @@ public class FOE extends Game{
 	public void setScreen(Screen screen){
 		
 		// Custom implementation (WIP)
-		
-		if (this.screen != null) this.screen.hide();
-		this.screen = screen;
-		if (this.screen != null) {
-			this.screen.show();
-			this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		}		
+		Gdx.app.postRunnable(() -> {
+			if(screen.getClass().getName().equals(screen_Game)){
+				pluginsAssetsLoader.clear();
+				System.gc();
+				Tile.registerTiles();
+				Log.info(TAG, "Switched to game screen, loading assets...");
+				pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+			}
+			if(screen.getClass().getName().equals(screen_Menu)){
+				if(!firstTimeMenu){
+					Log.info(TAG, "Switched to menu screen, loading assets...");
+					pluginsAssetsLoader.clear();
+					System.gc();
+					pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+				}
+				firstTimeMenu = false;
+			}
+			
+			if (this.screen != null) this.screen.hide();
+			this.screen = screen;
+			if (this.screen != null) {
+				this.screen.show();
+				this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+		});		
 	}
 	
 	public void update(float delta){
