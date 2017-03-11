@@ -65,7 +65,7 @@ public class PluginsScreen extends GameScreen {
 		return 30 + index * 40;
 	}
 	
-	public void render(float delta, Batch batch){
+	public void renderUI(float delta, Batch batch){
 		for(int i = 0; i < names.length; i++){			
 			defaultFont.draw(batch, names[i], 10, positions[i], 0, -1, false);			
 		}

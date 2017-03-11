@@ -1,5 +1,6 @@
 package co.uk.epicguru.main;
 
+import static co.uk.epicguru.main.Constants.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,6 +32,7 @@ public class FOE extends Game{
 	
 	public static SpriteBatch batch;
 	public static OrthographicCamera camera;
+	public static OrthographicCamera UIcamera;
 	public static Color BG_Colour = new Color(0.2f, 0.3f, 0.7f, 1f); // BRITAIN TILL THE END!!!!
 	
 	public static final String gameDirectory = "Game Data/";
@@ -87,6 +89,7 @@ public class FOE extends Game{
 		// Required...
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
+		UIcamera = new OrthographicCamera();
 		
 		// Timers
 		final String all = "All";
@@ -225,7 +228,8 @@ public class FOE extends Game{
 	
 	public void resize(int width, int height){
 		
-		camera.setToOrtho(false, width, height); // No scaling (Box2D ?)
+		camera.setToOrtho(false, width / PPM, height / PPM);
+		UIcamera.setToOrtho(false, width, height); // No scaling
 		
 		super.resize(width, height);
 	}
@@ -239,12 +243,23 @@ public class FOE extends Game{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		
-		// Render current screen
-		super.render();
-		
+		batch.begin();		
+		// Render current screen, normal mode
+		super.render();		
+		batch.end();		
+		batch.setProjectionMatrix(UIcamera.combined);
+		batch.begin();	
+		// Render current screen, UI mode
+		renderUI();	
 		batch.end();
+	}
+	
+	public void renderUI(){
+		if(getScreen() == null || !(getScreen() instanceof GameScreen))
+			return;
+		
+		GameScreen screen = (GameScreen) getScreen();
+		screen.renderUI(Gdx.graphics.getDeltaTime(), batch);
 	}
 
 	public void dispose(){

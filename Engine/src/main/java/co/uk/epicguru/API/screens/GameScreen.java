@@ -42,12 +42,22 @@ public class GameScreen extends Base implements Screen {
 	
 	/**
 	 * Called 60 times a second when active, after {@link #update(float)}.
-	 * Use this to render objects.
+	 * Use this to render objects, because one unit here is equal to one meter (see Constants.PPM).
 	 * @param delta The time in seconds between this frame and the previous one.
 	 * @param batch The SpriteBatch to use when rendering.
 	 */
 	public void render(float delta, Batch batch){}
 
+	/**
+	 * Called 60 times a second when active, after {@link #render(float, Batch)}.
+	 * Use this to render UI elements as there is not scaling.
+	 * @param delta The time in seconds between this frame and the previous one.
+	 * @param batch The SpriteBatch to use when rendering.
+	 */
+	public void renderUI(float delta, Batch batch){
+		
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		

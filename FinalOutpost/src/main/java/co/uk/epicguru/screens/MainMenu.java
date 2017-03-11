@@ -31,7 +31,7 @@ public final class MainMenu extends GameScreen {
 		
 	}
 	
-	public void render(float delta, Batch batch){	
+	public void renderUI(float delta, Batch batch){	
 		batch.setColor(Color.WHITE);
 		
 		// Background
