@@ -5,11 +5,14 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginWrapper;
@@ -176,6 +179,33 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 */
 	public <T> T getAsset(String name, Class<T> type){
 		return getAssetLoader().get(this.assetsFolder.replaceAll("\\\\", "/") + name.replaceAll("\\\\", "/"), type);
+	}
+	
+	/**
+	 * Gets the settings used when packing all the textures for this plugin.
+	 */
+	public Settings getPackerSettings(){
+		Settings settings = new Settings();
+		
+		// Override to manipulate settings.
+		settings.maxWidth = (int) Math.pow(2, 16);
+		settings.maxHeight = (int) Math.pow(2, 16);
+		
+		return settings;
+	}
+	
+	/**
+	 * Called only once when all textures are packed.
+	 */
+	public void packTextures(){
+		Log.info(this.getDisplayName(), "Packing textures using default implementation");
+		
+		if(!new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).exists())
+			return;
+		
+		String path = Gdx.files.getExternalStoragePath() + this.assetsFolder;
+		
+		TexturePacker.process(getPackerSettings(), path, new File(path).getParentFile().getAbsolutePath() + "/Packed", "Textures.atlas");
 	}
 	
 	/**

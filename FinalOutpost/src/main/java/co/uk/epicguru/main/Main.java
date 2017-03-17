@@ -3,6 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
@@ -78,6 +79,7 @@ public class Main extends FinalOutpostPlugin{
 			
 			// WIP tiled map
 			loadAsset("Textures/Map/Dirt.png", Texture.class);
+			loadAsset("Textures/Player/Player.png", TextureRegion.class);
 			break;
 		case INIT_CORE:
 			

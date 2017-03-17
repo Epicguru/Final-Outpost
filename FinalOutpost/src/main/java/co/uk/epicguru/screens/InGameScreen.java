@@ -7,6 +7,7 @@ import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.screens.hooks.DebugHook;
+import co.uk.epicguru.screens.hooks.PlayerRenderer;
 import ro.fortsoft.pf4j.Extension;
 
 @Extension
@@ -19,6 +20,7 @@ public class InGameScreen extends GameScreen {
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		super.clearHooks();
+		super.addHook(new PlayerRenderer());
 		super.addHook(new DebugHook());
 		
 		super.show();

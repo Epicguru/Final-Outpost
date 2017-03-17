@@ -5,6 +5,7 @@ import static co.uk.epicguru.main.Constants.PPM;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -12,11 +13,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
+import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.IO.JLineParsers;
@@ -105,23 +108,12 @@ public class FOE extends Game{
 		final String plugins = "Plugins";
 		final String pluginsExtraction = "Plugins - Extraction";
 		final String assetsLoad = "Assets Load";
+		final String packing = "Textures Pack";
 		
 		loading("Loading Final Outpost Engine", "Hello there!");
 		
-//		loading("Finding game icons", "Only be a sec!\n(If you can read me then you have a potato PC)");
-//		Pixmap mid = new Pixmap(Gdx.files.internal("assets/32.png"));
-//		Pixmap small = new Pixmap(Gdx.files.internal("assets/32.png"));
-//		ByteBuffer[] icons = new ByteBuffer[] {
-//				mid.getPixels(),
-//				small.getPixels()
-//		};
-//		Display.setIcon(icons);
-		
 		U.startTimer(all);
 		new Thread(() -> {
-			
-			// Icon
-			
 			
 			// Load plugins
 			U.startTimer(plugins);
@@ -135,14 +127,13 @@ public class FOE extends Game{
 			pluginsLoader.startPlugins();
 			
 			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
-					
+			
 			// Load assets
 			U.startTimer(pluginsExtraction);
 			loading("Loading plugin assets", "...");
 			pluginsLoader.extractAllAssets();	
 			Log.info(TAG, "Extracted assets for all plugins in " + U.endTimer(pluginsExtraction));
-			
-			
+						
 			// Load parsers
 			U.startTimer(parsers);
 			loading("Loading plugins' parsers", "...");
@@ -171,10 +162,16 @@ public class FOE extends Game{
 			loading("Saving configs", "...");
 			pluginsLoader.saveAllConfigs();
 			
+			// Pack all textures
+			U.startTimer(packing);
+			pluginsAssetsLoader = new PluginAssetLoader();
+			pluginsAssetsLoader.setLoader(TextureRegion.class, "png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
+			pluginsAssetsLoader.packAllTextures(pluginsLoader);
+			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));
+			
 			// Load initial content before init and post init.
 			U.startTimer(assetsLoad);
 			loading("Loading core content", "");
-			pluginsAssetsLoader = new PluginAssetLoader();
 			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
 			
 			postDone = false;
