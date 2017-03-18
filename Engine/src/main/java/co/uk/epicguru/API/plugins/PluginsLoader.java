@@ -193,7 +193,7 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 		
 		// Clean extraction directory 
 		try {
-			FileUtils.deleteDirectory(extractionPluginFolder);
+			FileUtils.deleteDirectory(new File(extractionPluginFolder.getAbsolutePath() + "\\assets\\"));
 		} catch (IOException e) {
 			Log.error(TAG, "ERROR!", e);
 		}

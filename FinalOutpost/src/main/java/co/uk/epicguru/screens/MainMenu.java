@@ -1,9 +1,9 @@
 package co.uk.epicguru.screens;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.input.Input;
@@ -13,11 +13,11 @@ import ro.fortsoft.pf4j.Extension;
 @Extension
 public final class MainMenu extends GameScreen {
 
-	public Texture texture;
+	public TextureRegion texture;
 	public BitmapFont font;
 	
 	public MainMenu(){
-		this.texture = Main.INSTANCE.getAsset("Textures/UI/TitleBackground.png", Texture.class);
+		this.texture = Main.INSTANCE.getAsset("Textures/UI/TitleBackground.png", TextureRegion.class);
 		this.font = Main.INSTANCE.getAsset("Fonts/Title.fnt", BitmapFont.class);
 	}
 	

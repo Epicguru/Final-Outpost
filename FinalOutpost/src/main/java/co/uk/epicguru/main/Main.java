@@ -1,7 +1,6 @@
 package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -78,13 +77,16 @@ public class Main extends FinalOutpostPlugin{
 		case GAME_START:
 			
 			// WIP tiled map
-			loadAsset("Textures/Map/Dirt.png", Texture.class);
-			loadAsset("Textures/Player/Player.png", TextureRegion.class);
+			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
+			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
+			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
+			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
+			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
 			break;
 		case INIT_CORE:
 			
 			// Main menu content
-			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
+			loadAsset("Textures/UI/TitleBackground.png", TextureRegion.class);
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
