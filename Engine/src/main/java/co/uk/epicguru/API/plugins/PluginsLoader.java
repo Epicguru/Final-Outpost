@@ -100,6 +100,32 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 		}
 	}
 	
+	public boolean deletePlugin(String pluginID){
+		
+		// Delete plugin zip (Done)
+		// Delete plugin file (Assume done by cleanDirectory)
+		// Delete configs (Done)
+		// Delete extracted content (Done)
+		
+		File configs = new File(FOE.gameDirectory + FOE.configsDirectory + pluginID);
+		try {
+			FileUtils.deleteDirectory(configs);
+		} catch (IOException e) {
+			Log.error(TAG, "Error deleting directory", e);
+			return false;
+		}
+		
+		File extracted = new File(FOE.gameDirectory + FOE.gamePluginsExtracted + pluginID);
+		try {
+			FileUtils.deleteDirectory(extracted);
+		} catch (IOException e) {
+			Log.error(TAG, "Error deleting directory", e);
+			return false;
+		}
+		
+		return super.deletePlugin(pluginID);
+	}
+	
 	/**
 	 * Stops all plugins.
 	 */
@@ -188,6 +214,12 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 		File root = new File(FOE.gameDirectory + FOE.pluginsDirectory + plugin.getWrapper().getPluginPath() + ".zip");
 		final String starter = pluginID + '\\';
 		File extractionPluginFolder = new File(FOE.gameDirectory + FOE.gamePluginsExtracted + starter);
+		
+		
+		if(extractionPluginFolder.exists() && extractionPluginFolder.isDirectory() && extractionPluginFolder.listFiles().length > 0){
+			Log.info(TAG, "Plugin already extracted!");
+			return;
+		}			
 		
 		// Log.debug(TAG, "Looking at " + root.getAbsolutePath()); // Too slow
 		

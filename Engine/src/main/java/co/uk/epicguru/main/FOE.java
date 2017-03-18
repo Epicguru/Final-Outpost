@@ -167,7 +167,7 @@ public class FOE extends Game{
 			loading("Optimising (Long packing only happens once)", "...");
 			pluginsAssetsLoader = new PluginAssetLoader();
 			pluginsAssetsLoader.setLoader(TextureRegion.class, "png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
-			pluginsAssetsLoader.packAllTextures(pluginsLoader); // TODO make one time
+			pluginsAssetsLoader.packAllTextures(pluginsLoader);
 			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));
 			
 			// Load initial content before init and post init.

@@ -182,6 +182,13 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	}
 	
 	/**
+	 * A call to {@link #packTextures()} will be triggered if this returns true.
+	 */
+	public boolean needsToPack(){
+		return !new File(new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).getParentFile().getAbsolutePath() + "\\Packed").exists();
+	}
+	
+	/**
 	 * Gets the settings used when packing all the textures for this plugin.
 	 */
 	public Settings getPackerSettings(){

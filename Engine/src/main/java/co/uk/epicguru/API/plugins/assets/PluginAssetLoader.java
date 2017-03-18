@@ -57,9 +57,14 @@ public class PluginAssetLoader extends AssetManager {
 		Log.info(TAG, "Packing textures for all plugins...");
 		
 		for(FinalOutpostPlugin plugin : loader.getAllPlugins()){
-			FOE.loadingSubText = "Packing textures for " + plugin.getDisplayName();
-			plugin.packTextures();
-			Log.info(TAG, "Packed all textures for '" + plugin.getWrapper().getPluginId() + '\'');
+			if(plugin.needsToPack()){
+				FOE.loadingSubText = "Packing textures for " + plugin.getDisplayName();
+				plugin.packTextures();
+				Log.info(TAG, "Packed all textures for '" + plugin.getWrapper().getPluginId() + '\'');				
+			}else{
+				Log.info(TAG, "Skipping packing for '" + plugin.getWrapper().getPluginId() + '\'');				
+				FOE.loadingSubText = "Skipping " + plugin.getDisplayName();
+			}
 		}
 	}
 }
