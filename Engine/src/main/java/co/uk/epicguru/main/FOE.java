@@ -1,8 +1,11 @@
 package co.uk.epicguru.main;
 
+import static co.uk.epicguru.main.Constants.PPM;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -10,16 +13,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
+import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.map.GameMap;
+import co.uk.epicguru.map.tiles.Tile;
 
 public class FOE extends Game{
 
@@ -31,6 +38,7 @@ public class FOE extends Game{
 	
 	public static SpriteBatch batch;
 	public static OrthographicCamera camera;
+	public static OrthographicCamera UIcamera;
 	public static Color BG_Colour = new Color(0.2f, 0.3f, 0.7f, 1f); // BRITAIN TILL THE END!!!!
 	
 	public static final String gameDirectory = "Game Data/";
@@ -40,15 +48,20 @@ public class FOE extends Game{
 	public static final String configsExtension = ".FOConfig";
 	public static final String logsDirectory = "Logs/";
 	public static final String logsExtension = ".FO_Log";
+	public static final String screen_Game = "co.uk.epicguru.screens.InGameScreen";
+	public static final String screen_Menu = "co.uk.epicguru.screens.MainMenu";
 	
 	public static String loadingText = "PLACEHOLDER";
 	public static String loadingSubText = "Something Goes Here!";
 	
 	public static boolean loaded = false;
 	public static boolean postDone = false;
+	public static boolean firstTimeMenu = true;
 	
 	public static PluginsLoader pluginsLoader;
 	public static PluginAssetLoader pluginsAssetsLoader;
+	
+	public static GameMap map;
 	
 	public static void main(String... args){
 		
@@ -87,6 +100,7 @@ public class FOE extends Game{
 		// Required...
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
+		UIcamera = new OrthographicCamera();
 		
 		// Timers
 		final String all = "All";
@@ -94,23 +108,12 @@ public class FOE extends Game{
 		final String plugins = "Plugins";
 		final String pluginsExtraction = "Plugins - Extraction";
 		final String assetsLoad = "Assets Load";
+		final String packing = "Textures Pack";
 		
 		loading("Loading Final Outpost Engine", "Hello there!");
 		
-//		loading("Finding game icons", "Only be a sec!\n(If you can read me then you have a potato PC)");
-//		Pixmap mid = new Pixmap(Gdx.files.internal("assets/32.png"));
-//		Pixmap small = new Pixmap(Gdx.files.internal("assets/32.png"));
-//		ByteBuffer[] icons = new ByteBuffer[] {
-//				mid.getPixels(),
-//				small.getPixels()
-//		};
-//		Display.setIcon(icons);
-		
 		U.startTimer(all);
 		new Thread(() -> {
-			
-			// Icon
-			
 			
 			// Load plugins
 			U.startTimer(plugins);
@@ -124,14 +127,13 @@ public class FOE extends Game{
 			pluginsLoader.startPlugins();
 			
 			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
-					
+			
 			// Load assets
 			U.startTimer(pluginsExtraction);
 			loading("Loading plugin assets", "...");
 			pluginsLoader.extractAllAssets();	
 			Log.info(TAG, "Extracted assets for all plugins in " + U.endTimer(pluginsExtraction));
-			
-			
+						
 			// Load parsers
 			U.startTimer(parsers);
 			loading("Loading plugins' parsers", "...");
@@ -160,10 +162,17 @@ public class FOE extends Game{
 			loading("Saving configs", "...");
 			pluginsLoader.saveAllConfigs();
 			
+			// Pack all textures
+			U.startTimer(packing);
+			loading("Optimising (Long packing only happens once)", "...");
+			pluginsAssetsLoader = new PluginAssetLoader();
+			pluginsAssetsLoader.setLoader(TextureRegion.class, "png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
+			pluginsAssetsLoader.packAllTextures(pluginsLoader);
+			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));
+			
 			// Load initial content before init and post init.
 			U.startTimer(assetsLoad);
 			loading("Loading core content", "");
-			pluginsAssetsLoader = new PluginAssetLoader();
 			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
 			
 			postDone = false;
@@ -205,13 +214,33 @@ public class FOE extends Game{
 	public void setScreen(Screen screen){
 		
 		// Custom implementation (WIP)
-		
-		if (this.screen != null) this.screen.hide();
-		this.screen = screen;
-		if (this.screen != null) {
-			this.screen.show();
-			this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		}		
+		Gdx.app.postRunnable(() -> {
+			if(screen.getClass().getName().equals(screen_Game)){
+				pluginsAssetsLoader.clear();
+				System.gc();
+				Tile.registerTiles();
+				Log.info(TAG, "Switched to game screen, loading assets...");
+				pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+				pluginsAssetsLoader.finishLoading();
+			}
+			if(screen.getClass().getName().equals(screen_Menu)){
+				if(!firstTimeMenu){
+					Log.info(TAG, "Switched to menu screen, loading assets...");
+					pluginsAssetsLoader.clear();
+					System.gc();
+					pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+					pluginsAssetsLoader.finishLoading();
+				}
+				firstTimeMenu = false;
+			}
+			
+			if (this.screen != null) this.screen.hide();
+			this.screen = screen;
+			if (this.screen != null) {
+				this.screen.show();
+				this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			}
+		});		
 	}
 	
 	public void update(float delta){
@@ -225,7 +254,8 @@ public class FOE extends Game{
 	
 	public void resize(int width, int height){
 		
-		camera.setToOrtho(false, width, height); // No scaling (Box2D ?)
+		camera.setToOrtho(false, width / PPM, height / PPM);
+		UIcamera.setToOrtho(false, width, height); // No scaling
 		
 		super.resize(width, height);
 	}
@@ -239,12 +269,23 @@ public class FOE extends Game{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		
-		// Render current screen
-		super.render();
-		
+		batch.begin();		
+		// Render current screen, normal mode
+		super.render();		
+		batch.end();		
+		batch.setProjectionMatrix(UIcamera.combined);
+		batch.begin();	
+		// Render current screen, UI mode
+		renderUI();	
 		batch.end();
+	}
+	
+	public void renderUI(){
+		if(getScreen() == null || !(getScreen() instanceof GameScreen))
+			return;
+		
+		GameScreen screen = (GameScreen) getScreen();
+		screen.renderUI(Gdx.graphics.getDeltaTime(), batch);
 	}
 
 	public void dispose(){
@@ -253,6 +294,7 @@ public class FOE extends Game{
 		pluginsLoader.stopPlugins();	
 		pluginsLoader.dispose();
 		pluginsLoader = null;
+		if(map != null) map.dispose();
 		
 		System.gc();
 		

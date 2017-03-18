@@ -26,7 +26,7 @@ public class LoadingScreen extends GameScreen {
 		}
 	}
 
-	public void render(float delta, Batch batch){
+	public void renderUI(float delta, Batch batch){
 		font.draw(batch, FOE.loadingText == null ? "" : FOE.loadingText, getScreenWidth() / 2f, getScreenHeight() / 2f, -1, 1, false);
 		font.draw(batch, FOE.loadingSubText == null ? "" : FOE.loadingSubText, getScreenWidth() / 2f, getScreenHeight() / 2f - 20, -1, 1, false);
 	}
