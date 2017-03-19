@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
@@ -170,7 +171,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	
 	/**
 	 * Adds a generic input that allows for the user to configure keys.
-	 * This does not work for mouse buttons, only keys. Use the 'Keys' gdx class
+	 * This does not work for mouse buttons, only keys. Use the {@link Keys} class to get keys from.
 	 * to get keys from. (For example Keys.SPACE).
 	 * @param name The name of the input.
 	 * @param key The number of the key to initially bind to.
@@ -181,7 +182,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 		if(beforeInit){
 			throw new PluginRuntimeException("Cannot add a new input before init() method is called. Please override init() to do this.");
 		}
-		
+
 		Input.addInput(this, name, key);
 		this.inputNames.add(name);
 	}
@@ -189,7 +190,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	/**
 	 * Changes an existing input, as created with {@link #addInput(String, int)}.
 	 * @param name The name of the existing input.
-	 * @param newKey The new key to bind it to. See Gdx class Keys.
+	 * @param newKey The new key to bind it to. See {@link Keys}.
 	 */
 	public void changeInput(final String name, int newKey){
 		if(beforeInit){
