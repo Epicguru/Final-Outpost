@@ -9,7 +9,9 @@ import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
+import ro.fortsoft.pf4j.Extension;
 
+@Extension
 public class PluginsScreen extends GameScreen {
 
 	public BitmapFont defaultFont;
@@ -33,6 +35,9 @@ public class PluginsScreen extends GameScreen {
 		if(Input.isKeyJustDown(Keys.SPACE)){
 			show();
 		}
+		
+		// For hooks, if any
+		super.update(delta);
 	}
 	
 	public void show(){
@@ -41,6 +46,9 @@ public class PluginsScreen extends GameScreen {
 			defaultFont = Main.INSTANCE.getAsset("Fonts/Default.fnt", BitmapFont.class);
 		
 		refresh();
+		
+		// For hooks, if any
+		super.show();
 	}
 	
 	public void refresh(){
@@ -65,10 +73,13 @@ public class PluginsScreen extends GameScreen {
 		return 30 + index * 40;
 	}
 	
-	public void render(float delta, Batch batch){
+	public void renderUI(float delta, Batch batch){
 		for(int i = 0; i < names.length; i++){			
 			defaultFont.draw(batch, names[i], 10, positions[i], 0, -1, false);			
 		}
+		
+		// For hooks, if any
+		super.renderUI(delta, batch);
 	}
 	
 }

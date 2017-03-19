@@ -1,8 +1,9 @@
 package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
@@ -10,7 +11,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.screens.MainMenu;
+import co.uk.epicguru.screens.InGameScreen;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -18,8 +19,14 @@ public class Main extends FinalOutpostPlugin{
 
 	public static Main INSTANCE;
 	
-	public static final String version = "0.0.0";
+	public static final String version = "0.0.1";
 	public static final String TAG = "Final Outpost Plugin";	
+	
+	public static final String UP = "Up";
+	public static final String DOWN = "Down";
+	public static final String LEFT = "Left";
+	public static final String RIGHT = "Right";
+	public static final String DEBUG = "Debug";
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
@@ -76,11 +83,17 @@ public class Main extends FinalOutpostPlugin{
 		switch(type){
 		case GAME_START:
 			
+			// WIP tiled map
+			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
+			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
+			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
+			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
+			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
 			break;
 		case INIT_CORE:
 			
-			// TEMP TEST - Load all
-			loadAsset("Textures/UI/TitleBackground.png", Texture.class);
+			// Main menu content
+			loadAsset("Textures/UI/TitleBackground.png", TextureRegion.class);
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
@@ -90,7 +103,16 @@ public class Main extends FinalOutpostPlugin{
 		return true;
 	}
 	
+	public void init(){
+		// INPUTS
+		addInput(UP, Keys.W);
+		addInput(DOWN, Keys.S);
+		addInput(LEFT, Keys.A);
+		addInput(RIGHT, Keys.D);
+		addInput(DEBUG, Keys.F12);
+	}
+	
 	public void postInit(){
-		FOE.INSTANCE.setScreen(new MainMenu());
+		FOE.INSTANCE.setScreen(new InGameScreen());
 	}
 }

@@ -6,7 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.badlogic.gdx.Gdx;
 
@@ -105,11 +108,12 @@ public final class Log {
 		Log.info("Logging", "Saving log...");
 		
 		// Time and date
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 		LocalDateTime now = LocalDateTime.now();
 		
-		String name = dtf.format(now);
-		Log.debug("Logging", "Saving log as " + FOE.gameDirectory + FOE.logsDirectory + name + FOE.logsExtension);
+		String s = "/";
+		String name = now.getYear() + s + now.getMonth().getDisplayName(TextStyle.SHORT,Locale.ENGLISH) + s + now.getDayOfMonth() + s;
+		name += DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).format(now).replace(":", "_");
+		Log.info("Logging", "Saving log as " + FOE.gameDirectory + FOE.logsDirectory + name + FOE.logsExtension);
 
 		File saveFile = new File(FOE.gameDirectory + FOE.logsDirectory + name + FOE.logsExtension);
 		
