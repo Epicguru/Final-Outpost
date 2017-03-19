@@ -12,6 +12,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.Plugin;
@@ -21,6 +22,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 
 	private String displayName, displayVersion;
 	private ArrayList<Config> configs = new ArrayList<>();
+	private ArrayList<String> inputNames = new ArrayList<>();
 	private String assetsFolder;
 	
 	/**
@@ -161,6 +163,81 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 */
 	public void postInit() {
 
+	}
+	
+	/**
+	 * Adds a generic input that allows for the user to configure keys.
+	 * This does not work for mouse buttons, only keys. Use the 'Keys' gdx class
+	 * to get keys from. (For example Keys.SPACE).
+	 * @param name The name of the input.
+	 * @param key The number of the key to initially bind to.
+	 * @see {@link #changeInput(String, int)}, {@link #removeInput(String)}
+	 */
+	public void addInput(final String name, int key){
+		Input.addInput(this, name, key);
+		this.inputNames.add(name);
+	}
+	
+	/**
+	 * Changes an existing input, as created with {@link #addInput(String, int)}.
+	 * @param name The name of the existing input.
+	 * @param newKey The new key to bind it to. See Gdx class Keys.
+	 */
+	public void changeInput(final String name, int newKey){
+		Input.changeInput(this, name, newKey);
+	}
+	
+	/**
+	 * Removes a input added by this plugin using {@link #addInput(String, int)}.
+	 * @param name The name of the input to remove.
+	 */
+	public void removeInput(final String name){
+		Input.removeInput(this, name);
+		this.inputNames.remove(name);
+	}
+	
+	/**
+	 * Returns true if the key bound to the specified input is currently pressed on the keyboard.
+	 * @param name The name of the input as given in {@link #addInput(String, int)}.
+	 * @return True if currently held down, false if not.
+	 */
+	public boolean isInputDown(final String name){
+		return Input.isInputDown(this, name);
+	}
+	
+	/**
+	 * Returns true if the key bound to the specified input is currently pressed AND was NOT pressed last frame on the keyboard.
+	 * @param name The name of the input as given in {@link #addInput(String, int)}.
+	 * @return True if currently just pressed (in terms of frames), false if not.
+	 */
+	public boolean isInputJustDown(final String name){
+		return Input.isInputJustDown(this, name);
+	}
+	
+	/**
+	 * Gets the number of the key that the specified input is bound to. This can be changed by {@link #changeInput(String, int)}
+	 * or by the user.
+	 * @param name The name of the plugin as specified in {@link #addInput(String, int)}.
+	 * @return The number (code) of the key mapped to the input, or -1 if the input does not exist.
+	 */
+	public int getInputCode(final String name){
+		return Input.getInputCode(this, name);
+	}
+	
+	/**
+	 * Gets the (sort of) user friendly name of the key bound to the specified input.
+	 * @param name The name of the input as specified in {@link #addInput(String, int)}.
+	 * @return The name of the input, or null if the input does not exist.
+	 */
+	public String getInputString(final String name){
+		return Input.getInputString(this, name);
+	}
+	
+	/**
+	 * Gets an array-list of all inputs added and removed through {@link #addInput(String, int)} and {@link #removeInput(String)}.
+	 */
+	public ArrayList<String> getInputNames(){
+		return this.inputNames;
 	}
 	
 	/**

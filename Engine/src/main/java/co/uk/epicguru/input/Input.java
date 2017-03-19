@@ -1,15 +1,26 @@
 package co.uk.epicguru.input;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
+import co.uk.epicguru.IO.JLineReader;
+import co.uk.epicguru.IO.JLineWriter;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 
 public final class Input {
+	
+	private static HashMap<String, Integer> keys = new HashMap<>();
 	
 	static Vector2 tempVec = new Vector2();
 	static Vector3 tempVec3 = new Vector3();
@@ -17,6 +28,7 @@ public final class Input {
 	static boolean mousePressed;
 	static boolean rightPressed;
 	static boolean oldRightPressed;
+	static final String TAG = "Input";
 	
 	public static void update(){
 		
@@ -25,6 +37,134 @@ public final class Input {
 		mousePressed = Gdx.input.isButtonPressed(Buttons.LEFT);
 		rightPressed = Gdx.input.isButtonPressed(Buttons.RIGHT);
 		
+	}
+	
+	public static void addInput(FinalOutpostPlugin plugin, String name, Integer keyNumber){
+		// TODO document all this class.
+		
+		if(plugin == null){
+			Log.error(TAG, "Plugin not loaded, key '" + name + "' ignored");
+			return;
+		}
+		
+		String key = plugin.getWrapper().getPluginId() + ":" + name;
+		if(!keys.containsKey(key)){
+			keys.put(key, keyNumber);			
+		}else{
+			// Loaded from file or already present.
+		}
+	}
+	
+	public static void changeInput(FinalOutpostPlugin plugin, String name, Integer newKeyNumber){
+		
+		if(plugin == null){
+			Log.error(TAG, "Plugin not loaded, key change for '" + name + "' ignored");
+			return;
+		}
+		
+		String key = plugin.getWrapper().getPluginId() + ":" + name;
+		if(keys.containsKey(name)){
+			keys.put(key, newKeyNumber);
+		}
+	}
+	
+	public static void removeInput(FinalOutpostPlugin plugin, String name){
+		if(plugin == null){
+			Log.error(TAG, "Plugin not loaded, key removal for '" + name + "' ignored");
+			return;
+		}
+		keys.remove(plugin.getWrapper().getPluginId() + ":" + name);
+	}
+	
+	public static void loadInputs(){	
+		
+		Log.info(TAG, "Loading all input keys...");
+		
+		File file = new File(FOE.gameDirectory + FOE.inputDirectory + "Keys.txt");
+		
+		// Ensure that file exists
+		if(!file.exists()){
+			file.getParentFile().mkdirs();
+			try {
+				if(!file.createNewFile()){
+					Log.error(TAG, "Error loading input keys! (Creating file)");
+				}
+			} catch (IOException e) {
+				Log.error(TAG, "Error loading input keys!", e);
+				return;
+			}
+		}
+		
+		try {
+			JLineReader reader = new JLineReader(file);
+			reader.readAllLines();
+			
+			for(String key : reader.getLoadedValues().keySet()){
+				
+				String plugin = key.split(":")[0];
+				String name = key.split(":")[1];
+				String value = (String)reader.read(key);
+							
+				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, Keys.valueOf(value));
+				Log.info(TAG, "Input '" + name + "' of plugin '" + plugin + "' is mapped to " + value + "(" + Keys.valueOf(value) + ")");
+			}
+			
+		} catch (Exception e){
+			Log.error(TAG, "Error loading input keys!", e);
+			return;
+		}	
+	}
+	
+	public static void saveInputs(){
+		
+		Log.info(TAG, "Saving all input keys...");
+		
+		File file = new File(FOE.gameDirectory + FOE.inputDirectory + "Keys.txt");
+		try {
+			JLineWriter writer = new JLineWriter(file);
+			
+			for(String key : keys.keySet()){
+				Log.info(TAG, key);
+				writer.writeLine(key, Keys.toString(keys.get(key)));
+			}
+			
+			writer.save();
+			
+		} catch (Exception e){
+			Log.error(TAG, "Error saving inputs!", e);
+		}
+	}
+	
+	public static boolean isInputDown(FinalOutpostPlugin plugin, String name){
+		if(plugin == null){
+			return false;
+		}else{
+			return isKeyDown(keys.get(plugin.getWrapper().getPluginId() + ":" + name));			
+		}
+	}
+	
+	public static boolean isInputJustDown(FinalOutpostPlugin plugin, String name){
+		if(plugin == null){
+			return false;
+		}else{
+			return isKeyJustDown(keys.get(plugin.getWrapper().getPluginId() + ":" + name));			
+		}
+	}
+	
+	public static int getInputCode(FinalOutpostPlugin plugin, String name){
+		if(plugin == null){
+			return -1;
+		}else{
+			return keys.get(plugin.getWrapper().getPluginId() + ":" + name);		
+		}
+	}
+	
+	public static String getInputString(FinalOutpostPlugin plugin, String inputName){
+		if(plugin == null){
+			return null;
+		}else{
+			return Keys.toString(keys.get(plugin.getWrapper().getPluginId() + ":" + inputName));		
+		}
 	}
 	
 	public static int getScreenWidth(){

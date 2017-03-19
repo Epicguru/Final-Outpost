@@ -1,6 +1,7 @@
 package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +21,12 @@ public class Main extends FinalOutpostPlugin{
 	
 	public static final String version = "0.0.1";
 	public static final String TAG = "Final Outpost Plugin";	
+	
+	public static final String UP = "Up";
+	public static final String DOWN = "Down";
+	public static final String LEFT = "Left";
+	public static final String RIGHT = "Right";
+	public static final String DEBUG = "Debug";
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
@@ -41,6 +48,14 @@ public class Main extends FinalOutpostPlugin{
 		graphics.add("Windowed Resolution", new Vector2(900, 500));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
+		
+		
+		// INPUTS
+		addInput(UP, Keys.W);
+		addInput(DOWN, Keys.S);
+		addInput(LEFT, Keys.A);
+		addInput(RIGHT, Keys.D);
+		addInput(DEBUG, Keys.F12);
 	}
 	
 	public boolean config(Config config){
@@ -94,6 +109,10 @@ public class Main extends FinalOutpostPlugin{
 		}	
 		
 		return true;
+	}
+	
+	public void init(){
+
 	}
 	
 	public void postInit(){
