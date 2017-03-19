@@ -16,8 +16,13 @@ public abstract class Tile extends Base {
 	// STATIC
 	private static final String TAG = "Tile";
 	private static ArrayList<TileFactory> factories = new ArrayList<>();
+	private static ArrayList<Tile> toUpdate = new ArrayList<>();
 	private static boolean sort;
 	public static float ONE = 1.001f;
+	
+	public static void clearAlwaysUpdates() {
+		toUpdate.clear();		
+	}
 	
 	public static boolean addTile(TileFactory factory){
 		if(!containsTile(factory.getName())){
