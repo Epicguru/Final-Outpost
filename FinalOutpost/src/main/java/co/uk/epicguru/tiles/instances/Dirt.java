@@ -20,10 +20,8 @@ public final class Dirt extends Tile {
 		}
 	}
 
-	public void render(Batch batch){
-		
-		
-		batch.draw(texture, getX(), getY(), 1, 1);
+	public void render(Batch batch){		
+		batch.draw(texture, getX(), getY(), ONE, ONE);
 	}
 	
 }

@@ -24,6 +24,7 @@ import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
@@ -42,6 +43,7 @@ public class FOE extends Game{
 	public static Color BG_Colour = new Color(0.2f, 0.3f, 0.7f, 1f); // BRITAIN TILL THE END!!!!
 	
 	public static final String gameDirectory = "Game Data/";
+	public static final String inputDirectory = "Input/";
 	public static final String gamePluginsExtracted = "Extracted/";
 	public static final String pluginsDirectory = "Plugins/";
 	public static final String configsDirectory = "Configs/";
@@ -123,10 +125,20 @@ public class FOE extends Game{
 			loading("Loading plugins", "Finding on disk...");
 			pluginsLoader.loadPlugins();
 			
-			loading("Loading plugins", "Finding on disk...");
+			// Start plugins
+			loading("Loading plugins", "Warming up...");
 			pluginsLoader.startPlugins();
-			
 			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
+			
+			// Load parsers
+			U.startTimer(parsers);
+			loading("Loading plugins' parsers", "...");
+			JLineParsers.loadParsers();
+			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
+					
+			// Loading input keys
+			loading("Setting up input", "Just a second M8");
+			Input.loadInputs();		
 			
 			// Load assets
 			U.startTimer(pluginsExtraction);
@@ -134,11 +146,6 @@ public class FOE extends Game{
 			pluginsLoader.extractAllAssets();	
 			Log.info(TAG, "Extracted assets for all plugins in " + U.endTimer(pluginsExtraction));
 						
-			// Load parsers
-			U.startTimer(parsers);
-			loading("Loading plugins' parsers", "...");
-			JLineParsers.loadParsers();
-			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
 			
 			postDone = false;
 			
@@ -198,6 +205,10 @@ public class FOE extends Game{
 			loading("Post-Initialising plugins", "...");
 			pluginsLoader.postInitAllPlugins();
 			
+			// Save inputs (also done at shutdown)
+			loading("Saving inputs", "Don't blink");
+			Input.saveInputs();
+			
 			// End timer
 			Log.info(TAG, "Finished thread creation in " + U.endTimer(all) + " seconds.");
 			loaded = true;
@@ -245,6 +256,7 @@ public class FOE extends Game{
 	
 	public void update(float delta){
 		
+		Input.update();
 		camera.update();
 		
 		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
@@ -254,7 +266,7 @@ public class FOE extends Game{
 	
 	public void resize(int width, int height){
 		
-		camera.setToOrtho(false, width / PPM, height / PPM);
+		camera.setToOrtho(false, (float)width / PPM, (float)height / PPM);
 		UIcamera.setToOrtho(false, width, height); // No scaling
 		
 		super.resize(width, height);
@@ -294,6 +306,7 @@ public class FOE extends Game{
 		pluginsLoader.stopPlugins();	
 		pluginsLoader.dispose();
 		pluginsLoader = null;
+		Input.saveInputs();
 		if(map != null) map.dispose();
 		
 		System.gc();
