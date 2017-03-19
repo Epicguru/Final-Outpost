@@ -125,22 +125,20 @@ public class FOE extends Game{
 			loading("Loading plugins", "Finding on disk...");
 			pluginsLoader.loadPlugins();
 			
+			// Start plugins
+			loading("Loading plugins", "Warming up...");
+			pluginsLoader.startPlugins();
+			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
+			
 			// Load parsers
 			U.startTimer(parsers);
 			loading("Loading plugins' parsers", "...");
 			JLineParsers.loadParsers();
 			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
-			
+					
 			// Loading input keys
 			loading("Setting up input", "Just a second M8");
-			Input.loadInputs();
-			
-			// Start plugins
-			loading("Loading plugins", "Warming up...");
-			pluginsLoader.startPlugins();
-					
-			
-			Log.info(TAG, "Loaded and started " + pluginsLoader.getStartedPlugins().size() + " plugins in " + U.endTimer(plugins) + " seconds.");
+			Input.loadInputs();		
 			
 			// Load assets
 			U.startTimer(pluginsExtraction);
@@ -268,7 +266,7 @@ public class FOE extends Game{
 	
 	public void resize(int width, int height){
 		
-		camera.setToOrtho(false, width / PPM, height / PPM);
+		camera.setToOrtho(false, (float)width / PPM, (float)height / PPM);
 		UIcamera.setToOrtho(false, width, height); // No scaling
 		
 		super.resize(width, height);

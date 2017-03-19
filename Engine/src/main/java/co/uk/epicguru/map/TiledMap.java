@@ -111,6 +111,21 @@ public class TiledMap extends Base{
 	}
 	
 	/**
+	 * Clears all tiles within a range, by setting the tile to null using {@link #clearTile(int, int)}.
+	 * @param x The X coordinate, in tiles.
+	 * @param y The Y coordinate, in tiles.
+	 * @param width The width of the range.
+	 * @param height The height of the range.
+	 */
+	public void clearTiles(int x, int y, int width, int height){
+		for(; x < width; x++){
+			for(; y < height; y++){
+				clearTile(x, y);
+			}
+		}
+	}
+	
+	/**
 	 * Sets the tile at the given coordinates if the coordinates are within the bounds of the map.
 	 * @param tile The Tile object to set. It can be null.
 	 * @param x The X coordinate, in tiles.
@@ -184,6 +199,22 @@ public class TiledMap extends Base{
 	}
 	
 	/**
+	 * Sets all tiles within the range to the tile supplied by the factory.
+	 */
+	public void setTiles(TileFactory factory, int x, int y, int width, int height){
+		if(factory == null){
+			clearTiles(x, y, width, height);
+			return;
+		}
+		
+		for(; x < width; x++){
+			for(; y < height; y++){
+				setTile(factory, x, y);
+			}
+		}
+	}
+	
+	/**
 	 * Creates a new 2D array of tiles given a starting position and a size.
 	 * As always the tiles returned may be null, but the returned value will never be null.
 	 * @param start The starting posisition. All values are truncated to an int.
@@ -215,7 +246,7 @@ public class TiledMap extends Base{
 	 */
 	public Tile[] getTilesRange(float x, float y, float radius){
 		
-		int extra = 1;
+		int extra = 3;
 		int size = (int)radius;
 		int ri = extra + size;
 		int X = (int)x - ri / 2;

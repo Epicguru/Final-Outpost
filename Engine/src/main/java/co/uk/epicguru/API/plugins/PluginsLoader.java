@@ -163,7 +163,9 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	public void initAllPlugins(){
 		for(PluginWrapper plugin : getPlugins()){
 			FOE.loadingSubText = plugin.getPluginId();
-			getFOPlugin(plugin.getPluginId()).init();
+			FinalOutpostPlugin pl = getFOPlugin(plugin.getPluginId());
+			pl.beforeInit = false;
+			pl.init();
 		}
 	}
 	

@@ -8,6 +8,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
+import co.uk.epicguru.API.PluginRuntimeException;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
@@ -24,21 +25,22 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	private ArrayList<Config> configs = new ArrayList<>();
 	private ArrayList<String> inputNames = new ArrayList<>();
 	private String assetsFolder;
+	/**
+	 * Please do not alter, but if you are interested in what it does then read the name of the variable to discover what it is.
+	 */
+	public boolean beforeInit = true;
 	
 	/**
 	 * The base class that all plugins should implement as a main class.
 	 * Use start to create and save configuration files.
 	 * <p>
-	 * Things that ARE auto loaded : 
+	 * Things that ARE auto loaded (Assuming @Extension annotation): 
 	 * <ul>
-	 * <li>-All JLineIO parsers.
-	 * <li>-Kryonet messages that inherit from BaseMessage
+	 * <li>All JLineIO parsers.
+	 * <li>Kryonet messages that inherit from BaseMessage
+	 * <li>Tile Factories and Tiles
 	 * </ul>
 	 * <p>
-	 * Things that ARE NOT auto loaded (But can be loaded) : 
-	 * <ul>
-	 * <li> All classes (MUST - Implement ExtensionPoint or extend Base AND have the @Extension annotation on the class)
-	 * </ul>
 	 * @param wrapper The wrapper, will be handed to you.
 	 * @param displayName The name of this plugin, as users will see it. Make it pretty.
 	 * @param displayVersion The version of this plugin, as users will see it. This does not have to follow any conventions.
@@ -151,6 +153,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	
 	/**
 	 * Called after ALL plugins have been loaded and ALL content has been loaded and ALL configs have been loaded.
+	 * Here is where you should define, check and maintain inputs using {@link #addInput(String, int)} and other methods.
 	 * This allows for interaction between plugins at start up if required.
 	 */
 	public void init(){
@@ -159,7 +162,7 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	
 	/**
 	 * Called after ALL plugins have been loaded and ALL content has been loaded and after ALL configs have been loaded AND after {@link #init()}.
-	 * This serves as a second layer to interaction.
+	 * This serves as a second layer to interaction. Adding inputs is also valid here and after this.
 	 */
 	public void postInit() {
 
@@ -174,6 +177,11 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @see {@link #changeInput(String, int)}, {@link #removeInput(String)}
 	 */
 	public void addInput(final String name, int key){
+		
+		if(beforeInit){
+			throw new PluginRuntimeException("Cannot add a new input before init() method is called. Please override init() to do this.");
+		}
+		
 		Input.addInput(this, name, key);
 		this.inputNames.add(name);
 	}
@@ -184,6 +192,9 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @param newKey The new key to bind it to. See Gdx class Keys.
 	 */
 	public void changeInput(final String name, int newKey){
+		if(beforeInit){
+			throw new PluginRuntimeException("Cannot change an input before init() method is called. Please override init() to do this.");
+		}
 		Input.changeInput(this, name, newKey);
 	}
 	
@@ -192,6 +203,9 @@ public abstract class FinalOutpostPlugin extends Plugin{
 	 * @param name The name of the input to remove.
 	 */
 	public void removeInput(final String name){
+		if(beforeInit){
+			throw new PluginRuntimeException("Cannot remove an input before init() method is called. Please override init() to do this.");
+		}
 		Input.removeInput(this, name);
 		this.inputNames.remove(name);
 	}

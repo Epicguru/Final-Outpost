@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.main.Constants;
+import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
 public class PlayerRenderer extends ScreenHook{
@@ -27,9 +28,24 @@ public class PlayerRenderer extends ScreenHook{
 	
 	@Override
 	public void update(float delta) {
+		
+		float speed = 10;
+		speed *= delta;
+		
 		if(Main.INSTANCE.isInputDown(Main.RIGHT)){
-			// Move right
+			position.x += speed;
 		}
+		if(Main.INSTANCE.isInputDown(Main.LEFT)){
+			position.x -= speed;
+		}
+		if(Main.INSTANCE.isInputDown(Main.UP)){
+			position.y += speed;
+		}
+		if(Main.INSTANCE.isInputDown(Main.DOWN)){
+			position.y -= speed;
+		}
+		
+		FOE.camera.position.set(this.position, 0);
 	}
 
 	@Override

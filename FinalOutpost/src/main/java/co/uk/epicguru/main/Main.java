@@ -48,14 +48,6 @@ public class Main extends FinalOutpostPlugin{
 		graphics.add("Windowed Resolution", new Vector2(900, 500));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
-		
-		
-		// INPUTS
-		addInput(UP, Keys.W);
-		addInput(DOWN, Keys.S);
-		addInput(LEFT, Keys.A);
-		addInput(RIGHT, Keys.D);
-		addInput(DEBUG, Keys.F12);
 	}
 	
 	public boolean config(Config config){
@@ -112,7 +104,12 @@ public class Main extends FinalOutpostPlugin{
 	}
 	
 	public void init(){
-
+		// INPUTS
+		addInput(UP, Keys.W);
+		addInput(DOWN, Keys.S);
+		addInput(LEFT, Keys.A);
+		addInput(RIGHT, Keys.D);
+		addInput(DEBUG, Keys.F12);
 	}
 	
 	public void postInit(){

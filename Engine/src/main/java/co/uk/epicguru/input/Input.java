@@ -106,7 +106,7 @@ public final class Input {
 				String value = (String)reader.read(key);
 							
 				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, Keys.valueOf(value));
-				Log.info(TAG, "Input '" + name + "' of plugin '" + plugin + "' is mapped to " + value + "(" + Keys.valueOf(value) + ")");
+				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + value + "(" + Keys.valueOf(value) + ")");
 			}
 			
 		} catch (Exception e){

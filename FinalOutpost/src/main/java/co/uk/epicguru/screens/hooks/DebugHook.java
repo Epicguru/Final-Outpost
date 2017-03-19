@@ -18,6 +18,9 @@ public class DebugHook extends ScreenHook {
 			this.active = !active;
 		}
 		
+		if(!active)
+			return;
+		
 		float total = (float) (Runtime.getRuntime().totalMemory() / Math.pow(1024, 3));
 		float used = (float) (total - Runtime.getRuntime().freeMemory() / Math.pow(1024, 3));
 		float p = used / total;
