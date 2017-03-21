@@ -17,11 +17,28 @@ public abstract class Tile extends Base {
 	private static final String TAG = "Tile";
 	private static ArrayList<TileFactory> factories = new ArrayList<>();
 	private static ArrayList<Tile> toUpdate = new ArrayList<>();
+	private static ArrayList<Tile> toBin = new ArrayList<>();
 	private static boolean sort;
 	public static float ONE = 1.001f;
 	
-	public static void clearAlwaysUpdates() {
-		toUpdate.clear();		
+	public static void clearUpdates() {
+		toUpdate.clear();	
+		toBin.clear();
+	}
+	
+	public static void updateAll(float delta){
+		for(Tile tile : toUpdate){
+			if(tile.needsToUpdate()){
+				tile.update(delta);				
+			}else{
+				toBin.add(tile);
+			}
+		}
+		
+		for(Tile tile : toBin){
+			toUpdate.remove(tile);
+		}
+		toBin.clear();
 	}
 	
 	public static boolean addTile(TileFactory factory){
@@ -145,7 +162,11 @@ public abstract class Tile extends Base {
 		this.x = x;
 		this.y = y;
 	}
-
+	
+	public boolean needsToUpdate(){
+		return false;
+	}
+	
 	public void update(float delta){
 		
 	}

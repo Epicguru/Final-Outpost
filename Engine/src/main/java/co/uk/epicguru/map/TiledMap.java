@@ -318,7 +318,7 @@ public class TiledMap extends Base{
 	 */
 	public void dispose(){
 		this.tiles = null;
-		Tile.clearAlwaysUpdates();
+		Tile.clearUpdates();
 		print("Disposed");
 	}
 }
