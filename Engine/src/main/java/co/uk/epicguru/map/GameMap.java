@@ -22,6 +22,10 @@ public class GameMap extends TiledMap {
 		return renderLoops;
 	}
 	
+	public void update(float delta){
+		Tile.updateAll(delta);
+	}
+	
 	public void render(){
 		
 		renderCalls = 0;

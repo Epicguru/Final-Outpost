@@ -35,6 +35,13 @@ public class InGameScreen extends GameScreen {
 		super.hide();
 	}
 	
+	public void update(float delta){
+		
+		FOE.map.update(delta);
+		
+		super.update(delta);
+	}
+	
 	public void render(float delta, Batch batch){
 		FOE.map.render();
 		
