@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import co.uk.epicguru.API.Base;
 import co.uk.epicguru.IO.parsers.JLineParser;
+import co.uk.epicguru.logging.Log;
 
 /**
  * The Input class in the Final Outpost engine. Takes a file to read from to and reads lines of JCode.
@@ -21,6 +22,7 @@ public class JLineReader extends Base implements Disposable{
 	private int currentLine = -1;
 	private String[] lines;
 	private HashMap<String, Object> variables = new HashMap<String, Object>();
+	private ArrayList<String> tempStrings = new ArrayList<>();
 	private File file;
 	
 	/**
@@ -152,51 +154,171 @@ public class JLineReader extends Base implements Disposable{
 	 */
 	public void readLine(int index){
 		String line = lines[index];
+				
+		// 0. Whooo!
+		tempStrings.clear();
 		
-		// 1. Split into variables 
-		String[] vars = line.split("-");
-		String[] newVars = new String[vars.length - 1];
-		int i = 0;
-		for(String s : vars){
-			if(i != 0)				
-				newVars[i - 1] = '-' + s.trim();
-			i++;
+		// 1. Check if line is empty or comment
+		if(line == null)
+			return;
+		if(line.trim().isEmpty())
+			return;
+		if(line.trim().charAt(0) == '#')
+			return;
+		
+		char split = '-';
+		int found = 0;
+		StringBuilder str = new StringBuilder();
+		
+		// 2. Get variables and trim
+		char[] letters = line.trim().toCharArray();
+		for(int i = 0; i < letters.length; i++){
+			char current = letters[i];
+			
+			if(current == split){
+				tempStrings.add(str.toString().trim());
+				str.setLength(0);
+				found++;
+			}else{
+				str.append(current);
+			}
 		}
 		
-		// 2. Loop		
-		for(String variable : newVars){
+		str.setLength(0);
+		
+		// 3. Check length
+		if(found == 0)
+			return; // Not worth reading
+		
+		// 4. Read each var
+		for(String string : tempStrings){
+			char[] l = string.toCharArray();
+			boolean pastType = false;
+			boolean finishedType = false;
+			boolean pastContent = false;
+			boolean finishedContent = false;
+			char typeA = '<';
+			char typeB = '>';
+			char contentA = '[';
+			char contentB = ']';
 			
-			// 3. Get name : From '-' to '<'. Do not include whitespace.			
-			String name = variable.substring(1, variable.indexOf('<')).trim();
+			String name = null;
+			String type = null;
+			String content = null;
 			
-			// 4. Get prefix. Easy.
-			String prefix = variable.substring(variable.indexOf('<') + 1, variable.indexOf('>')).trim();
+			int currentIndex = 0;
+			for(char c : l){
+				if(!pastType){
+					// In name
+					if(c == typeA){
+						pastType = true;
+						name = str.toString();
+						
+						// Check name for bad chars
+						if(JLineIO.containsESCs(name)){
+							RuntimeException e = new RuntimeException("The name of a JLineVariable cannot contain any of the following : \n" + 
+									JLineIO.getEscapableCharacters().toString()
+									);
+							Log.error("JLine IO", "JLineIO name invalid : '" + name + "'", e);
+							throw e;
+						}
+						
+						str.setLength(0);
+					}else{
+						str.append(c);
+					}
+				}else{
+					if(!finishedType){
+						// Looking for >
+						if(c == typeB){
+							// Found end of type
+							type = str.toString().trim();
+							finishedType = true;
+						}else{
+							str.append(c);
+						}
+					}else{
+						if(!pastContent){
+							// Looking for [
+							if(c == contentA){
+								// Found start of content
+								// Nothing to save
+								str.setLength(0);
+								pastContent = true;
+							}
+						}else{
+							if(!finishedContent){
+								// Be careful with escape chars...
+								if(c == contentB){
+									if(letters[currentIndex - 1] != getEscapeChar()){
+										finishedContent = true;
+										content = str.toString().trim();
+										str.setLength(0);
+									}else{
+										str.append(c);
+									}
+								}else{
+									str.append(c);
+								}
+							}
+						}
+					}
+				}
+				currentIndex++;
+				
+				if(finishedContent)
+					break;
+			}
 			
-			// 5. Get content
-			String content = variable.substring(variable.indexOf('[') + 1, variable.lastIndexOf(']')).trim();
+			// 5. Errors, if any
+			if(!pastType){
+				RuntimeException e = new RuntimeException("Error whilst pasring JLineIO : \n"
+						+ "Did not find beggining of TYPE (<) in line!");
+				Log.error("JLine IO", "Error in line parsing.", e);
+				throw e;
+			}
+			if(!finishedType){
+				RuntimeException e = new RuntimeException("Error whilst pasring JLineIO : \n"
+						+ "Did not find end of TYPE (>) in line!");
+				Log.error("JLine IO", "Error in line parsing.", e);
+				throw e;
+			}
+			if(!pastContent){
+				RuntimeException e = new RuntimeException("Error whilst pasring JLineIO : \n"
+						+ "Did not find beggining of CONTENT ([) in line!");
+				Log.error("JLine IO", "Error in line parsing.", e);
+				throw e;
+			}
+			if(!finishedContent){
+				RuntimeException e = new RuntimeException("Error whilst pasring JLineIO : \n"
+						+ "Did not find end of CONTENT (]) in line!");
+				Log.error("JLine IO", "Error in line parsing.", e);
+				throw e;
+			}
 			
-			// 6. Load parser
+			// 6. Read, read!
 			JLineParser<?> parser = null;
 			try {
-				parser = JLineParsers.getParser(prefix);
+				parser = JLineParsers.getParser(type);
 			} catch (JLIOException e) {
-				error("Failed to get parser for loaded variable, variable will be ignored. Prefix : '" + prefix + "' Name : '" + name + "' Content : '" + content + "'", e);
-				continue;
+				RuntimeException e2 = new RuntimeException("Error whilst pasring JLineIO : \n"
+						+ "Could not find parser for type '" + type + "'", e);
+				Log.error("JLine IO", "Error in line parsing.", e2);
+				throw e2;
 			}
 			
-			// 7. Load variable using parser
-			Object variableValue = parser.read(name, content, this);
+			Object o = parser.read(name, content, this);
+			variables.put(name, o);
 			
-			if(variableValue == null){
-				error("Parser '" + parser.getClass().getName() + "' returned a null value when reading! Naughty parser! (Variable ignored)");
-				continue;
-			}
-			
-			// 8. Put in map
-			variables.put(name, variableValue);
-			
-			// 9. Pat yourself on the back James (pat, pat)
+			// Done!
 		}
+	}
+	
+	/**
+	 * Gets the escape character used in JLineIO. Just in case you were curious...
+	 */
+	public final char getEscapeChar(){
+		return JLineIO.escape;
 	}
 	
 	/**
@@ -290,7 +412,6 @@ public class JLineReader extends Base implements Disposable{
 	public int getLineCount(){
 		return getLinesRaw().length;
 	}
-
 
 	/**
 	 * Disposes the reader.

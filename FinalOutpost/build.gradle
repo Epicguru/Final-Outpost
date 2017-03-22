@@ -1,7 +1,7 @@
 
 // Plugin properties
 project.ext.pluginName = "FinalOutpost"
-project.ext.pluginVersion = "0.0.1"
+project.ext.pluginVersion = "0.0.2"
 project.ext.pluginProvider = "Epicguru"
 project.ext.pluginClass = "co.uk.epicguru.main.Main"
 
