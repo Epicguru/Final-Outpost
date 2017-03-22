@@ -1,7 +1,10 @@
 package co.uk.epicguru.API.plugins;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -10,6 +13,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 import co.uk.epicguru.API.PluginRuntimeException;
+import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
@@ -35,11 +39,11 @@ public abstract class PluginBackend extends Plugin {
 	 * Please do not alter, but if you are interested in what it does then read the name of the variable to discover what it is.
 	 */
 	public boolean beforeInit = true;
-	
+
 	public PluginBackend(PluginWrapper wrapper) {
 		super(wrapper);
 	}
-	
+
 	/**
 	 * Starts a new config. This config will be automatically saved when necessary.
 	 */
@@ -55,7 +59,7 @@ public abstract class PluginBackend extends Plugin {
 	public ArrayList<Config> getRegisteredConfigs(){
 		return configs;
 	}
-	
+
 	/**
 	 * Gets a config given its name.
 	 */
@@ -66,7 +70,7 @@ public abstract class PluginBackend extends Plugin {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the class through which assets are loaded into memory for use.
 	 * Same as <code>FOE.pluginsAssetsLoader;</code>
@@ -74,14 +78,14 @@ public abstract class PluginBackend extends Plugin {
 	public PluginAssetLoader getAssetLoader(){
 		return FOE.pluginsAssetsLoader;
 	}
-	
+
 	/**
 	 * Loads all configs for this plugin that are saved on the disk.
 	 */
 	public void loadConfigs(){
 		ConfigLoader.loadConfigsFor(getWrapper().getPluginId());
 	}
-	
+
 	/**
 	 * Loads all configs without reading from file. (as in those registered with {@link #newConfig(String)}).
 	 * Not recommended as erroneous data may crop up. ONLY USE IF YOU KNOW WHAT YOU ARE DOING.
@@ -91,7 +95,7 @@ public abstract class PluginBackend extends Plugin {
 			config(config);
 		}
 	}
-	
+
 	/**
 	 * Saves all configs registered with {@link #newConfig(String)}.
 	 */
@@ -101,14 +105,14 @@ public abstract class PluginBackend extends Plugin {
 			config.save((FinalOutpostPlugin)this);
 		}
 	}
-	
+
 	/**
 	 * Gets the display name.
 	 */
 	public String getDisplayName(){
 		return displayName;
 	}
-	
+
 	/**
 	 * Gets the display version.
 	 */
@@ -118,7 +122,7 @@ public abstract class PluginBackend extends Plugin {
 
 	public abstract boolean config(Config config);
 	public abstract Settings getPackerSettings();
-	
+
 	/**
 	 * Adds a generic input that allows for the user to configure keys.
 	 * This does not work for mouse buttons, only keys. Use the {@link Keys} class to get keys from.
@@ -128,7 +132,7 @@ public abstract class PluginBackend extends Plugin {
 	 * @see {@link #changeInput(String, int)}, {@link #removeInput(String)}
 	 */
 	public void addInput(final String name, int key){
-		
+
 		if(beforeInit){
 			throw new PluginRuntimeException("Cannot add a new input before init() method is called. Please override init() to do this.");
 		}
@@ -136,7 +140,7 @@ public abstract class PluginBackend extends Plugin {
 		Input.addInput(this, name, key);
 		this.inputNames.add(name);
 	}
-	
+
 	/**
 	 * Changes an existing input, as created with {@link #addInput(String, int)}.
 	 * @param name The name of the existing input.
@@ -148,7 +152,7 @@ public abstract class PluginBackend extends Plugin {
 		}
 		Input.changeInput(this, name, newKey);
 	}
-	
+
 	/**
 	 * Removes a input added by this plugin using {@link #addInput(String, int)}.
 	 * @param name The name of the input to remove.
@@ -160,7 +164,7 @@ public abstract class PluginBackend extends Plugin {
 		Input.removeInput(this, name);
 		this.inputNames.remove(name);
 	}
-	
+
 	/**
 	 * Returns true if the key bound to the specified input is currently pressed on the keyboard.
 	 * @param name The name of the input as given in {@link #addInput(String, int)}.
@@ -169,7 +173,7 @@ public abstract class PluginBackend extends Plugin {
 	public boolean isInputDown(final String name){
 		return Input.isInputDown(this, name);
 	}
-	
+
 	/**
 	 * Returns true if the key bound to the specified input is currently pressed AND was NOT pressed last frame on the keyboard.
 	 * @param name The name of the input as given in {@link #addInput(String, int)}.
@@ -178,7 +182,7 @@ public abstract class PluginBackend extends Plugin {
 	public boolean isInputJustDown(final String name){
 		return Input.isInputJustDown(this, name);
 	}
-	
+
 	/**
 	 * Gets the number of the key that the specified input is bound to. This can be changed by {@link #changeInput(String, int)}
 	 * or by the user.
@@ -188,7 +192,7 @@ public abstract class PluginBackend extends Plugin {
 	public int getInputCode(final String name){
 		return Input.getInputCode(this, name);
 	}
-	
+
 	/**
 	 * Gets the (sort of) user friendly name of the key bound to the specified input.
 	 * @param name The name of the input as specified in {@link #addInput(String, int)}.
@@ -197,14 +201,14 @@ public abstract class PluginBackend extends Plugin {
 	public String getInputString(final String name){
 		return Input.getInputString(this, name);
 	}
-	
+
 	/**
 	 * Gets an array-list of all inputs added and removed through {@link #addInput(String, int)} and {@link #removeInput(String)}.
 	 */
 	public ArrayList<String> getInputNames(){
 		return this.inputNames;
 	}
-	
+
 	/**
 	 * Gets the assets folder for an extracted assets directory.
 	 */
@@ -227,16 +231,47 @@ public abstract class PluginBackend extends Plugin {
 	 * Called only once when all textures are packed.
 	 */
 	public void packTextures(){
-		Log.info(this.getDisplayName(), "Packing textures using default implementation");
 		
-		if(!new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).exists())
-			return;
+		boolean collect = false;
+		// True -- Collects, Packs (no faster...) but DOES NOT LOAD???
+		// False - Works with all tested assets.
 		
-		String path = Gdx.files.getExternalStoragePath() + this.assetsFolder;
-		
-		TexturePacker.process(getPackerSettings(), path, new File(path).getParentFile().getAbsolutePath() + "/Packed", "Textures.atlas");
+		if(collect){	
+			Log.info(this.getDisplayName(), "Packing textures using default implementation (Collect mode)");
+			if(!new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).exists())
+				return;
+			
+			String path = Gdx.files.getExternalStoragePath() + this.assetsFolder;
+			String input = new File(path).getParentFile().getAbsolutePath() + "/Collected";
+			String output = new File(path).getParentFile().getAbsolutePath() + "/Packed";
+			
+			File collectedFolder = new File(input);
+			if(!collectedFolder.mkdirs())
+				return;
+			
+			File[] files = U.getFilesWithEnding(new File(path), ".png");
+			System.out.println(U.prettify(files));
+			for(File file : files){
+				try {
+					FileUtils.copyFile(file, new File(collectedFolder.getAbsolutePath() + "\\" + file.getName()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}				
+			}
+						
+			TexturePacker.process(getPackerSettings(), input, output, "Textures.atlas");
+			
+		}else{
+			Log.info(this.getDisplayName(), "Packing textures using default implementation (Raw mode)");
+			if(!new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).exists())
+				return;
+
+			String path = Gdx.files.getExternalStoragePath() + this.assetsFolder;
+
+			TexturePacker.process(getPackerSettings(), path, new File(path).getParentFile().getAbsolutePath() + "/Packed", "Textures.atlas");
+		}
 	}
-	
+
 	/**
 	 * Loads an asset for the whole program, that is able to be used my this plugin.
 	 * <li>
@@ -250,7 +285,7 @@ public abstract class PluginBackend extends Plugin {
 	public void loadAsset(String path, Class<?> clazz){
 		getAssetLoader().load(assetsFolder + path.replaceAll("/", "\\\\"), clazz);
 	}
-	
+
 	/**
 	 * Used to load plugin assets. To load assets/Thing.png, do getAsset("Thing.png").
 	 */

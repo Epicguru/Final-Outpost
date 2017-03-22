@@ -94,8 +94,9 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 		Settings settings = new Settings();
 		
 		// Override to manipulate settings.
-		settings.maxWidth = (int) Math.pow(2, 16);
-		settings.maxHeight = (int) Math.pow(2, 16);
+		settings.maxWidth = 2048;
+		settings.maxHeight = 2048;
+		settings.fast = true;
 		
 		return settings;
 	}	
