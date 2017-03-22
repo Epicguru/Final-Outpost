@@ -12,7 +12,7 @@ public final class JLineIO {
 	static final char escape = '&';
 	private static char[] escs = new char[]{
 			escape,
-			'@',
+			escape,
 
 			'\n',
 			'n',
@@ -28,9 +28,6 @@ public final class JLineIO {
 
 			'-',
 			'-',
-
-			':',
-			':',
 
 			'[',
 			'[',
@@ -117,10 +114,15 @@ public final class JLineIO {
 		for(char c : chars){
 			translator.append(c);
 		}
+		
+		if(chars.get(chars.size() - 1) == escape){
+			translator.append(' ');
+		}
 
 		String result = translator.toString();
 		translator.setLength(0);
 		chars.clear();
+		
 		return result;
 	}
 
@@ -143,9 +145,10 @@ public final class JLineIO {
 				char next = letters[i + 1];				
 				char real = getRealValue(esc, next);
 				
+				i++;
+				
 				chars.add(real);
 				
-				i++;
 				continue;
 			}
 			
@@ -161,6 +164,7 @@ public final class JLineIO {
 		String result = translator.toString();
 		translator.setLength(0);
 		chars.clear();
+		
 		return result;
 	}
 }

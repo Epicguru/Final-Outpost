@@ -47,11 +47,12 @@ public class Config extends Base{
 		for(String oldKey : oldMap.keySet()){
 			if(!map.containsKey(oldKey)){
 				add(oldKey, oldMap.get(oldKey).getDefaultValue());
-				if(oldMap.get(oldKey).getValue() != null)
-					set(oldKey, oldMap.get(oldKey).getValue());
-				else
+				if(oldMap.get(oldKey).getValue() != null){
+					set(oldKey, oldMap.get(oldKey).getValue());					
+				}else{
 					set(oldKey, oldMap.get(oldKey).getDefaultValue());
-				print("Variable '" + oldKey + "' was not loaded in file but was designated as one in start(). Created a default value var.");
+					print("Variable '" + oldKey + "' was not loaded in file but was designated as one in start(). Created a default value var.");
+				}
 			}
 		}
 	}

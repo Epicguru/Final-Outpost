@@ -59,7 +59,7 @@ public class JLineWriter extends Base{
 	 */
 	public void writeRaw(final String content, JLineParser<?> parser, String key){
 		String newString = JLineIO.translateIn(content.trim());
-		appendToLine(getStart(parser, key) + newString.trim() + getEnd(parser, key));
+		appendToLine(getStart(parser, key) + newString + getEnd(parser, key));
 		writes++;
 	}
 	
