@@ -7,6 +7,7 @@ import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.screens.hooks.DebugHook;
+import co.uk.epicguru.screens.hooks.PhysicsTest;
 import co.uk.epicguru.screens.hooks.PlayerRenderer;
 import ro.fortsoft.pf4j.Extension;
 
@@ -22,6 +23,7 @@ public class InGameScreen extends GameScreen {
 		super.clearHooks();
 		super.addHook(new PlayerRenderer());
 		super.addHook(new DebugHook());
+		super.addHook(new PhysicsTest());
 		
 		super.show();
 	}

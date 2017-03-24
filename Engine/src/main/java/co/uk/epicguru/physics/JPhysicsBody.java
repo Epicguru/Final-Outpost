@@ -1,6 +1,8 @@
 package co.uk.epicguru.physics;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,7 +13,11 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class JPhysicsBody {
 
+	private static ShapeRenderer renderer = new ShapeRenderer();
 	private Rectangle rect;
+	private Vector2 velocity = new Vector2(0, 0);
+	private Vector2 drag = new Vector2(1f, 1f);
+	private float gravityScale = 1f;
 	
 	/**
 	 * Creates a new physics body given a position and a texture. The size of this body will be set to
@@ -155,6 +161,32 @@ public class JPhysicsBody {
 		return this;
 	}
 	
+	public JPhysicsBody scale(Vector2 scale){
+		
+		if(scale == null)
+			return this;
+		
+		return this.scale(scale.x, scale.y);
+	}
+	
+	public JPhysicsBody translate(Vector2 offset){
+		if(offset == null)
+			return this;
+		
+		return this.translate(offset.x, offset.y);
+	}
+	
+	public JPhysicsBody translate(Vector2 offset, float scale){
+		if(offset == null)
+			return this;
+		
+		return this.translate(offset.x * scale, offset.y * scale);
+	}
+	
+	public JPhysicsBody translate(float x, float y){
+		return this.setPosition(this.getX() + x, this.getY() + y);
+	}
+	
 	public JPhysicsBody setPosition(Vector2 position){		
 		if(position == null){
 			throw new IllegalArgumentException("Position cannot be set to a null value!");
@@ -197,5 +229,81 @@ public class JPhysicsBody {
 	public JPhysicsBody centerOn(float x, float y){
 		this.rect.setCenter(x, y);
 		return this;
+	}
+
+	public Vector2 getVelocity(){
+		return this.velocity;
+	}
+	
+	public JPhysicsBody applyForce(Vector2 force, ForceMode mode){
+		if(force == null)
+			return this;
+		
+		this.applyForce(force.x, force.y, mode);
+		
+		return this;
+	}
+	
+	public JPhysicsBody applyForce(float x, float y, ForceMode mode){
+		switch(mode){
+		case FORCE:
+			this.velocity.add(x, y);
+			break;
+			
+		case IMPULSE:
+			this.velocity.set(x, y);
+			break;
+		
+		}
+		
+		return this;
+	}
+	
+	public JPhysicsBody setGravityScale(float scale){
+		this.gravityScale = scale;
+		return this;
+	}
+	
+	public float getGravityScale(){
+		return this.gravityScale;
+	}
+	
+	public Vector2 getDrag(){
+		return this.drag;
+	}
+	
+	public JPhysicsBody setDrag(float xScale, float yScale){
+		this.drag.set(xScale, yScale);
+		return this;
+	}
+	
+	private void updateVelocity(float delta){
+		// Translate by velocity
+		this.translate(this.getVelocity(), delta);
+		
+		// Reduce velocity by drag.
+		this.velocity.scl(this.getDrag());
+		
+	}
+	
+	public void update(float delta){
+		
+		// Apply gravity
+		applyForce(JPhysics.getGravity().x * this.getGravityScale(), JPhysics.getGravity().y * this.getGravityScale(), ForceMode.FORCE);
+		
+		// Apply
+		updateVelocity(delta);		
+	}
+
+	public void render(OrthographicCamera camera){	
+		
+		renderer.setAutoShapeType(true);
+		renderer.setProjectionMatrix(camera.combined);
+		if(!renderer.isDrawing())
+			renderer.begin();
+		
+		renderer.box(this.getX(), this.getY(), 0, this.getWidth(), this.getHeight(), 0);
+		
+		
 	}
 }

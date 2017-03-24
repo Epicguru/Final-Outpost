@@ -38,7 +38,8 @@ public class JPhysics {
 	 * <li> Gravity - {@link #getGravity()}
 	 */
 	public static void reset(){
-		
+		setPPM(1);
+		setGravity(0, 0);
 	}
 	
 	/**
