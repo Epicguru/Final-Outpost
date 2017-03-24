@@ -9,7 +9,7 @@ import co.uk.epicguru.logging.Log;
  */
 public class JPhysics {
 	
-	private float PPM = 1;
+	private static float PPM = 1;
 	
 	protected static void print(Object object){
 		//System.out.println(object == null ? "Null" : object.toString()); // Deploy
@@ -23,8 +23,8 @@ public class JPhysics {
 	 * @param PPM The pixels that are in each meter.
 	 * @see {@link #getPPM()}.
 	 */
-	public void setPPM(float PPM){
-		this.PPM = PPM;
+	public static void setPPM(float PPM){
+		JPhysics.PPM = PPM;
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public class JPhysics {
 	 * The default value of this is 1.
 	 * @return The pixels in one meter.
 	 */
-	public float getPPM(){
+	public static float getPPM(){
 		return PPM;
 	}
 }
