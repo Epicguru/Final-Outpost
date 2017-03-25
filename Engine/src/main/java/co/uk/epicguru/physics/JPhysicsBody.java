@@ -503,8 +503,10 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		float thisMass = this.getMass();
 		float otherMass = other.getMass();
 		float dif = thisMass / otherMass;
-		float influence = dif < 1 ? 1 : dif > 50 ? 1000000 : dif;
+		float influence = dif < 1 ? 1 : dif;
 
+		float barge = -1 + ((influence / 100f) > 1f ? 1f : (influence / 100f)) * 2;
+		
 		switch(index){
 		case 0:		
 			// Tell other
@@ -519,7 +521,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 			float addY = !original ? other.getVelocity().y / influence : 0;
 			
 			// Bounce
-			this.applyForce((-this.getVelocity().x * bounce) + addX, this.getVelocity().y + addY, ForceMode.IMPULSE);
+			this.applyForce((this.getVelocity().x * barge * bounce) + addX, this.getVelocity().y + addY, ForceMode.IMPULSE);
 			break;
 		case 1:
 			// Tell other
@@ -534,7 +536,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 			addY = !original ? other.getVelocity().y / influence : 0;
 			
 			// Bounce
-			this.applyForce((-this.getVelocity().x * bounce) + addX, this.getVelocity().y + addY, ForceMode.IMPULSE);
+			this.applyForce((this.getVelocity().x * barge * bounce) + addX, this.getVelocity().y + addY, ForceMode.IMPULSE);
 			break;
 		case 2:
 			// Tell other
@@ -549,7 +551,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 			addY = !original ? other.getVelocity().y / influence : 0;
 			
 			// Bounce
-			this.applyForce(this.getVelocity().x + addX, (-this.getVelocity().y * bounce) + addY, ForceMode.IMPULSE);
+			this.applyForce(this.getVelocity().x + addX, (this.getVelocity().y * barge * bounce) + addY, ForceMode.IMPULSE);
 			break;
 		case 3:
 			// Tell other
@@ -564,7 +566,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 			addY = !original ? other.getVelocity().y / influence : 0;
 			
 			// Bounce
-			this.applyForce(this.getVelocity().x + addX, (-this.getVelocity().y * bounce) + addY, ForceMode.IMPULSE);
+			this.applyForce(this.getVelocity().x + addX, (this.getVelocity().y * barge * bounce) + addY, ForceMode.IMPULSE);
 			break;
 		}
 	}

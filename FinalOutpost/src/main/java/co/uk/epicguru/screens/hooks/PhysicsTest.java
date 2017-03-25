@@ -22,8 +22,8 @@ public class PhysicsTest extends ScreenHook {
 		JPhysics.setPPM(Constants.PPM);
 		JPhysics.setGravity(JPhysics.GRAVITY_ZERO);
 		
-		a = new JPhysicsBody(5, 10, 1, 1);
-		b = new JPhysicsBody(5, 5, 3, 3);
+		a = new JPhysicsBody(5, 10, 2, 2);
+		b = new JPhysicsBody(5, 5, 30, 30);
 	}
 	
 	public void update(float delta){
