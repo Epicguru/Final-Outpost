@@ -1,5 +1,7 @@
 package co.uk.epicguru.physics;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.logging.Log;
@@ -24,8 +26,15 @@ public class JPhysics {
 	 */
 	public static final Vector2 GRAVITY_ZERO = new Vector2(0, 0);
 	
+	private static ArrayList<JPhysicsBody> active = new ArrayList<>();
+	private static ArrayList<JPhysicsBody> bin = new ArrayList<>();
+	private static ArrayList<JPhysicsBody> add = new ArrayList<>();
+	
 	private static float PPM = 1;
+	private static float dragsPerSecond = 60f;
+	private static Vector2 defaultDrag = new Vector2(0.98f, 0.98f);
 	private static Vector2 gravity = new Vector2();
+	
 	
 	protected static void print(Object object){
 		//System.out.println(object == null ? "Null" : object.toString()); // Deploy
@@ -38,8 +47,70 @@ public class JPhysics {
 	 * <li> Gravity - {@link #getGravity()}
 	 */
 	public static void reset(){
+		clearWorld();
 		setPPM(1);
 		setGravity(0, 0);
+	}
+	
+	public static void addBody(JPhysicsBody body){
+		add.add(body);
+	}
+	
+	public static void removeBody(JPhysicsBody body){
+		bin.add(body);
+	}
+	
+	public static void update(float delta){
+		addAll();
+		for(JPhysicsBody body : active){
+			body.update(delta);
+		}
+		clearBin();
+	}
+	
+	public static void clearWorld(){
+		active.clear();
+	}
+	
+	private static void addAll(){
+		for(JPhysicsBody body : add){
+			active.add(body);
+		}
+	}
+	
+	private static void clearBin(){
+		for(JPhysicsBody body : bin){
+			active.remove(body);
+		}
+		bin.clear();
+	}
+	
+	public static Vector2 getDefaultDrag(){
+		return defaultDrag;
+	}
+	
+	public static void setDefaultDrag(Vector2 drag){
+		defaultDrag.set(drag);
+	}
+	
+	public static void setDefaultDrag(float x, float y){
+		defaultDrag.set(x, y);
+	}
+	
+	/**
+	 * Gets the value that represents how many times, per second (where a second is determined by the deltaTime value),
+	 * that the drag multiplier is applied to all active physics bodies. If you are unsure that this is then leave it alone!
+	 * The default value is 60;
+	 */
+	public static float getDragsPerSecond(){
+		return dragsPerSecond;
+	}
+	
+	/**
+	 * Sets the times per second that the drag multiplier is applied to all active bodies. See {@link #getDragsPerSecond()} for more info.
+	 */
+	public static void setDragsPerSecond(float dragsPerSecond){
+		JPhysics.dragsPerSecond = dragsPerSecond;
 	}
 	
 	/**
