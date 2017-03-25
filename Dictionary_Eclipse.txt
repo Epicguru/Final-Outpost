@@ -4,3 +4,5 @@ plugins
 config
 whooo
 billy
+collider
+arraylist

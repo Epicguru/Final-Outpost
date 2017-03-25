@@ -1,6 +1,7 @@
 package co.uk.epicguru.physics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -29,6 +30,7 @@ public class JPhysics {
 	private static ArrayList<JPhysicsBody> active = new ArrayList<>();
 	private static ArrayList<JPhysicsBody> bin = new ArrayList<>();
 	private static ArrayList<JPhysicsBody> add = new ArrayList<>();
+	private static ArrayList<JCollisionData> tempCollision = new ArrayList<>();
 	
 	private static float PPM = 1;
 	private static float dragsPerSecond = 60f;
@@ -62,10 +64,18 @@ public class JPhysics {
 	
 	public static void update(float delta){
 		addAll();
+		sort();
 		for(JPhysicsBody body : active){
 			body.update(delta);
 		}
+		for(JPhysicsBody body : active){
+			body.updatePhysics(delta);
+		}
 		clearBin();
+	}
+	
+	private static void sort(){
+		Collections.sort(active);
 	}
 	
 	public static void clearWorld(){
@@ -76,6 +86,7 @@ public class JPhysics {
 		for(JPhysicsBody body : add){
 			active.add(body);
 		}
+		add.clear();
 	}
 	
 	private static void clearBin(){
@@ -95,6 +106,39 @@ public class JPhysics {
 	
 	public static void setDefaultDrag(float x, float y){
 		defaultDrag.set(x, y);
+	}
+
+	public static ArrayList<JPhysicsBody> getActiveBodies(){
+		return active;
+	}
+	
+	public static ArrayList<JPhysicsBody> getPendingBodies(){
+		return add;
+	}
+	
+	public static ArrayList<JPhysicsBody> getBinnedBodies(){
+		return bin;
+	}
+	
+	public static ArrayList<JCollisionData> getAllCollisions(JPhysicsBody body){
+		tempCollision.clear();
+		
+		for(JPhysicsBody b : active){
+			if(b != body){
+				// Test for collision
+				if(b.overlaps(body)){
+					JCollisionData c = new JCollisionData();
+					
+					// Set data
+					c.bodyA = body;
+					c.bodyB = b;
+					
+					tempCollision.add(c);
+				}
+			}
+		}	
+		
+		return tempCollision;
 	}
 	
 	/**

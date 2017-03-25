@@ -1,11 +1,13 @@
 package co.uk.epicguru.screens.hooks;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.ScreenHook;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
-import co.uk.epicguru.main.Main;
 import co.uk.epicguru.physics.ForceMode;
 import co.uk.epicguru.physics.JPhysics;
 import co.uk.epicguru.physics.JPhysicsBody;
@@ -20,17 +22,18 @@ public class PhysicsTest extends ScreenHook {
 		JPhysics.setPPM(Constants.PPM);
 		JPhysics.setGravity(JPhysics.GRAVITY_ZERO);
 		
-		a = new JPhysicsBody(5, 10, 1, 1).setDrag(0.98f, 0.98f);
-		b = new JPhysicsBody(10, 30, 3, 3).setDrag(0.98f, 0.98f);
+		a = new JPhysicsBody(5, 10, 1, 1);
+		b = new JPhysicsBody(5, 5, 3, 3);
 	}
 	
 	public void update(float delta){
 		
 		JPhysics.update(delta);
 		
-		if(Main.INSTANCE.isInputJustDown(Main.DEBUG)){
-			a.setPosition(0, 0);
-			a.applyForce(20, 0, ForceMode.IMPULSE);
+		if(Input.getMouseButtonJustDown(Buttons.MIDDLE)){
+			b.setPosition(Input.getMouseWorldPos());
+			b.applyForce(Gdx.input.getDeltaX() * 5, -Gdx.input.getDeltaY() * 5, ForceMode.IMPULSE);
+			
 		}
 	}
 	
