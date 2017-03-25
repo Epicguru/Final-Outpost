@@ -415,46 +415,100 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		return this.drag;
 	}
 
+	/**
+	 * Gets a general number for velocity. This can be used as a gauge for speed.
+	 */
 	public float getGeneralVelocity(){
 		return this.getVelocity().len();
 	}
 	
+	/**
+	 * Gets the surface area of this body.
+	 */
 	public float getArea(){
 		return this.rect.area();
 	}
 	
+	/**
+	 * Gets the density of this body. This is how much mass is within one unit as got from {@link #getArea()}.
+	 * Used to calculate mass in {@link #getMass()}.
+	 * @return
+	 */
 	public float getDensity(){
 		return this.density;
 	}
 	
+	/**
+	 * Sets the density, which is the mass per unit of {@link #getArea()}.
+	 * @param density The density. It should be in the range 1 - 10, but can be any value. The default value is 1.
+	 * @return This object for chaining.
+	 */
 	public JPhysicsBody setDensity(float density){
+		
+		if(density < 0)
+			density = 0;
+		
 		this.density = density;
 		return this;
 	}
 	
+	/**
+	 * Gets the bounciness of this body.
+	 */
 	public float getBounciness(){
 		return this.bounciness;
 	}
 	
-	public JPhysicsBody setBounciness(float bounciness){
+	/**
+	 * Sets the bounciness of this body, this is a multiplier and therefore should be between 0 and 1.
+	 * Zero means no bouncing, 0.5 means bouncing half of the initial velocity and 1 means bouncing with as much force
+	 * as the initial velocity. 
+	 * @return This object for chaining.
+	 */
+	public JPhysicsBody setBounciness(float bounciness){		
 		this.bounciness = bounciness;
 		return this;
 	}
 	
+	/**
+	 * Gets the mass of this body. This is calculated using {@link #getArea()} and {@link #getDensity()}.
+	 * @return The mass of this body. Value depends on units used.
+	 */
 	public float getMass(){
 		return this.getDensity() * this.getArea();
 	}
 	
+	/**
+	 * Called when this body enters collision with another. 
+	 * This will be called after the collision has been resolved using {@link #handleCollision(JPhysicsBody, boolean)}.
+	 * @param data Some info about the collision.
+	 */
 	public void collisionEvent(JCollisionData data){
 		// Override for handling
 	}
 
+	/**
+	 * Sets the drag multipliers. These values should be between 0 and 1.
+	 * A value of 0.5 means that every X times per second the velocity of this object will be halved.
+	 * X is equal to the value returned by {@link JPhysics.getDragsPerSecond()}. By default, this value will be whatever
+	 * {@link JPhysics.getDefaultDrag()} returns at the time of creation of this body.
+	 * @return This object for chaining.
+	 */
 	public JPhysicsBody setDrag(float xScale, float yScale){
+		
 		this.drag.set(xScale, yScale);
 		return this;
 	}
 
-	private void updateVelocity(float delta){
+	/**
+	 * Applies drag and moves this object by its current velocity.
+	 * @param delta The time, in seconds, between calls to this method.
+	 * @see 
+	 * <li>{@link #getVelocity()} for velocity.
+	 * <li>{@link #getGravityScale()} for the gravity scale.
+	 * <li>{@link JPhysics.getGravity()} for the world gravity.
+	 */
+	protected void updateVelocity(float delta){
 		// Translate by velocity
 		this.translate(this.getVelocity(), delta);
 
@@ -468,7 +522,15 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 
 	}
 
-	private void handleCollision(JPhysicsBody other, boolean original){
+	/**
+	 * Called when another body enters collision with this object. This method is expected to resolve and update anything
+	 * necessary for a smooth and responsive physics simulation. 
+	 * @param other The other body that we have entered collision with.
+	 * @param original True if this is a call from the main {@link #updatePhysics(float)} method. False if
+	 * this is a call from another body to resolve collision. Normally if this is true you are moving faster than the other object
+	 * and you have priority.
+	 */
+	protected void handleCollision(JPhysicsBody other, boolean original){
 		// Find shortest path out of the other body : then apply velocity
 
 		float left, right, down, up;
@@ -571,7 +633,19 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		}
 	}
 
-	public void updatePhysics(float delta){
+	/**
+	 * Updates physics by responding to all collisions encountered.
+	 * The order of execution if this method depends on the velocity of 
+	 * the bodies, if highest first and if slowest, last.
+	 * @param delta The time, in seconds, between calls to this method.
+	 * @see 
+	 * <li>{@link #render(OrthographicCamera)} for a method to render this object to the screen, debug style.
+	 * <li>{@link #compareTo(JPhysicsBody)} on how execution is timed.
+	 * <li>{@link #getGeneralVelocity()} for a measure of general velocity.
+	 * <li>{@link #update(float)} for a method to update other aspects of the body.
+	 * <li>{@link #handleCollision(JPhysicsBody, boolean)} to see how collision is handled, or add a custom implementation.
+	 */
+	protected void updatePhysics(float delta){
 		// 1. Check for collisions - get all - and store in arraylist;
 		// 2. Respond to collisions by first moving out of other collider;
 		// 3. Then apply (add) force opposite to the one that we were moving at, multiplied by a bounce value.
@@ -594,6 +668,10 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		}
 	}
 
+	/**
+	 * Updates movement and applies gravity for this body. Does not resolve collisions.
+	 * @param delta The time, in seconds, between calls to this method.
+	 */
 	public void update(float delta){
 
 		// Apply gravity
@@ -603,6 +681,11 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		updateVelocity(delta);	
 	}
 
+	/**
+	 * Renders a debug style view of this body. You should end any running batches before calling this.
+	 * @param camera The camera to project the image with. This will affect how the scale and the image compare.
+	 * @see {@link JPhysics.getPPM()} for more info on scaling and cameras.
+	 */
 	public void render(OrthographicCamera camera){	
 
 		renderer.setAutoShapeType(true);
@@ -616,6 +699,9 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	}
 
 
+	/**
+	 * Used to sort bodies ready for collision. By default uses {@link #getGeneralVelocity()} to calculate priority.
+	 */
 	public int compareTo(JPhysicsBody other) {
 		
 		boolean larger = this.getGeneralVelocity() > other.getGeneralVelocity();

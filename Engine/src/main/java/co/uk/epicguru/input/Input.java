@@ -340,6 +340,9 @@ public final class Input {
 		return tempVec.set(getMouseX(), getMouseY());
 	}
 	
+	/**
+	 * Gets the mouse position where the Y axis is top-down.
+	 */
 	public static Vector2 getMousePosRaw(){
 		return tempVec.set(getMouseX(), getMouseYRaw());
 	}

@@ -36,6 +36,7 @@ public class JPhysics {
 	private static float dragsPerSecond = 60f;
 	private static Vector2 defaultDrag = new Vector2(0.98f, 0.98f);
 	private static Vector2 gravity = new Vector2();
+	private static boolean collisions = true;
 	
 	
 	protected static void print(Object object){
@@ -49,19 +50,35 @@ public class JPhysics {
 	 * <li> Gravity - {@link #getGravity()}
 	 */
 	public static void reset(){
+		setCollisions(true);
 		clearWorld();
 		setPPM(1);
 		setGravity(0, 0);
 	}
 	
+	/**
+	 * Adds a physics body to the active pool. This is done automatically by the default implementation of the physics body.
+	 * This should only be called if you have a custom implementation that requires this to be called at a certain point.
+	 * Note that if this is called, manually or through a constructor, within the update method of a physics object,
+	 * then this new object will not be updated until next frame.
+	 */
 	public static void addBody(JPhysicsBody body){
 		add.add(body);
 	}
 	
+	/**
+	 * Removes a body from the active pool. This will remove the object after the end of the update loop, and will only take effect after update.
+	 */
 	public static void removeBody(JPhysicsBody body){
 		bin.add(body);
 	}
 	
+	/**
+	 * Updates the physics simulation. This calls update() and then updatePhysics() on all active objects.
+	 * This also adds all pending bodies, added through {@link #addBody(JPhysicsBody)} and removes all unused bodies.
+	 * @param delta The delta time value. This is the time, in seconds, between calls to this method. It is a good idea to use
+	 * Gdx.graphics.getDeltaTime() for this.
+	 */
 	public static void update(float delta){
 		addAll();
 		sort();
@@ -78,8 +95,29 @@ public class JPhysics {
 		Collections.sort(active);
 	}
 	
+	/**
+	 * Enables or disables collisions. See {@link #getCollisions()} for more info.
+	 */
+	public static void setCollisions(boolean flag){
+		collisions = flag;
+	}
+	
+	/**
+	 * Checks to see if collisions are enabled.
+	 * If collisions are disabled, it does not mean that they cannot happen.
+	 * It means that they will not be triggered in {@link #update(float)}.
+	 */
+	public static boolean getCollisions(){
+		return collisions;
+	}
+	
+	/**
+	 * Removes all bodies.
+	 */
 	public static void clearWorld(){
 		active.clear();
+		bin.clear();
+		add.clear();
 	}
 	
 	private static void addAll(){
@@ -96,30 +134,59 @@ public class JPhysics {
 		bin.clear();
 	}
 	
+	/**
+	 * Gets the default value for the drag field of all new JPhysicsBodies. This can be set through {@link #setDefaultDrag(float, float)} or 
+	 * {@link #setDefaultDrag(Vector2)}.
+	 */
 	public static Vector2 getDefaultDrag(){
 		return defaultDrag;
 	}
 	
+	/**
+	 * Sets the default drag value for all new bodies using the default implementation.
+	 * @param drag The drag value. This is a multiplier, and therefore should be between 0 and 1. This value is applied
+	 * {@link #getDragsPerSecond()} times per second to all active bodies.
+	 */
 	public static void setDefaultDrag(Vector2 drag){
 		defaultDrag.set(drag);
 	}
 	
+	/**
+	 * Sets the default drag value for all new bodies using the default implementation.
+	 * The parameters passed are the drag values. These is a multipliers, and therefore should be between 0 and 1. These values are applied
+	 * {@link #getDragsPerSecond()} times per second to all active bodies.
+	 */
 	public static void setDefaultDrag(float x, float y){
 		defaultDrag.set(x, y);
 	}
 
+	/**
+	 * Gets all active bodies. DO NOT MODIFY!
+	 */
 	public static ArrayList<JPhysicsBody> getActiveBodies(){
 		return active;
 	}
 	
+	/**
+	 * Gets all bodies ready to be activated. DO NOT MODIFY!
+	 */
 	public static ArrayList<JPhysicsBody> getPendingBodies(){
 		return add;
 	}
 	
+	/**
+	 * Gets all dead bodies ready to be deactivated. DO NOT MODIFY!
+	 */
 	public static ArrayList<JPhysicsBody> getBinnedBodies(){
 		return bin;
 	}
 	
+	/**
+	 * Gets all collisions that are occurring the the active bodies. This normally returns an array of 0 because all collisions are resolved internally.
+	 * To detect collisions override a JPhysicsBody and implement the method collisionEvent().
+	 * @param body The body to check for collisions with.
+	 * @return An arraylist containing info about collisions. This always returns the same object, please read only.
+	 */
 	public static ArrayList<JCollisionData> getAllCollisions(JPhysicsBody body){
 		tempCollision.clear();
 		

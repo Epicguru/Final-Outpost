@@ -36,7 +36,6 @@ public class DebugHook extends ScreenHook {
 		draw(batch, String.format("%.2f", used) + "/" + String.format("%.2f", total) + "GB, " + (int)p + "%", Color.WHITE);
 		draw(batch, JPhysics.getActiveBodies().size() + " bodies active. Gravity is " + JPhysics.getGravity().toString() + " and default drag is " + JPhysics.getDefaultDrag() + " @ " + JPhysics.getDragsPerSecond() + " DPS.", Color.WHITE);
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS : " + Gdx.graphics.getDeltaTime() + " delta", Color.WHITE);
-		draw(batch, JPhysics.getActiveBodies().get(0).getGeneralVelocity() + " m/s : " + JPhysics.getActiveBodies().get(1).getGeneralVelocity() + " m/s", Color.GREEN);
 	}
 	
 	private void draw(Batch batch, String text, Color color){
