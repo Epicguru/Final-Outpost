@@ -27,6 +27,7 @@ public class Main extends FinalOutpostPlugin{
 	public static final String LEFT = "Left";
 	public static final String RIGHT = "Right";
 	public static final String DEBUG = "Debug";
+	public static final String VSYNC = "VSync";
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
@@ -110,6 +111,7 @@ public class Main extends FinalOutpostPlugin{
 		addInput(LEFT, Keys.A);
 		addInput(RIGHT, Keys.D);
 		addInput(DEBUG, Keys.F12);
+		addInput(VSYNC, Keys.F1);
 	}
 	
 	public void postInit(){
