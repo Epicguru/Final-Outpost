@@ -31,11 +31,12 @@ public class DebugHook extends ScreenHook {
 		float p = used / total;
 		p *= 100;
 	
+		
 		y = 20;
 		
 		draw(batch, String.format("%.2f", used) + "/" + String.format("%.2f", total) + "GB, " + (int)p + "%", Color.WHITE);
 		draw(batch, JPhysics.getActiveBodies().size() + " bodies active. Gravity is " + JPhysics.getGravity().toString() + " and default drag is " + JPhysics.getDefaultDrag() + " @ " + JPhysics.getDragsPerSecond() + " DPS.", Color.WHITE);
-		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS : " + Gdx.graphics.getDeltaTime() + " delta", Color.WHITE);
+		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 	}
 	
 	private void draw(Batch batch, String text, Color color){

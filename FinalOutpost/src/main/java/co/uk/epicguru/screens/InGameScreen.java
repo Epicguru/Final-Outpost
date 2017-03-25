@@ -3,11 +3,13 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
+import co.uk.epicguru.physics.JPhysics;
 import co.uk.epicguru.screens.hooks.DebugHook;
-import co.uk.epicguru.screens.hooks.PlayerRenderer;
+import co.uk.epicguru.screens.hooks.PlayerController;
 import ro.fortsoft.pf4j.Extension;
 
 @Extension
@@ -19,9 +21,12 @@ public class InGameScreen extends GameScreen {
 		FOE.map = new GameMap(1000, 1000);
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
+		JPhysics.reset();
+		JPhysics.setPPM(Constants.PPM);
+		
 		super.clearHooks();
-		super.addHook(new PlayerRenderer());
 		super.addHook(new DebugHook());
+		super.addHook(new PlayerController());
 		
 		super.show();
 	}
@@ -38,12 +43,17 @@ public class InGameScreen extends GameScreen {
 	public void update(float delta){
 		
 		FOE.map.update(delta);
+		JPhysics.update(delta);
 		
 		super.update(delta);
 	}
 	
 	public void render(float delta, Batch batch){
 		FOE.map.render();
+		
+		batch.end();
+		// TODO
+		batch.begin();
 		
 		super.render(delta, batch);
 	}
