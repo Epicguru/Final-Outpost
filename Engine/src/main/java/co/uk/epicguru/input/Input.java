@@ -341,6 +341,13 @@ public final class Input {
 	}
 	
 	/**
+	 * Gets the mouse position where the Y axis is top-down.
+	 */
+	public static Vector2 getMousePosRaw(){
+		return tempVec.set(getMouseX(), getMouseYRaw());
+	}
+	
+	/**
 	 * Gets the X position of the cursor within the world, using {@link FOE.camera}.
 	 * The result will be in TILES, a.k.a. 32px as seen in {@link Constants}.
 	 */
@@ -361,7 +368,7 @@ public final class Input {
 	 */
 	public static float getMouseWorldX(OrthographicCamera cam){
 		
-		tempVec3.set(getMousePos(), 1);
+		tempVec3.set(getMousePosRaw(), 1);
 		cam.unproject(tempVec3);
 		return tempVec3.x;
 		
@@ -372,7 +379,7 @@ public final class Input {
 	 */
 	public static float getMouseWorldY(OrthographicCamera cam){
 		
-		tempVec3.set(getMousePos(), 1);
+		tempVec3.set(getMousePosRaw(), 1);
 		cam.unproject(tempVec3);
 		return tempVec3.y;
 		
