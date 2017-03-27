@@ -15,6 +15,7 @@ public class PlayerController extends ScreenHook{
 	
 	public PlayerRenderer renderer;
 	private JPhysicsBody body;
+	private float timer;
 	
 	public void show(){
 		renderer = new PlayerRenderer();
@@ -23,32 +24,42 @@ public class PlayerController extends ScreenHook{
 	
 	public void updateInput(float delta){
 		
-		float speed = 0.1f;
+		float speed = 2.2f;
 		boolean p = false;
 		
 		body.setDrag(0.7f, 0.7f);
 		
-		if(Main.INSTANCE.isInputDown(Main.LEFT)){
-			body.applyForce(-speed, 0, ForceMode.FORCE);
-			p = true;
-		}
-		if(Main.INSTANCE.isInputDown(Main.RIGHT)){
-			body.applyForce(speed, 0, ForceMode.FORCE);
-			p = true;
-		}
-		if(Main.INSTANCE.isInputDown(Main.DOWN)){
-			body.applyForce(0, -speed, ForceMode.FORCE);
-			p = true;
-		}
-		if(Main.INSTANCE.isInputDown(Main.UP)){
-			body.applyForce(0, speed, ForceMode.FORCE);
-			p = true;
-		}
+		// Renderer
+		renderer.update(delta);
 		
-		if(p){
-			renderer.update(delta);
-		}else{
-			renderer.resetFrame();
+		timer += delta;
+		float interval = 1f / 120f;
+		
+		while(timer >= interval){
+			timer -= interval;
+			
+			// Input - 60 times per second, since it depends on frame rate.
+			if(Main.INSTANCE.isInputDown(Main.LEFT)){
+				body.applyForce(-speed, 0, ForceMode.FORCE);
+				p = true;
+			}
+			if(Main.INSTANCE.isInputDown(Main.RIGHT)){
+				body.applyForce(speed, 0, ForceMode.FORCE);
+				p = true;
+			}
+			if(Main.INSTANCE.isInputDown(Main.DOWN)){
+				body.applyForce(0, -speed, ForceMode.FORCE);
+				p = true;
+			}
+			if(Main.INSTANCE.isInputDown(Main.UP)){
+				body.applyForce(0, speed, ForceMode.FORCE);
+				p = true;
+			}
+			
+			if(!p){
+				renderer.resetFrame();
+			}
+			
 		}
 	}
 	

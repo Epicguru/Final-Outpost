@@ -42,19 +42,14 @@ public class InGameScreen extends GameScreen {
 	
 	public void update(float delta){
 		
-		FOE.map.update(delta);
-		JPhysics.update(delta);
-		
 		super.update(delta);
+		JPhysics.update(delta);
+		FOE.map.update(delta);
+		
 	}
 	
-	public void render(float delta, Batch batch){
+	public void render(float delta, Batch batch){		
 		FOE.map.render();
-		
-		batch.end();
-		// TODO
-		batch.begin();
-		
 		super.render(delta, batch);
 	}
 	
