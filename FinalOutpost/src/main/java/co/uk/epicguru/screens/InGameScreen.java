@@ -8,7 +8,6 @@ import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.physics.JPhysics;
-import co.uk.epicguru.physics.JPhysicsBody;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
 import co.uk.epicguru.screens.hooks.PlayerController;
@@ -33,8 +32,6 @@ public class InGameScreen extends GameScreen {
 		super.addHook(player = new PlayerController());
 		super.addHook(new InputHook());
 		
-		new JPhysicsBody(5, 0, 5, 5).setStatic(true);
-		
 		super.show();
 	}
 	
@@ -51,8 +48,8 @@ public class InGameScreen extends GameScreen {
 	public void update(float delta){
 		
 		super.update(delta);
-		JPhysics.update(delta);
 		FOE.map.update(delta);
+		JPhysics.update(delta);
 		
 	}
 	
@@ -60,6 +57,8 @@ public class InGameScreen extends GameScreen {
 		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);
 		FOE.map.render();
 		super.render(delta, batch);
+		
+		//JPhysics.render(batch, FOE.camera);
 	}
 	
 }

@@ -3,6 +3,9 @@ package co.uk.epicguru.physics;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.logging.Log;
@@ -94,6 +97,23 @@ public class JPhysics {
 			body.updatePhysics(delta);
 		}
 		clearBin();
+	}
+	
+	/**
+	 * Does a debug mode render of all bodies. Red bodies are static, grey bodies are normal.
+	 * This calls the render() method on all bodies, and also temporarily end and restarts the batch.
+	 * @param batch The Batch object, not used in rendering but is managed.
+	 * @param camera The camera to render with. For the best results should be scaled in world units, see {@link #getPPM()}.
+	 */
+	public static void render(Batch batch, OrthographicCamera camera){
+		batch.end();
+		
+		for(JPhysicsBody body : active){
+			JPhysicsBody.setShapeColour(body.isStatic() ? Color.RED : Color.LIGHT_GRAY);
+			body.render(camera);
+		}
+		
+		batch.begin();
 	}
 	
 	private static void sort(){
