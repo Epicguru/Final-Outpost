@@ -8,6 +8,7 @@ import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.physics.JPhysics;
+import co.uk.epicguru.physics.JPhysicsBody;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
 import co.uk.epicguru.screens.hooks.PlayerController;
@@ -31,6 +32,8 @@ public class InGameScreen extends GameScreen {
 		super.addHook(new DebugHook());
 		super.addHook(player = new PlayerController());
 		super.addHook(new InputHook());
+		
+		new JPhysicsBody(5, 0, 5, 5).setStatic(true);
 		
 		super.show();
 	}

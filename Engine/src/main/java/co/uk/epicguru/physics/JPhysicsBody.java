@@ -23,6 +23,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	private float gravityScale = 1f;
 	private float density = 1;
 	private float bounciness = 0.65f; // Yes, this is the correct spelling :D
+	private boolean statik; // Nice spelling
 	
 	private float dragTimer = 0f;
 
@@ -375,6 +376,10 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	 * Applies a force to this body. The result of this operation depends on the force mode.
 	 */
 	public JPhysicsBody applyForce(float x, float y, ForceMode mode){
+		
+		if(isStatic()) // Disabled
+			return this;
+		
 		switch(mode){
 		case FORCE:
 			this.velocity.add(x, y);
@@ -678,7 +683,8 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		applyForce(JPhysics.getGravity().x * this.getGravityScale() * delta, JPhysics.getGravity().y * this.getGravityScale() * delta, ForceMode.FORCE);
 
 		// Apply
-		updateVelocity(delta);	
+		if(!isStatic())
+			updateVelocity(delta);	
 	}
 
 	/**
@@ -698,6 +704,23 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 
 	}
 
+	/**
+	 * Sets the static mode of this body. If a body is static then is cannot be moved by collisions with other objects,
+	 * and applying forces to it is disabled. Otherwise, if it is not static, it can mode and collide with other bodies normally.
+	 * Note that it is possible to manually update velocity on this object, but it is not recommended.
+	 * @param flag The new static mode, true of false.
+	 */
+	public void setStatic(boolean flag){
+		this.statik = flag;
+	}
+	
+	/**
+	 * Checks the static state of this body. See {@link #setStatic(boolean)} for more info.
+	 * @return True if static, false if not.
+	 */
+	public boolean isStatic(){
+		return this.statik;
+	}
 
 	/**
 	 * Used to sort bodies ready for collision. By default uses {@link #getGeneralVelocity()} to calculate priority.
