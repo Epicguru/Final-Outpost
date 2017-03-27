@@ -3,6 +3,7 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.entities.EntityManager;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
@@ -45,20 +46,28 @@ public class InGameScreen extends GameScreen {
 		super.hide();
 	}
 	
-	public void update(float delta){
+	public void update(float delta){	
+		
+		FOE.map.update(delta); // Map
+		EntityManager.update(delta); // Entities
+		JPhysics.update(delta); // Physics
+		
 		
 		super.update(delta);
-		FOE.map.update(delta);
-		JPhysics.update(delta);
 		
 	}
 	
-	public void render(float delta, Batch batch){	
-		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);
-		FOE.map.render();
-		super.render(delta, batch);
+	public void render(float delta, Batch batch){
 		
-		//JPhysics.render(batch, FOE.camera);
+		// Camera position
+		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);
+		
+		
+		FOE.map.render(); // Map
+		EntityManager.render(delta, batch); // Entities
+		
+		super.render(delta, batch);
+		//JPhysics.render(batch, FOE.camera); // Debug
 	}
 	
 }

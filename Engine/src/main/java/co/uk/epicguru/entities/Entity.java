@@ -1,7 +1,10 @@
 package co.uk.epicguru.entities;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.API.AllocatedTimer;
+import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.Base;
 
 /**
@@ -14,6 +17,7 @@ public abstract class Entity extends Base {
 	private static Vector2 fakeVector = new Vector2();
 	private Vector2 position = new Vector2();
 	private String name;
+	private AllocatedTimer inputTimer;
 	
 	/**
 	 * Default no-param constructor that leaves name as default value. Position will be 0, 0.
@@ -48,7 +52,49 @@ public abstract class Entity extends Base {
 	public Entity(float x, float y, String name){
 		this.position = new Vector2(x, y);
 		this.name = name;
+		this.addToWorld();
 	}
+	
+	/**
+	 * Starts an {@link AllocatedTimer} that calls {@link #input()} <code> timesPerSecond </code> times per second.
+	 * Works in a separate thread, so no GL stuff please!
+	 */
+	protected void startInput(float timesPerSecond){
+		if(inputTimer != null){
+			inputTimer.setTPM(timesPerSecond / 60f);
+		}else{
+			inputTimer = Allocator.add(AllocatedTimer.inSecond(timesPerSecond, () -> {
+				input();
+			}));
+		}
+	}
+	
+	/**
+	 * Stops the input timer, if it was started.
+	 */
+	protected void stopInput(){
+		Allocator.removeTimer(inputTimer);
+		inputTimer = null;
+	}
+	
+	/**
+	 * Adds this entity to the main list where it is managed by {@link EntityManager}.
+	 * Called in the default constructors.
+	 */
+	public void addToWorld(){
+		EntityManager.addEntity(this);
+	}
+	
+	/**
+	 * Removes this entity from the managed list.
+	 */
+	public void destroy(){
+		EntityManager.removeEntity(this);
+	}
+	
+	public void input(){ }
+	public void update(float delta){ }
+	public void render(float delta, Batch batch){ }
 	
 	/**
 	 * Gets the position of the object within the world map. This value is in tiles.
