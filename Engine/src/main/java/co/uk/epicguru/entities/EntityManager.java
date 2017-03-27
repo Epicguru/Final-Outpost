@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class EntityManager {
 
-	public static ArrayList<Entity> entities = new ArrayList<>();
-	public static ArrayList<Entity> add = new ArrayList<>();
-	public static ArrayList<Entity> bin = new ArrayList<>();
+	private static ArrayList<Entity> entities = new ArrayList<>();
+	private static ArrayList<Entity> add = new ArrayList<>();
+	private static ArrayList<Entity> bin = new ArrayList<>();
 	
 	/**
 	 * Clears all entities from the active list.
@@ -71,6 +71,13 @@ public class EntityManager {
 			entities.remove(e);
 		}
 		bin.clear();
+	}
+	
+	/**
+	 * Gets the array list of active entities. DO NOT MODIFY!
+	 */
+	public static ArrayList<Entity> getActiveEntities(){
+		return entities;
 	}
 	
 	/**

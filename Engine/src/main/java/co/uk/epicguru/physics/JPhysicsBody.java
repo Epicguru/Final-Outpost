@@ -21,7 +21,7 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	
 	private Rectangle rect;
 	private Vector2 velocity = new Vector2(0, 0);
-	private Vector2 drag = JPhysics.getDefaultDrag();
+	private Vector2 drag = new Vector2(JPhysics.getDefaultDrag());
 	private float gravityScale = 1f;
 	private float density = 1;
 	private float bounciness = 0.65f; // Yes, this is the correct spelling :D
