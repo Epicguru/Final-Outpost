@@ -56,6 +56,43 @@ public abstract class Entity extends Base {
 	}
 	
 	/**
+	 * Offsets this entity's position by the parameters.
+	 */
+	public void translate(Vector2 offset){
+		if(offset == null)
+			return;
+		
+		this.translate(offset.x, offset.y);
+	}
+	
+	/**
+	 * Offsets this entity's position by the parameters.
+	 */
+	public void translate(float xOffset, float yOffset){
+		this.setPosition(this.getPosition().x + xOffset, this.getPosition().y + yOffset);
+	}
+	
+	/**
+	 * Sets the position of this entity.
+	 * @param position The new position of this entity, in tiles.
+	 */
+	public void setPosition(Vector2 position){
+		if(position == null)
+			return;
+		
+		this.setPosition(position.x, position.y);
+	}
+	
+	/**
+	 * Sets the position of this entity.
+	 * @param x The X coordinate in tiles.
+	 * @param y The Y coordinate in tiles.
+	 */
+	public void setPosition(float x, float y){
+		this.position.set(x, y);
+	}
+	
+	/**
 	 * Starts an {@link AllocatedTimer} that calls {@link #input()} <code> timesPerSecond </code> times per second.
 	 * Works in a separate thread, so no GL stuff please!
 	 */

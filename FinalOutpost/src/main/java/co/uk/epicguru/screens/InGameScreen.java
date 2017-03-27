@@ -21,16 +21,24 @@ public class InGameScreen extends GameScreen {
 	
 	public void show(){
 		// WIP
-		// Size?
+
+		// Map
 		FOE.map = new GameMap(1000, 1000);
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
+		// Entities
+		EntityManager.clear();
+		
+		// Physics
 		JPhysics.reset();
 		JPhysics.setPPM(Constants.PPM);
 		
+		// Add player
+		player = new PlayerController();		
+		
+		// Hooks
 		super.clearHooks();
 		super.addHook(new DebugHook());
-		super.addHook(player = new PlayerController());
 		super.addHook(new InputHook());
 		
 		super.show();
@@ -41,17 +49,18 @@ public class InGameScreen extends GameScreen {
 		FOE.map.dispose();
 		FOE.map = null;
 		player = null;
+		EntityManager.clear();
+		JPhysics.clearWorld();
 		System.gc();
 		
 		super.hide();
 	}
 	
-	public void update(float delta){	
+	public void update(float delta){
 		
 		FOE.map.update(delta); // Map
 		EntityManager.update(delta); // Entities
-		JPhysics.update(delta); // Physics
-		
+		JPhysics.update(delta); // Physics		
 		
 		super.update(delta);
 		
@@ -60,8 +69,7 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);
-		
+		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);	
 		
 		FOE.map.render(); // Map
 		EntityManager.render(delta, batch); // Entities
