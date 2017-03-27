@@ -6,7 +6,6 @@ import co.uk.epicguru.API.AllocatedTimer;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.main.Constants;
-import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 import co.uk.epicguru.physics.ForceMode;
 import co.uk.epicguru.physics.JPhysicsBody;
@@ -16,7 +15,7 @@ public class PlayerController extends ScreenHook implements Runnable{
 	// TODO with entity classes
 	
 	public PlayerRenderer renderer;
-	private JPhysicsBody body;
+	public JPhysicsBody body;
 	private AllocatedTimer timer;
 	
 	public void show(){
@@ -62,9 +61,6 @@ public class PlayerController extends ScreenHook implements Runnable{
 		// Position
 		renderer.update(delta);
 		renderer.setPosition(body.getX(), body.getY());
-		
-		// Camera
-		FOE.camera.position.set(body.getX(), body.getY(), 0);
 	}
 	
 	public void render(float delta, Batch batch){
