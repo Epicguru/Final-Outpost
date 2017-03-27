@@ -171,7 +171,7 @@ public abstract class Entity extends Base {
 	 * @see {@link #getPosition()} to get the whole position.
 	 */
 	public float getX(){
-		return this.position.x;
+		return this.getPosition().x;
 	}
 	
 	/**
@@ -179,7 +179,7 @@ public abstract class Entity extends Base {
 	 * @see {@link #getPosition()} to get the whole position.
 	 */
 	public float getY(){
-		return this.position.y;
+		return this.getPosition().y;
 	}
 	
 	/**

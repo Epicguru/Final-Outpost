@@ -2,25 +2,25 @@ package co.uk.epicguru.screens.hooks;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import co.uk.epicguru.entities.Entity;
+import co.uk.epicguru.entities.EntityBody;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Main;
 import co.uk.epicguru.physics.ForceMode;
-import co.uk.epicguru.physics.JPhysicsBody;
 import co.uk.epicguru.player.PlayerRenderer;
 
-public class PlayerController extends Entity{
+public class PlayerController extends EntityBody{
 	// TODO with entity classes
 	
 	public PlayerRenderer renderer;
-	public JPhysicsBody body;
 	
 	public PlayerController(){
 		super("Player");
-		renderer = new PlayerRenderer();
-		body = new JPhysicsBody(0, 0, 16f / Constants.PPM * 2, 32f / Constants.PPM * 2).setDrag(0.7f, 0.7f);
-		
+		renderer = new PlayerRenderer();		
 		super.startInput(120);
+		
+		// Body
+		super.setSize(16f / Constants.PPM * 2, 32f / Constants.PPM * 2);
+		super.getBody().setDrag(0.7f, 0.7f);
 	}
 	
 	public void input(){
@@ -30,19 +30,19 @@ public class PlayerController extends Entity{
 		//boolean p = false;
 		
 		if(Main.INSTANCE.isInputDown(Main.LEFT)){
-			body.applyForce(-speed, 0, ForceMode.FORCE);
+			getBody().applyForce(-speed, 0, ForceMode.FORCE);
 			//p = true;
 		}
 		if(Main.INSTANCE.isInputDown(Main.RIGHT)){
-			body.applyForce(speed, 0, ForceMode.FORCE);
+			getBody().applyForce(speed, 0, ForceMode.FORCE);
 			//p = true;
 		}
 		if(Main.INSTANCE.isInputDown(Main.DOWN)){
-			body.applyForce(0, -speed, ForceMode.FORCE);
+			getBody().applyForce(0, -speed, ForceMode.FORCE);
 			//p = true;
 		}
 		if(Main.INSTANCE.isInputDown(Main.UP)){
-			body.applyForce(0, speed, ForceMode.FORCE);
+			getBody().applyForce(0, speed, ForceMode.FORCE);
 			//p = true;
 		}
 	}
@@ -51,7 +51,7 @@ public class PlayerController extends Entity{
 		
 		// Position
 		renderer.update(delta);
-		renderer.setPosition(body.getX(), body.getY());
+		renderer.setPosition(getX(), getY());
 	}
 	
 	public void render(float delta, Batch batch){

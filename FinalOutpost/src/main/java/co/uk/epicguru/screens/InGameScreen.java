@@ -69,7 +69,7 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);	
+		FOE.camera.position.set(player.getX(), player.getY(), 0);	
 		
 		FOE.map.render(); // Map
 		EntityManager.render(delta, batch); // Entities
