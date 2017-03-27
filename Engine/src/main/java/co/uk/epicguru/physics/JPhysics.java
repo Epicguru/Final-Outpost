@@ -48,9 +48,14 @@ public class JPhysics {
 	 * Resets all important world values :
 	 * <li> Pixels per meter - {@link #getPPM()}
 	 * <li> Gravity - {@link #getGravity()}
+	 * <li> Collisions - {@link #getCollisions()}
+	 * <li> DPS - {@link #getDragsPerSecond()}
+	 * <li> Default Drag {@link #getDefaultDrag()}
 	 */
 	public static void reset(){
 		setCollisions(true);
+		setDefaultDrag(0.98f, 0.98f);
+		setDragsPerSecond(60f);
 		clearWorld();
 		setPPM(1);
 		setGravity(0, 0);
