@@ -2,6 +2,7 @@ package co.uk.epicguru.physics;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -27,6 +28,14 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	
 	private float dragTimer = 0f;
 
+	/**
+	 * Sets the colour to render shapes with. Has no effect if using default {@link JPhysics} render method.
+	 * @param colour The new colour, not null please.
+	 */
+	public static void setShapeColour(Color colour){
+		renderer.setColor(colour);
+	}
+	
 	/**
 	 * Creates a new physics body given a position and a texture. The size of this body will be set to
 	 * the width and height of the texture divided by the PPM value seen in {@link JPhysics.getPPM()}.
@@ -536,6 +545,11 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 	 * and you have priority.
 	 */
 	protected void handleCollision(JPhysicsBody other, boolean original){
+		
+		// If static ignore completely
+		if(this.isStatic())
+			return;
+		
 		// Find shortest path out of the other body : then apply velocity
 
 		float left, right, down, up;
