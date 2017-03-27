@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
@@ -104,7 +105,10 @@ public class FOE extends Game{
 		camera = new OrthographicCamera();
 		UIcamera = new OrthographicCamera();
 		
-		// Timers
+		// Start the allocator
+		Allocator.start();
+		
+		// Timers names
 		final String all = "All";
 		final String parsers = "Parsers";
 		final String plugins = "Plugins";
@@ -301,6 +305,7 @@ public class FOE extends Game{
 	}
 
 	public void dispose(){
+		Allocator.stop();
 		batch.dispose();		
 		pluginsLoader.saveAllConfigs();
 		pluginsLoader.stopPlugins();	
