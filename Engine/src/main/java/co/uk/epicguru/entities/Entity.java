@@ -129,9 +129,34 @@ public abstract class Entity extends Base {
 		EntityManager.removeEntity(this);
 	}
 	
+	/**
+	 * Called only if the input timer is activated using {@link #startInput(float)}.
+	 * It is made for framerate independent input, but is can be used for anything. This method will call in a thread separate from
+	 * the renderer one. Default implementation does nothing.
+	 */
 	public void input(){ }
+	
+	/**
+	 * Called once per frame, do all logic here. Default implementation does nothing.
+	 * @param delta The delta time value.
+	 */
 	public void update(float delta){ }
+	
+	/**
+	 * Called once per frame, render the entity here. Default implementation does nothing.
+	 * @param delta The delta time value.
+	 * @param batch The batch to draw with. Use FOE.camera for a camera.
+	 * @see {@link #renderUI(float, Batch)} to render UI elements.
+	 */
 	public void render(float delta, Batch batch){ }
+	
+	/**
+	 * Called once per frame, differs from {@link #render(float, Batch)} in that the batch is
+	 * scaled to render UI elements. Default implementation does nothing.
+	 * @param delta The delta time value.
+	 * @param batch The batch to draw with. Use FOE.UIcamera for a camera.
+	 */
+	public void renderUI(float delta, Batch batch){ }
 	
 	/**
 	 * Gets the position of the object within the world map. This value is in tiles.
