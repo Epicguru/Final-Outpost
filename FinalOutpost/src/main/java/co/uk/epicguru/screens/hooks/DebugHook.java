@@ -14,7 +14,7 @@ import co.uk.epicguru.physics.JPhysics;
 public class DebugHook extends ScreenHook {
 
 	public static BitmapFont font = new BitmapFont();
-	public boolean active = false;;
+	public static boolean active = false;;
 	
 	float y = 0;
 	
@@ -22,7 +22,7 @@ public class DebugHook extends ScreenHook {
 	public void renderUI(float delta, Batch batch) {
 		
 		if(Main.INSTANCE.isInputJustDown(Main.DEBUG)){
-			this.active = !active;
+			active = !active;
 		}
 		
 		if(!active)
