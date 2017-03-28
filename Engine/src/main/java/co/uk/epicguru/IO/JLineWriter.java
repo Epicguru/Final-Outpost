@@ -58,7 +58,8 @@ public class JLineWriter extends Base{
 	 * @param key The key (name of variable) to write. Please do not change unless there is a very good reason to do so.
 	 */
 	public void writeRaw(final String content, JLineParser<?> parser, String key){
-		appendToLine(getStart(parser, key) + content.trim() + getEnd(parser, key));
+		String newString = JLineIO.translateIn(content.trim());
+		appendToLine(getStart(parser, key) + newString + getEnd(parser, key));
 		writes++;
 	}
 	
@@ -90,13 +91,20 @@ public class JLineWriter extends Base{
 	}
 	
 	/**
+	 * Gets the escape character used in JLineIO. Just in case you were curious...
+	 */
+	public final char getEscapeChar(){
+		return JLineIO.escape;
+	}
+	
+	/**
 	 * Saves all lines of JCode to the file. Uses {@link #getAllLines()}.
 	 * @return True if operation was successful.
 	 */
 	public boolean save(){
 		
 		if(file == null){
-			error("This method is disabled because the file passed with the constructor was null!");
+			error("The save() is disabled because the file passed with the constructor was null!");
 			return false;
 		}
 		

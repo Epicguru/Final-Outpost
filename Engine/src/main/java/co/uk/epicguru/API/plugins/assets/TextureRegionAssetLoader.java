@@ -49,24 +49,10 @@ public class TextureRegionAssetLoader extends AsynchronousAssetLoader<TextureReg
 		array.clear();
 		array.add(desc);
 		
-		return TextureRegionAssetLoader.array;
+		return array;
 	}
 	
-	static public class TRP extends AssetLoaderParameters<TextureRegion>{
-		private int frameNumber;
-		
-		public TRP(int frameNumber){
-			setFrame(frameNumber);
-		}
-		
-		public void setFrame(int frameNumber){
-			this.frameNumber = frameNumber;
-		}
-		
-		public int getFrameNumber(){
-			return this.frameNumber;
-		}
-	}
+	static public class TRP extends AssetLoaderParameters<TextureRegion>{ }
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, TRP parameter) {

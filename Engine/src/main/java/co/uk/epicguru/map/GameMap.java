@@ -5,6 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.tiles.Tile;
 
+/**
+ * The game mode, rendering capable implementation of a {@link TiledMap}.
+ * @author James Billy
+ *
+ */
 public class GameMap extends TiledMap {
 
 	private int renderCalls = 0;
@@ -20,6 +25,10 @@ public class GameMap extends TiledMap {
 	
 	public int getRenderLoops(){
 		return renderLoops;
+	}
+	
+	public void update(float delta){
+		Tile.updateAll(delta);
 	}
 	
 	public void render(){

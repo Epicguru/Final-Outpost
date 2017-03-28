@@ -49,6 +49,7 @@ public class Main extends FinalOutpostPlugin {
 		config.add("MyVariable", "Hello world!");
 		config.add("MyNumber", 123);
 		config.add("MyVector", new Vector3(0, 1, 2));
+		config.add("MyString", "Something \n Cool <> &&");
 	}
 	
 	public boolean config(Config config){

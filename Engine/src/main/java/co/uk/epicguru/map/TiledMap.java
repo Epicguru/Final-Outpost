@@ -11,6 +11,11 @@ import co.uk.epicguru.API.Base;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.map.tiles.TileFactory;
 
+/**
+ * A map that contains a 2D array of tiles. Used as a back end for {@link GameMap}
+ * @author James Billy
+ *
+ */
 public class TiledMap extends Base{
 
 	private Tile[][] tiles;
@@ -104,9 +109,10 @@ public class TiledMap extends Base{
 	 */
 	public void clearTile(int x, int y){
 		if(inBounds(x, y)){
-			//Tile old = tiles[x][y];
+			Tile old = tiles[x][y];
 			tiles[x][y] = null;
-			// WIP old.something()
+			if(old != null)
+				old.cancelUpdate();
 		}
 	}
 	
@@ -318,6 +324,7 @@ public class TiledMap extends Base{
 	 */
 	public void dispose(){
 		this.tiles = null;
+		Tile.clearUpdates();
 		print("Disposed");
 	}
 }

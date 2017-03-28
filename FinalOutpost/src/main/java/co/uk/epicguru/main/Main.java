@@ -19,6 +19,9 @@ public class Main extends FinalOutpostPlugin{
 
 	public static Main INSTANCE;
 	
+	public static Config launch;
+	public static Config graphics;
+	
 	public static final String version = "0.0.1";
 	public static final String TAG = "Final Outpost Plugin";	
 	
@@ -27,6 +30,7 @@ public class Main extends FinalOutpostPlugin{
 	public static final String LEFT = "Left";
 	public static final String RIGHT = "Right";
 	public static final String DEBUG = "Debug";
+	public static final String VSYNC = "VSync";
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
@@ -38,12 +42,12 @@ public class Main extends FinalOutpostPlugin{
 		Log.info(TAG, "Started plugin");	
 		
 		// Create new config
-		Config launch = newConfig("Launch");
+		launch = newConfig("Launch");
 		
 		launch.add("Title", "Final Outpost by Epicguru");
 		
 		// Graphics config
-		Config graphics = newConfig("Graphics");
+		graphics = newConfig("Graphics");
 		
 		graphics.add("Windowed Resolution", new Vector2(900, 500));	
 		graphics.add("Fullscreen", false);
@@ -110,6 +114,7 @@ public class Main extends FinalOutpostPlugin{
 		addInput(LEFT, Keys.A);
 		addInput(RIGHT, Keys.D);
 		addInput(DEBUG, Keys.F12);
+		addInput(VSYNC, Keys.F1);
 	}
 	
 	public void postInit(){

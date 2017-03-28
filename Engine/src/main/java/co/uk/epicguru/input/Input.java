@@ -12,11 +12,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
+import ro.fortsoft.pf4j.Plugin;
 
 public final class Input {
 	
@@ -77,7 +78,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static void addInput(FinalOutpostPlugin plugin, String name, Integer keyNumber){		
+	public static void addInput(Plugin plugin, String name, Integer keyNumber){		
 		if(plugin == null){
 			Log.error(TAG, "Plugin not loaded, key '" + name + "' ignored");
 			return;
@@ -94,7 +95,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static void changeInput(FinalOutpostPlugin plugin, String name, Integer newKeyNumber){
+	public static void changeInput(Plugin plugin, String name, Integer newKeyNumber){
 		
 		if(plugin == null){
 			Log.error(TAG, "Plugin not loaded, key change for '" + name + "' ignored");
@@ -110,7 +111,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static void removeInput(FinalOutpostPlugin plugin, String name){
+	public static void removeInput(Plugin plugin, String name){
 		if(plugin == null){
 			Log.error(TAG, "Plugin not loaded, key removal for '" + name + "' ignored");
 			return;
@@ -187,7 +188,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static boolean isInputDown(FinalOutpostPlugin plugin, String name){
+	public static boolean isInputDown(Plugin plugin, String name){
 		if(plugin == null){
 			return false;
 		}else{
@@ -198,7 +199,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static boolean isInputJustDown(FinalOutpostPlugin plugin, String name){
+	public static boolean isInputJustDown(Plugin plugin, String name){
 		if(plugin == null){
 			return false;
 		}else{
@@ -209,7 +210,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static int getInputCode(FinalOutpostPlugin plugin, String name){
+	public static int getInputCode(Plugin plugin, String name){
 		if(plugin == null){
 			return -1;
 		}else{
@@ -220,7 +221,7 @@ public final class Input {
 	/**
 	 * Should only be accessed by plugins, internally.
 	 */
-	public static String getInputString(FinalOutpostPlugin plugin, String inputName){
+	public static String getInputString(Plugin plugin, String inputName){
 		if(plugin == null){
 			return null;
 		}else{
@@ -340,6 +341,13 @@ public final class Input {
 	}
 	
 	/**
+	 * Gets the mouse position where the Y axis is top-down.
+	 */
+	public static Vector2 getMousePosRaw(){
+		return tempVec.set(getMouseX(), getMouseYRaw());
+	}
+	
+	/**
 	 * Gets the X position of the cursor within the world, using {@link FOE.camera}.
 	 * The result will be in TILES, a.k.a. 32px as seen in {@link Constants}.
 	 */
@@ -360,7 +368,7 @@ public final class Input {
 	 */
 	public static float getMouseWorldX(OrthographicCamera cam){
 		
-		tempVec3.set(getMousePos(), 1);
+		tempVec3.set(getMousePosRaw(), 1);
 		cam.unproject(tempVec3);
 		return tempVec3.x;
 		
@@ -371,7 +379,7 @@ public final class Input {
 	 */
 	public static float getMouseWorldY(OrthographicCamera cam){
 		
-		tempVec3.set(getMousePos(), 1);
+		tempVec3.set(getMousePosRaw(), 1);
 		cam.unproject(tempVec3);
 		return tempVec3.y;
 		
