@@ -142,6 +142,11 @@ public class FOE extends Game{
 			loading("Loading plugins' parsers", "...");
 			JLineParsers.loadParsers();
 			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
+			// Check
+			if(JLineParsers.parsers.size() == 0){
+				loaded = true;
+				return;
+			}
 					
 			// Loading input keys
 			loading("Setting up input", "Just a second M8");

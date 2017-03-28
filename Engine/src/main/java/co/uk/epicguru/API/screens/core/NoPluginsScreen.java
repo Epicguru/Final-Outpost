@@ -26,7 +26,7 @@ public final class NoPluginsScreen extends GameScreen {
 		if(noPlugins){
 			font.draw(batch, "No plugins loaded!\nPlease install at least the Core plugin & restart.", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + y, 0, 1, false);					
 		}else{
-			font.draw(batch, "Could not find the Core plugin!\nPlease install the Core plugin & restart.", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + y, 0, 1, false);							
+			font.draw(batch, "Could not find the Core plugin!\nPlease install the Core plugin & restart.\nPlease also check for duplicate plugins, which can cause this error.", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f + y, 0, 1, false);							
 		}
 	}
 	
