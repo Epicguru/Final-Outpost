@@ -17,12 +17,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
+import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
+import co.uk.epicguru.API.screens.core.NoPluginsScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.input.Input;
@@ -58,6 +60,7 @@ public class FOE extends Game{
 	public static String loadingSubText = "Something Goes Here!";
 	
 	public static boolean loaded = false;
+	public static boolean donePluginCheck = false;
 	public static boolean postDone = false;
 	public static boolean firstTimeMenu = true;
 	
@@ -262,6 +265,31 @@ public class FOE extends Game{
 		
 		Input.update();
 		camera.update();
+		
+		if(!donePluginCheck && loaded){
+			FinalOutpostPlugin[] plugins = pluginsLoader.getAllPlugins();
+			
+			if(plugins.length == 0){
+				NoPluginsScreen s = new NoPluginsScreen();
+				s.noPlugins = true;
+				this.setScreen(s);
+			}else{
+				boolean found = false;
+				for(FinalOutpostPlugin plugin : plugins){
+					if(plugin.getWrapper().getPluginId().equals("FinalOutpost")){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					NoPluginsScreen s = new NoPluginsScreen();
+					s.noPlugins = false;
+					this.setScreen(s);
+				}
+			}
+			
+			donePluginCheck = true;
+		}
 		
 		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
 		
