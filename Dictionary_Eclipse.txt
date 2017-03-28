@@ -10,3 +10,5 @@ bounciness
 projectiles
 param
 framerate
+multiplayer
+pythagoras
