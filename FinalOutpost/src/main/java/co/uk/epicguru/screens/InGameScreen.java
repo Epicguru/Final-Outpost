@@ -75,7 +75,9 @@ public class InGameScreen extends GameScreen {
 		EntityManager.render(delta, batch); // Entities
 		
 		super.render(delta, batch);
-		//JPhysics.render(batch, FOE.camera); // Debug
+		
+		if(DebugHook.active)
+			JPhysics.render(batch, FOE.camera); // Debug
 	}
 	
 	public void renderUI(float delta, Batch batch){	
