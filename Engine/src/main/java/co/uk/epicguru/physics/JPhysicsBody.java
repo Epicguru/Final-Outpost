@@ -17,10 +17,11 @@ import com.badlogic.gdx.math.Vector2;
 public class JPhysicsBody implements Comparable<JPhysicsBody>{
 
 	private static ShapeRenderer renderer = new ShapeRenderer();
+	private static Vector2 posTemp = new Vector2();
 	
 	private Rectangle rect;
 	private Vector2 velocity = new Vector2(0, 0);
-	private Vector2 drag = JPhysics.getDefaultDrag();
+	private Vector2 drag = new Vector2(JPhysics.getDefaultDrag());
 	private float gravityScale = 1f;
 	private float density = 1;
 	private float bounciness = 0.65f; // Yes, this is the correct spelling :D
@@ -115,6 +116,14 @@ public class JPhysicsBody implements Comparable<JPhysicsBody>{
 		return rect;
 	}
 
+	/**
+	 * Gets the position of this body, note that this always returns the same vector object for all bodies.
+	 * @return The x and y position of this body in a vector.
+	 */
+	public Vector2 getPosition(){
+		return this.getBounds().getPosition(posTemp);
+	}
+	
 	/**
 	 * Checks to see if this physics body is touching (inside) another one.
 	 * @param body The other body.

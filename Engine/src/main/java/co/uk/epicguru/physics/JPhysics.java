@@ -143,6 +143,7 @@ public class JPhysics {
 		active.clear();
 		bin.clear();
 		add.clear();
+		tempCollision.clear();
 	}
 	
 	private static void addAll(){

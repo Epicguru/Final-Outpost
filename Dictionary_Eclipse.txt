@@ -7,3 +7,6 @@ billy
 collider
 arraylist
 bounciness
+projectiles
+param
+framerate

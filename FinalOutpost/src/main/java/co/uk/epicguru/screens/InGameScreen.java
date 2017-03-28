@@ -3,6 +3,7 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.entities.EntityManager;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
@@ -20,16 +21,24 @@ public class InGameScreen extends GameScreen {
 	
 	public void show(){
 		// WIP
-		// Size?
+
+		// Map
 		FOE.map = new GameMap(1000, 1000);
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
+		// Entities
+		EntityManager.clear();
+		
+		// Physics
 		JPhysics.reset();
 		JPhysics.setPPM(Constants.PPM);
 		
+		// Add player
+		player = new PlayerController();		
+		
+		// Hooks
 		super.clearHooks();
 		super.addHook(new DebugHook());
-		super.addHook(player = new PlayerController());
 		super.addHook(new InputHook());
 		
 		super.show();
@@ -40,6 +49,8 @@ public class InGameScreen extends GameScreen {
 		FOE.map.dispose();
 		FOE.map = null;
 		player = null;
+		EntityManager.clear();
+		JPhysics.clearWorld();
 		System.gc();
 		
 		super.hide();
@@ -47,18 +58,30 @@ public class InGameScreen extends GameScreen {
 	
 	public void update(float delta){
 		
+		FOE.map.update(delta); // Map
+		EntityManager.update(delta); // Entities
+		JPhysics.update(delta); // Physics		
+		
 		super.update(delta);
-		FOE.map.update(delta);
-		JPhysics.update(delta);
 		
 	}
 	
-	public void render(float delta, Batch batch){	
-		FOE.camera.position.set(player.body.getX(), player.body.getY(), 0);
-		FOE.map.render();
+	public void render(float delta, Batch batch){
+		
+		// Camera position
+		FOE.camera.position.set(player.getX(), player.getY(), 0);	
+		
+		FOE.map.render(); // Map
+		EntityManager.render(delta, batch); // Entities
+		
 		super.render(delta, batch);
-		
-		//JPhysics.render(batch, FOE.camera);
+		//JPhysics.render(batch, FOE.camera); // Debug
 	}
 	
+	public void renderUI(float delta, Batch batch){	
+		
+		EntityManager.renderUI(delta, batch);
+		
+		super.renderUI(delta, batch);
+	}
 }

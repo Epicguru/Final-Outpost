@@ -32,11 +32,7 @@ public abstract class Tile extends Base {
 	
 	public static void updateAll(float delta){
 		for(Tile tile : toUpdate){
-			if(tile.needsToUpdate()){
-				tile.update(delta);				
-			}else{
-				toBin.add(tile);
-			}
+			tile.update(delta);
 		}
 		
 		for(Tile tile : toBin){
@@ -173,7 +169,7 @@ public abstract class Tile extends Base {
 
 	private TileFactory parent;
 	private int x, y;
-	private Vector2 centre;
+	private static Vector2 centre = new Vector2();
 
 	public Tile(TileFactory parent){
 		this.parent = parent;
@@ -199,10 +195,16 @@ public abstract class Tile extends Base {
 		return y;
 	}
 
+	public void requestUpdate(){
+		if(!toUpdate.contains(this))
+			toUpdate.add(this);
+	}
+	
+	public void cancelUpdate(){
+		toBin.add(this);
+	}
+	
 	public Vector2 getCentre(){
-		if(centre == null){
-			centre = new Vector2();
-		}
 		centre.set(x + 0.5f, y + 0.5f);
 		return centre;
 	}
@@ -227,10 +229,6 @@ public abstract class Tile extends Base {
 	public void setPosition(int x, int y){
 		this.x = x;
 		this.y = y;
-	}
-	
-	public boolean needsToUpdate(){
-		return false;
 	}
 	
 	public void update(float delta){

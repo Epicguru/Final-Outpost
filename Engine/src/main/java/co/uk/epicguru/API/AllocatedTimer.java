@@ -67,4 +67,11 @@ public class AllocatedTimer extends Base {
 		if(this.runabble != null)
 			this.runabble.run();
 	}
+
+	/**
+	 * Sets the calls per minute of this timer.
+	 */
+	public void setTPM(float newTPM){
+		this.TPM = newTPM;
+	}
 }
