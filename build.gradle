@@ -20,9 +20,24 @@ task copyPlugins(){
 		delete 'Engine/Game Data/Plugins'
 		mkdir 'Engine/Game Data/Plugins'
 		
+		String[] exclude = new String[3];
+		exclude[0]=	"Engine";
+		exclude[1]=	"PluginTool";
+		exclude[2]=	"Launcher";
+			
+		
 		subprojects.each { p -> 
-			//println(p.name)
-			if(!p.name.equals("Engine")){
+			// Find in exclusion
+			
+			boolean good = true;
+			for(String s : exclude){
+				if(p.name.equals(s)){
+					good = false;
+					break;
+				}
+			}
+			
+			if(good){
 			
 				System.out.println("Copying plugin from " + p.path)
 				if(!file('/' + p.name + '/build/libs/' + p.ext.pluginName + "-" + p.ext.pluginVersion + ".zip").exists()){
@@ -35,6 +50,8 @@ task copyPlugins(){
 					include p.ext.pluginName + "-" + p.ext.pluginVersion + ".zip"
 				}
 				System.out.println(p.ext.pluginVersion);							
+			}else{
+				System.out.println(p.name + " was excluded.");
 			}
 		}
 	}
