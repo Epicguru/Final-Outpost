@@ -1,7 +1,0 @@
-0.0.3
-Game.jar
-START
-FinalOutpost-0.0.3.zip
-END
-Final Outpost version 0.0.3. Developed by James Billy, Epicguru.
-See www.epicguru.co.uk for more info.
