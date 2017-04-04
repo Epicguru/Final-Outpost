@@ -9,7 +9,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import co.uk.epicguru.launcher.Main;
-import co.uk.epicguru.launcher.connection.General;
+import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
@@ -31,8 +31,11 @@ public class Frame extends JFrame {
 				Main.print("Failed to set nice look-and-feel :(");
 			}
 			
-			// Testing
-			General.downloadLatestTxt();
+			// Download latest before launcher opens.
+			LauncherUpdatesManager.downloadLatest();
+			
+			// Update any pending
+			LauncherUpdatesManager.checkForUpdatedJar();
 			
 			// Frame
 			Frame frame = new Frame();

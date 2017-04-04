@@ -1,22 +1,43 @@
 package co.uk.epicguru.launcher;
 
+import javax.swing.JOptionPane;
+
+import co.uk.epicguru.launcher.connection.General;
 import co.uk.epicguru.launcher.frame.Frame;
 
 public class Main {
 
+	public static final String VERSION = "Launcher v0";
+	public static final String JAR_NAME = "Final Outpost Launcher.jar";
+	
+	
 	public static final String base = "https://epicguru.github.io/Final-Outpost/";
-	public static final String latestVersion = "Version.txt";
+	public static final String linkDown = "DOWN";
+	public static final String pending = "PENDING_UPDATE/";
+	public static final String launcher = "Launcher/";
+	public static final String latestLauncher = "Latest.txt";
+	public static final String versions = "Versions/";
+	public static final String versionsLatest = "Versions.txt";
 	
 	public static void main(String... args){
 		print("Hello world!");
+		print("Working from", System.getProperty("user.dir"));
 		
 		try{
 			run();
+			
+			// TODO wait until close
+			
 			print("Run ended sucessfully!");
 			
 		}catch(RuntimeException e){
 			print("Oh no! A", e.getClass().getName(), "was thrown!");
 			print("TODO handle exception.");
+			JOptionPane.showConfirmDialog(null,
+					e.getClass().getName() + "' w/ message \n'" + e.getMessage() + "'",
+					"Exception in launcher", 
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}finally{
 			cleanup();
@@ -31,7 +52,36 @@ public class Main {
 	}
 	
 	private static void run() throws RuntimeException{
+		
+		checkConnection();
+		
 		Frame.run();
+	}
+	
+	public static void checkConnection(){
+		if(!General.isConnected()){
+			int option = -1;
+			boolean gotConnection = false;
+			while(option != JOptionPane.CANCEL_OPTION){
+				option = JOptionPane.showConfirmDialog(null,
+						"No connection to the server!\nPlease check your internet connection!\nDo you want to attempt to connect again?",
+						"No Connection", 
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.ERROR_MESSAGE);
+				if(option == JOptionPane.OK_OPTION){
+					if(General.isConnected()){
+						// Stop
+						gotConnection = true;
+						break;
+					}
+				}
+			}
+			if(!gotConnection){
+				// TODO improve me
+				cleanup();
+				System.exit(0);
+			}
+		}
 	}
 	
 	private static StringBuilder str = new StringBuilder();
