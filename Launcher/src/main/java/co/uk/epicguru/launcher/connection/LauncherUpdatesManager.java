@@ -2,7 +2,9 @@ package co.uk.epicguru.launcher.connection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.swing.JOptionPane;
@@ -63,10 +65,7 @@ public final class LauncherUpdatesManager {
 			// Download update
 			Main.print("Downloading new version from", url);
 			
-			DownloadProgress pr = new DownloadProgress();
-			pr.setVisible(true);
-			
-			downloadNewJar(version, url, pr.progressBar);
+			downloadNewJar(version, url);
 		}
 	}
 	
@@ -74,24 +73,31 @@ public final class LauncherUpdatesManager {
 		// TODO if needed?
 	}
 	
-	public static void downloadNewJar(String name, String location, JProgressBar bar) throws Exception{
+	public static void downloadNewJar(String name, String location) throws Exception{
 		int option = JOptionPane.showConfirmDialog(null, "An update to the launcher is available. This update is not optional.\nDo you wish to install it now?",
 				"Launcher update available", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if(option == JOptionPane.OK_OPTION){
+			
+			// UI
+			DownloadProgress pr = new DownloadProgress();
+			pr.nameOfDownload.setText(name);
+			pr.setVisible(true);
+			JProgressBar bar = pr.progressBar;
+			
 			// Ok, download!
 			
 			URL url = General.newURL(location);
 			InputStream is = url.openStream();
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			
-			int estimate = (int) (15f * FileUtils.ONE_MB);
+			int estimate = getFileSize(url);
 			int total = 0;
 			
 			Main.print("Estimated", estimate);
 			
 			int n = 0;
-			byte[] chunk = new byte[1024]; // One KB
+			byte[] chunk = new byte[(int) (10 * FileUtils.ONE_KB)]; // 10 KB
 			
 			while((n = is.read(chunk)) > 0){
 				out.write(chunk, 0, n);
@@ -110,7 +116,7 @@ public final class LauncherUpdatesManager {
 			out.close();
 			
 			// Save to file
-			File file = new File(System.getProperty("user.dir") + name + ".jar");
+			File file = new File(System.getProperty("user.dir") + '/' + name + ".jar");
 			bytesToFile(bar, bytesRead, file);
 			
 			// Execute new and delete this.			
@@ -119,6 +125,20 @@ public final class LauncherUpdatesManager {
 			// Cancel
 			System.exit(0);
 		}
+	}
+	
+	private static int getFileSize(URL url) {
+	    HttpURLConnection conn = null;
+	    try {
+	        conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("HEAD");
+	        conn.getInputStream();
+	        return conn.getContentLength();
+	    } catch (IOException e) {
+	        return -1;
+	    } finally {
+	        conn.disconnect();
+	    }
 	}
 	
 	public static void bytesToFile(JProgressBar bar, byte[] array, File file) throws Exception{
@@ -145,5 +165,9 @@ public final class LauncherUpdatesManager {
 		
 		bar.setIndeterminate(true);
 		FileUtils.writeByteArrayToFile(file, array);
+		
+		// TODO RUN?	
+		Main.print("Download and ran new launcher, exiting...");
+		System.exit(0);
 	}
 }
