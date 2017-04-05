@@ -1,12 +1,16 @@
 package co.uk.epicguru.launcher.frame;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
+
+import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
 
 @SuppressWarnings("serial")
 public class DownloadProgress extends JDialog {
@@ -33,8 +37,14 @@ public class DownloadProgress extends JDialog {
 	 * Create the dialog.
 	 */
 	public DownloadProgress() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				LauncherUpdatesManager.closingWindow();
+			}
+		});
 		setResizable(false);
-		setTitle("Final Outpost Launcher - Download in progress");
+		setTitle("Final Outpost Launcher - Installing update...");
 		setBounds(100, 100, 469, 103);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

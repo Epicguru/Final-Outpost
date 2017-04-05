@@ -17,6 +17,8 @@ import co.uk.epicguru.launcher.frame.DownloadProgress;
 
 public final class LauncherUpdatesManager {
 	private LauncherUpdatesManager(){ }
+	private static boolean close;
+	
 	
 	public static void downloadLatest() throws Exception{	
 		Main.checkConnection();		
@@ -100,6 +102,12 @@ public final class LauncherUpdatesManager {
 			byte[] chunk = new byte[(int) (10 * FileUtils.ONE_KB)]; // 10 KB
 			
 			while((n = is.read(chunk)) > 0){
+				
+				if(close){
+					// Window closed
+					return;
+				}
+				
 				out.write(chunk, 0, n);
 				total += n;
 				
@@ -116,7 +124,7 @@ public final class LauncherUpdatesManager {
 			out.close();
 			
 			// Save to file
-			File file = new File(System.getProperty("user.dir") + '/' + name + ".jar");
+			File file = new File(Main.getFolder().getAbsolutePath() + "\\" + name + ".jar");
 			bytesToFile(bar, bytesRead, file);
 			
 			// Execute new and delete this.			
@@ -132,7 +140,7 @@ public final class LauncherUpdatesManager {
 	    try {
 	        conn = (HttpURLConnection) url.openConnection();
 	        conn.setRequestMethod("HEAD");
-	        conn.getInputStream();
+	        //conn.getInputStream();
 	        return conn.getContentLength();
 	    } catch (IOException e) {
 	        return -1;
@@ -167,7 +175,23 @@ public final class LauncherUpdatesManager {
 		FileUtils.writeByteArrayToFile(file, array);
 		
 		// TODO RUN?	
+		
+		// Run
+		runNewLauncher(file);
+		
+		// Remove this one
+		FileUtils.forceDeleteOnExit(Main.getFile());
+		
 		Main.print("Download and ran new launcher, exiting...");
 		System.exit(0);
+	}
+
+	
+	public static void runNewLauncher(File launcher) throws IOException{
+		Runtime.getRuntime().exec("java -jar " + launcher.getAbsolutePath());
+	}
+	
+	public static void closingWindow() {
+		close = true;
 	}
 }

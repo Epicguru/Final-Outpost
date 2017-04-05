@@ -1,5 +1,7 @@
 package co.uk.epicguru.launcher;
 
+import java.io.File;
+
 import javax.swing.JOptionPane;
 
 import co.uk.epicguru.launcher.connection.General;
@@ -7,9 +9,7 @@ import co.uk.epicguru.launcher.frame.Frame;
 
 public class Main {
 
-	public static final String VERSION = "Launcher v0";
-	public static final String JAR_NAME = "Final Outpost Launcher.jar";
-	
+	public static final String VERSION = "Launcher v0";	
 	
 	public static final String base = "https://epicguru.github.io/Final-Outpost/";
 	public static final String linkDown = "DOWN";
@@ -21,7 +21,7 @@ public class Main {
 	
 	public static void main(String... args){
 		print("Hello world!");
-		print("Working from", System.getProperty("user.dir"));
+		print("Working from", Main.getFile());
 		
 		try{
 			run();
@@ -56,6 +56,17 @@ public class Main {
 		checkConnection();
 		
 		Frame.run();
+	}
+	
+	public static File getFile(){
+		return new File(Main.class.getProtectionDomain()
+				  .getCodeSource()
+				  .getLocation()
+				  .getPath());				
+	}
+	
+	public static File getFolder(){
+		return getFile().getParentFile();
 	}
 	
 	public static void checkConnection(){
