@@ -7,17 +7,18 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
 import org.apache.commons.io.FileUtils;
 
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.frame.DownloadProgress;
+import co.uk.epicguru.launcher.frame.OkCancel;
 
 public final class LauncherUpdatesManager {
 	private LauncherUpdatesManager(){ }
 	private static boolean close;
+	private static boolean ok;
 	
 	
 	public static void downloadLatest() throws Exception{	
@@ -71,15 +72,19 @@ public final class LauncherUpdatesManager {
 		}
 	}
 	
-	public static void checkForUpdatedJar() throws Exception{
-		// TODO if needed?
-	}
-	
 	public static void downloadNewJar(String name, String location) throws Exception{
-		int option = JOptionPane.showConfirmDialog(null, "An update to the launcher is available. This update is not optional.\nDo you wish to install it now?",
-				"Launcher update available", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		ok = false;
+		Runnable ok = () -> {
+			LauncherUpdatesManager.ok = true;
+		};
+		Runnable cancel = () -> {
+			LauncherUpdatesManager.ok = false;
+		};	
 		
-		if(option == JOptionPane.OK_OPTION){
+		new OkCancel(ok, cancel, "Launcher update available!", "A new launcher update is available. This update is not optional,\n"
+				+ "but you can install it later if you wish. Do you want to install it now?");
+		
+		if(LauncherUpdatesManager.ok){
 			
 			// UI
 			DownloadProgress pr = new DownloadProgress();
@@ -131,6 +136,7 @@ public final class LauncherUpdatesManager {
 			is.close();
 		}else{
 			// Cancel
+			Main.print("Download was not accepted, quitting...");
 			System.exit(0);
 		}
 	}
@@ -170,28 +176,28 @@ public final class LauncherUpdatesManager {
 				return;
 			}
 		}	
+		boolean worked = file.createNewFile();
+		Main.print("Created new file :", worked);
 		
+		// UI responsiveness
 		bar.setIndeterminate(true);
+		
+		// Save to disk, it is all in memory
 		FileUtils.writeByteArrayToFile(file, array);
 		
-		// TODO RUN?	
-		
 		// Run
-		//runNewLauncher(file);
+		runNewLauncher(file);
 		
-		// Remove this one
-		//FileUtils.forceDeleteOnExit(Main.getFile());
-		
-		Main.print("Download and ran new launcher, exiting...");
+		Main.print("Downloaded and ran new launcher, exiting...");
 		System.exit(0);
 	}
-
 	
 	public static void runNewLauncher(File launcher) throws IOException{
-		Main.cmd("java -jar " + launcher.getAbsolutePath());
+		Main.cmd("java -jar \"" + launcher.getAbsolutePath() + '"' + " \"" + Main.getFile().getAbsolutePath() + '"');
 	}
 	
 	public static void closingWindow() {
 		close = true;
+		Main.print("Window closed, ending program...");
 	}
 }

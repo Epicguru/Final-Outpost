@@ -34,9 +34,6 @@ public class Frame extends JFrame {
 			// Download latest before launcher opens.
 			LauncherUpdatesManager.downloadLatest();
 			
-			// Update any pending
-			LauncherUpdatesManager.checkForUpdatedJar();
-			
 			// Frame
 			Frame frame = new Frame();
 			frame.setVisible(true);
