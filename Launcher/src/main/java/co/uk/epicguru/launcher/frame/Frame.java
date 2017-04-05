@@ -2,16 +2,20 @@ package co.uk.epicguru.launcher.frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -19,21 +23,19 @@ import javax.swing.border.EmptyBorder;
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.connection.GameDataLoader;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
-import javax.swing.ImageIcon;
-import javax.swing.JTextPane;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.JProgressBar;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblLoadingSplash;
-	private JTextPane news;
 	private JButton playButton;
 	@SuppressWarnings("rawtypes")
 	private JComboBox versionSelection;
 	private static boolean run = true;
+	private JTextPane news;
+	private JLabel lblLoading;
 
 	/**
 	 * Launch the application.
@@ -114,6 +116,12 @@ public class Frame extends JFrame {
 		
 		lblLoadingSplash = new JLabel("Loading Splash...");
 		lblLoadingSplash.setFont(new Font("Segoe Print", Font.BOLD, 13));
+		
+		JProgressBar progressBar = new JProgressBar();
+		
+		lblLoading = new JLabel("Loading...");
+		lblLoading.setForeground(Color.WHITE);
+		lblLoading.setFont(new Font("Space Bd BT", Font.BOLD, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -125,7 +133,11 @@ public class Frame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblGameVersion, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblLoading)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE))
 						.addComponent(lblLoadingSplash, GroupLayout.PREFERRED_SIZE, 853, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
@@ -133,22 +145,25 @@ public class Frame extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(lblLoadingSplash, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-					.addComponent(tabs, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
+					.addGap(15)
+					.addComponent(tabs, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblGameVersion)
-						.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblGameVersion)
+							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblLoading)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(playButton, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
 		);
 		
 		news = new JTextPane();
+		news.setText("Loading game news...");
+		news.setFont(new Font("SimSun", Font.BOLD, 16));
 		news.setEditable(false);
 		news.setBackground(Color.LIGHT_GRAY);
-		news.setFont(new Font("SimSun", Font.BOLD, 16));
-		news.setText("Loading game news...");
-		tabs.addTab("News", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/web/skin/AlignLeft_16x16_JFX.png")), news, null);
+		tabs.addTab("News", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), news, null);
 		contentPane.setLayout(gl_contentPane);
 	}
 	public JLabel getSplash() {
