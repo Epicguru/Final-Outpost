@@ -46,8 +46,8 @@ public final class LauncherUpdatesManager {
 			index++;
 		}
 		
-		version = "asd123";
-		url = Main.base + Main.versions + "0.0.3/Game.jar";
+		//version = "asd123";
+		//url = Main.base + Main.versions + "0.0.3/Game.jar";
 		
 		// Check for update
 		if(version.equals(Main.VERSION)){
@@ -199,5 +199,6 @@ public final class LauncherUpdatesManager {
 	public static void closingWindow() {
 		close = true;
 		Main.print("Window closed, ending program...");
+		System.exit(0);
 	}
 }

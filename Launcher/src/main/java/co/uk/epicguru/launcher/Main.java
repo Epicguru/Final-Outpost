@@ -20,6 +20,9 @@ public class Main {
 	public static final String linkDown = "DOWN";
 	public static final String pending = "PENDING_UPDATE/";
 	public static final String launcher = "Launcher/";
+	public static final String extra = "Extra/";
+	public static final String news = "News.txt";
+	public static final String splash = "Splash.txt";
 	public static final String latestLauncher = "Latest.txt";
 	public static final String versions = "Versions/";
 	public static final String versionsLatest = "Versions.txt";
@@ -41,15 +44,15 @@ public class Main {
 			print("Oh no! A", e.getClass().getName(), "was thrown!");
 			print("TODO handle exception.");
 			JOptionPane.showConfirmDialog(null,
-					e.getClass().getName() + "' w/ message \n'" + e.getMessage() + "'",
+					e.getClass().getName() + " with message \n'" + e.getMessage() + "'",
 					"Exception in launcher", 
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}finally{
 			cleanup();
+			System.exit(0);
 		}
-
 	}
 
 	private static void cleanup() throws RuntimeException{
@@ -114,9 +117,8 @@ public class Main {
 			int option = -1;
 			Main.gotConnection = false;
 			while(option != JOptionPane.CANCEL_OPTION){
-				//"No connection to the server!\nPlease check your internet connection!\nDo you want to attempt to connect again?",
-				//"No Connection", 
-
+				
+				// OK
 				Runnable ok = () -> {
 					if(General.isConnected()){
 						Main.breakConn = true;
@@ -125,11 +127,13 @@ public class Main {
 					}
 				};
 				
+				// CANCEL
 				Runnable cancel = () -> {
 					Main.print("Cancel search for connection");
 					System.exit(0);
 				};
 				
+				// Stops here until option selected. Red X on window gives CANCEL.
 				new OkCancel(ok, cancel, "No internet connection!", "The server was not found! Please ensure that you are connected.\n"
 						+ "Attempt to connect again?");
 				
