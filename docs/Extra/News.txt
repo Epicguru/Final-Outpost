@@ -1,6 +1,5 @@
 Hey there!
 Welcome to Final Outpost. This is an open source game.
-This news section is updated when a new release comes out, or when something significant occurs to the
-development of the game.
+This news section is updated when a new release comes out, or when something significant occurs to the development of the game.
 You can see source code and contribute here : https://github.com/Epicguru/Final-Outpost
 Have fun and be sure to give feedback!
