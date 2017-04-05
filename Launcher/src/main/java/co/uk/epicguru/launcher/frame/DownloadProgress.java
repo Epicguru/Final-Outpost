@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -13,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
 
 @SuppressWarnings("serial")
-public class DownloadProgress extends JDialog {
+public class DownloadProgress extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
 

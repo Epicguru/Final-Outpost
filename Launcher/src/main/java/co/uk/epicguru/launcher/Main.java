@@ -1,6 +1,7 @@
 package co.uk.epicguru.launcher;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
@@ -56,6 +57,17 @@ public class Main {
 		checkConnection();
 		
 		Frame.run();
+	}
+	
+	public static void cmd(String command){
+		
+		Main.print("Running", command);
+		
+		try {
+			Runtime.getRuntime().exec(command);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public static File getFile(){

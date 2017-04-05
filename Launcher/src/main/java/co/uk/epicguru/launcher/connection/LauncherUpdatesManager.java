@@ -83,7 +83,6 @@ public final class LauncherUpdatesManager {
 			
 			// UI
 			DownloadProgress pr = new DownloadProgress();
-			pr.nameOfDownload.setText(name);
 			pr.setVisible(true);
 			JProgressBar bar = pr.progressBar;
 			
@@ -94,9 +93,10 @@ public final class LauncherUpdatesManager {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			
 			int estimate = getFileSize(url);
+			pr.nameOfDownload.setText(name + " (" + FileUtils.byteCountToDisplaySize(estimate) + ')');
 			int total = 0;
 			
-			Main.print("Estimated", estimate);
+			Main.print("File size", estimate);
 			
 			int n = 0;
 			byte[] chunk = new byte[(int) (10 * FileUtils.ONE_KB)]; // 10 KB
@@ -177,10 +177,10 @@ public final class LauncherUpdatesManager {
 		// TODO RUN?	
 		
 		// Run
-		runNewLauncher(file);
+		//runNewLauncher(file);
 		
 		// Remove this one
-		FileUtils.forceDeleteOnExit(Main.getFile());
+		//FileUtils.forceDeleteOnExit(Main.getFile());
 		
 		Main.print("Download and ran new launcher, exiting...");
 		System.exit(0);
@@ -188,7 +188,7 @@ public final class LauncherUpdatesManager {
 
 	
 	public static void runNewLauncher(File launcher) throws IOException{
-		Runtime.getRuntime().exec("java -jar " + launcher.getAbsolutePath());
+		Main.cmd("java -jar " + launcher.getAbsolutePath());
 	}
 	
 	public static void closingWindow() {
