@@ -21,6 +21,8 @@ import co.uk.epicguru.launcher.connection.GameDataLoader;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
 import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
@@ -31,6 +33,7 @@ public class Frame extends JFrame {
 	private JButton playButton;
 	@SuppressWarnings("rawtypes")
 	private JComboBox versionSelection;
+	private static boolean run = true;
 
 	/**
 	 * Launch the application.
@@ -56,11 +59,20 @@ public class Frame extends JFrame {
 			// Get data
 			GameDataLoader.run(frame);
 			
+			while(run){
+				Thread.sleep(30 * 1000); // 30 seconds
+				update();
+			}
+			
 		} catch (Exception e) {
 			Main.print("Crash in Frame.run(), passing on exception.");
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static void update(){
+		
 	}
 
 	/**
@@ -68,6 +80,13 @@ public class Frame extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Frame() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				// Window close
+				run = false;
+			}
+		});
 		setTitle("Final Outpost - " + Main.VERSION);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 899, 449);

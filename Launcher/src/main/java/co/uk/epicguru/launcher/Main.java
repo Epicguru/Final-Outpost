@@ -56,8 +56,6 @@ public class Main {
 	}
 
 	private static void cleanup() throws RuntimeException{
-
-
 		print("Cleanup ended successfuly!");
 	}
 
