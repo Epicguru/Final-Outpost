@@ -2,6 +2,8 @@ package co.uk.epicguru.launcher.frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -14,16 +16,17 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import co.uk.epicguru.game.GameLoader;
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.connection.GameDataLoader;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
-import javax.swing.JProgressBar;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
@@ -36,6 +39,7 @@ public class Frame extends JFrame {
 	private static boolean run = true;
 	private JTextPane news;
 	private JLabel lblLoading;
+	private JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -82,6 +86,7 @@ public class Frame extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Frame() {
+		Frame instance = this;
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -107,6 +112,11 @@ public class Frame extends JFrame {
 		lblGameVersion.setFont(new Font("Segoe Print", Font.BOLD, 12));
 		
 		playButton = new JButton("PLAY");
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GameLoader.play(instance);
+			}
+		});
 		playButton.setForeground(Color.BLACK);
 		playButton.setBackground(Color.RED);
 		playButton.setFont(new Font("Segoe Print", Font.BOLD, 34));
@@ -117,7 +127,7 @@ public class Frame extends JFrame {
 		lblLoadingSplash = new JLabel("Loading Splash...");
 		lblLoadingSplash.setFont(new Font("Segoe Print", Font.BOLD, 13));
 		
-		JProgressBar progressBar = new JProgressBar();
+		progressBar = new JProgressBar();
 		
 		lblLoading = new JLabel("Loading...");
 		lblLoading.setForeground(Color.WHITE);
@@ -178,5 +188,8 @@ public class Frame extends JFrame {
 	@SuppressWarnings("rawtypes")
 	public JComboBox getVersionSelection() {
 		return versionSelection;
+	}
+	public JProgressBar getProgressBar() {
+		return progressBar;
 	}
 }

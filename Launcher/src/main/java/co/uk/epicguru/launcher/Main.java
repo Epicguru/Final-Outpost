@@ -16,6 +16,9 @@ public class Main {
 
 	public static final String VERSION = "Launcher v0";	
 
+	public static final String FOE = "Final Outpost Engine.jar";
+	public static final String gameDir = "Game/";
+	public static final String gameVersions = "Versions/";
 	public static final String base = "https://epicguru.github.io/Final-Outpost/";
 	public static final String linkDown = "DOWN";
 	public static final String pending = "PENDING_UPDATE/";

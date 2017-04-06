@@ -17,8 +17,12 @@ public final class General {
 	private static ArrayList<String> strArr = new ArrayList<String>();
 
 	public static boolean isConnected(){
+		return checkConnectionTo(Main.base);
+	}
+	
+	public static boolean checkConnectionTo(String location){
 		try {
-			final URL url = new URL(Main.base);
+			final URL url = new URL(location);
 			final URLConnection conn = url.openConnection();
 			conn.connect();
 			return true;
