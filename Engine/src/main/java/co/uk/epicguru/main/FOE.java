@@ -27,6 +27,7 @@ import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.NoPluginsScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
@@ -68,6 +69,7 @@ public class FOE extends Game{
 	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static GameMap map;
+	public static Engine engine;
 	
 	public static void main(String... args){
 		

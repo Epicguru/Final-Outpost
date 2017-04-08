@@ -3,6 +3,7 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
@@ -23,7 +24,7 @@ public class InGameScreen extends GameScreen {
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		// Entities
-		// TODO init entities
+		FOE.engine = new Engine();
 		
 		// Physics
 		JPhysics.reset();
@@ -41,12 +42,21 @@ public class InGameScreen extends GameScreen {
 	}
 	
 	public void hide(){
-		// TODO save map.
+		
+		// Save and dispose map
 		FOE.map.dispose();
 		FOE.map = null;
+		
 		// TODO dispose player
-		// TODO dispose entities
+		
+		// Clear entities
+		FOE.engine.clearEntities();
+		FOE.engine = null;
+		
+		// Physics
 		JPhysics.clearWorld();
+		
+		// Clean up
 		System.gc();
 		
 		super.hide();
@@ -55,7 +65,7 @@ public class InGameScreen extends GameScreen {
 	public void update(float delta){
 		
 		FOE.map.update(delta); // Map
-		// TODO update entities
+		FOE.engine.update(delta); // Entities
 		JPhysics.update(delta); // Physics		
 		
 		super.update(delta);
@@ -68,7 +78,7 @@ public class InGameScreen extends GameScreen {
 		// TODO set camera pos
 		
 		FOE.map.render(); // Map
-		// TODO render entities
+		FOE.engine.render(batch, delta);
 		
 		super.render(delta, batch);
 		
@@ -78,7 +88,7 @@ public class InGameScreen extends GameScreen {
 	
 	public void renderUI(float delta, Batch batch){	
 		
-		// TODO renderUI entities
+		FOE.engine.renderUI(batch, delta);
 		
 		super.renderUI(delta, batch);
 	}

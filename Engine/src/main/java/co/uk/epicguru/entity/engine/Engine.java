@@ -2,6 +2,8 @@ package co.uk.epicguru.entity.engine;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.Group;
 
@@ -59,5 +61,36 @@ public class Engine {
 			e.removed();
 		}
 		bin.clear();
+	}
+
+	public ArrayList<Entity> getAllEntities(){
+		return entities;
+	}
+	
+	public void update(float delta){
+		this.addNew();
+		this.flush();
+		
+		for(Entity e : entities){
+			e.update(delta);
+		}
+		
+		this.flush();
+	}
+	
+	public void render(Batch batch, float delta){
+		for(Entity e : entities){
+			e.render(batch, delta);
+		}
+		
+		this.flush();
+	}
+	
+	public void renderUI(Batch batch, float delta){
+		for(Entity e : entities){
+			e.renderUI(batch, delta);
+		}
+		
+		this.flush();
 	}
 }
