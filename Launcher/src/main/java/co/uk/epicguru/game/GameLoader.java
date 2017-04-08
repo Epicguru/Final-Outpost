@@ -121,13 +121,14 @@ public class GameLoader {
 
 	private static void copyURL(Frame frame, URL source, File destination) throws Exception{
 		// Ok, download!
+		frame.setBar(0f);
 		InputStream is = source.openStream();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		int estimate = getFileSize(source);
 		int total = 0;
 
-		Main.print("File size", estimate);
+		Main.print("File size", estimate, "from", source.toString());
 
 		int n = 0;
 		byte[] chunk = new byte[(int) (10 * FileUtils.ONE_KB)]; // 10 KB

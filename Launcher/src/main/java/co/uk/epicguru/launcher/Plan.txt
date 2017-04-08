@@ -8,16 +8,13 @@ In repository :
 		Launcher/
 			Latest.txt #Contains info on the latest launcher update. The launcher updates are not optional.
 			Bin/
-				Launcher.jar #Binary file for launcher
-				Notes.txt #Some patch notes, without formatting.
+				Launcher.jar # Binary file for launcher
+				Notes.txt # Some patch notes, without formatting.
 		Versions/
-			Versions.txt #Contains all versions - (x.x.x, y.y.y, z.z.z)
+			Versions.txt # Lists all versions
 			x.x.x/
-				Notes.txt #Includes some sort of formatting, for all devices.
+				Notes.txt # Includes some sort of formatting, for all devices.
+				Plugins.txt # Lists everything in Plugins/
 				Game.jar
-			y.y.y/
-				Notes.txt
-				Game.jar
-			z.z.z/
-				Notes.txt
-				Game.jar
+				Plugins/
+					Final Outpost Plugin.zip # All default plugins

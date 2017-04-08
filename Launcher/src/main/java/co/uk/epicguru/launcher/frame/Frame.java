@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -15,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
@@ -24,6 +26,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import co.uk.epicguru.game.GameLoader;
+import co.uk.epicguru.game.actions.Backup;
+import co.uk.epicguru.game.actions.ResetVersions;
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.connection.GameDataLoader;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
@@ -40,6 +44,9 @@ public class Frame extends JFrame {
 	private JTextPane news;
 	private JLabel lblLoading;
 	private JProgressBar progressBar;
+	private JPanel options;
+	private JButton runBackup;
+	private JButton runReset;
 
 	/**
 	 * Launch the application.
@@ -178,6 +185,72 @@ public class Frame extends JFrame {
 		news.setEditable(false);
 		news.setBackground(Color.LIGHT_GRAY);
 		tabs.addTab("News", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), news, null);
+		
+		options = new JPanel();
+		tabs.addTab("Options", new ImageIcon(Frame.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")), options, null);
+		
+		JLabel backupLabel = new JLabel("Backup");
+		backupLabel.setFont(new Font("Segoe Print", Font.PLAIN, 14));
+		
+		runBackup = new JButton("Run Backup");
+		runBackup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// Run backup here
+				boolean worked = Backup.backup(instance);
+				
+				if(worked){
+					JOptionPane.showConfirmDialog(null, "Game data has been backed up. See " + new File(Main.gameBackup).getAbsolutePath() + 
+							" for all backups.");
+				}
+			}
+		});
+		
+		JLabel resetLabel = new JLabel("Reset");
+		resetLabel.setFont(new Font("Segoe Print", Font.PLAIN, 14));
+		
+		runReset = new JButton("Run Reset");
+		runReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Run reset here
+				boolean worked = ResetVersions.resetVersions(instance);
+				
+				if(worked){
+					JOptionPane.showConfirmDialog(null, "All versions (NOT GAME DATA) have been reset. They will have to be downloaded again.");
+				}
+			}
+		});
+		GroupLayout gl_options = new GroupLayout(options);
+		gl_options.setHorizontalGroup(
+			gl_options.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_options.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_options.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_options.createSequentialGroup()
+							.addComponent(backupLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(runBackup))
+						.addGroup(gl_options.createSequentialGroup()
+							.addComponent(resetLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addGap(4)
+							.addComponent(runReset)))
+					.addContainerGap(683, Short.MAX_VALUE))
+		);
+		gl_options.setVerticalGroup(
+			gl_options.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_options.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_options.createParallelGroup(Alignment.BASELINE)
+						.addComponent(backupLabel)
+						.addComponent(runBackup))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_options.createParallelGroup(Alignment.LEADING)
+						.addComponent(resetLabel, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_options.createSequentialGroup()
+							.addGap(3)
+							.addComponent(runReset)))
+					.addContainerGap(155, Short.MAX_VALUE))
+		);
+		options.setLayout(gl_options);
 		contentPane.setLayout(gl_contentPane);
 	}
 	public JLabel getSplash() {
@@ -200,5 +273,11 @@ public class Frame extends JFrame {
 	}
 	public JProgressBar getProgressBar() {
 		return progressBar;
+	}
+	public JButton getRunBackup() {
+		return runBackup;
+	}
+	public JButton getRunReset() {
+		return runReset;
 	}
 }
