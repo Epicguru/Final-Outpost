@@ -131,17 +131,15 @@ public class GameLoader {
 
 		int n = 0;
 		byte[] chunk = new byte[(int) (10 * FileUtils.ONE_KB)]; // 10 KB
-
+		
 		while((n = is.read(chunk)) > 0){
 
 			out.write(chunk, 0, n);
 			total += n;
 
 			float p = total / (float)estimate;
-			p *= 100;
 
-			frame.getProgressBar().setMaximum(100);
-			frame.getProgressBar().setValue((int)p);
+			frame.setBar(p);
 		}
 
 		Main.print("Estimated", estimate, "bytes, there were", total, "bytes.");
@@ -198,6 +196,7 @@ public class GameLoader {
 			}else{
 				Main.print("Worked! Yay!");
 				runCurrent();
+				System.exit(0);
 			}
 
 		} catch (Exception e) {

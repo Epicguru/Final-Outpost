@@ -114,7 +114,9 @@ public class Frame extends JFrame {
 		playButton = new JButton("PLAY");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				GameLoader.play(instance);
+				new Thread(() -> {
+					GameLoader.play(instance);					
+				}).start();
 			}
 		});
 		playButton.setForeground(Color.BLACK);
@@ -128,6 +130,8 @@ public class Frame extends JFrame {
 		lblLoadingSplash.setFont(new Font("Segoe Print", Font.BOLD, 13));
 		
 		progressBar = new JProgressBar();
+		progressBar.setForeground(new Color(219, 112, 147));
+		progressBar.setStringPainted(true);
 		
 		lblLoading = new JLabel("Loading...");
 		lblLoading.setForeground(Color.WHITE);
@@ -185,6 +189,11 @@ public class Frame extends JFrame {
 	public JButton getPlayButton() {
 		return playButton;
 	}
+	
+	public void setBar(float p){
+		this.progressBar.setValue((int) (p * 100f));
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public JComboBox getVersionSelection() {
 		return versionSelection;
