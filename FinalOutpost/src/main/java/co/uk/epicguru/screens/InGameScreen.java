@@ -3,7 +3,6 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
-import co.uk.epicguru.entities.EntityManager;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
@@ -11,13 +10,10 @@ import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.physics.JPhysics;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
-import co.uk.epicguru.screens.hooks.PlayerController;
 import ro.fortsoft.pf4j.Extension;
 
 @Extension
 public class InGameScreen extends GameScreen {
-
-	private PlayerController player;
 	
 	public void show(){
 		// WIP
@@ -27,14 +23,14 @@ public class InGameScreen extends GameScreen {
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		// Entities
-		EntityManager.clear();
+		// TODO init entities
 		
 		// Physics
 		JPhysics.reset();
 		JPhysics.setPPM(Constants.PPM);
 		
 		// Add player
-		player = new PlayerController();		
+		// TODO create player	
 		
 		// Hooks
 		super.clearHooks();
@@ -48,8 +44,8 @@ public class InGameScreen extends GameScreen {
 		// TODO save map.
 		FOE.map.dispose();
 		FOE.map = null;
-		player = null;
-		EntityManager.clear();
+		// TODO dispose player
+		// TODO dispose entities
 		JPhysics.clearWorld();
 		System.gc();
 		
@@ -59,7 +55,7 @@ public class InGameScreen extends GameScreen {
 	public void update(float delta){
 		
 		FOE.map.update(delta); // Map
-		EntityManager.update(delta); // Entities
+		// TODO update entities
 		JPhysics.update(delta); // Physics		
 		
 		super.update(delta);
@@ -69,10 +65,10 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		FOE.camera.position.set(player.getX(), player.getY(), 0);	
+		// TODO set camera pos
 		
 		FOE.map.render(); // Map
-		EntityManager.render(delta, batch); // Entities
+		// TODO render entities
 		
 		super.render(delta, batch);
 		
@@ -82,7 +78,7 @@ public class InGameScreen extends GameScreen {
 	
 	public void renderUI(float delta, Batch batch){	
 		
-		EntityManager.renderUI(delta, batch);
+		// TODO renderUI entities
 		
 		super.renderUI(delta, batch);
 	}
