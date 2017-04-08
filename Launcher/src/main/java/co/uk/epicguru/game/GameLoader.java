@@ -187,7 +187,6 @@ public class GameLoader {
 		FileUtils.writeByteArrayToFile(file, array);
 		
 		Main.print("Downloaded and ran file.");
-		System.exit(0);
 	}
 
 	public static void play(Frame frame) {
