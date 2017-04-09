@@ -70,8 +70,38 @@ public class GameLoader {
 		File destination = new File(Main.gameDir + Main.gameVersions + version + '/' + Main.FOE);
 		Main.print("Downloading", gameJar.toString());
 		copyURL(frame, gameJar, destination);
+		
+		// Download plugins
+		Main.print("Now downloading plugins...");
+		downloadPlugins(version);		
 
 		return true;
+	}
+	
+	public static void downloadPlugins(String version) throws Exception {
+		String[] names = getPluginNamesFor(version);
+		URL[] urls = getPluginsFor(version);
+		
+		int index = 0;
+		for(URL url : urls){
+			
+			File destination = new File(Main.gameDataDir + "Plugins/" + names[index]);
+			Main.print("Saving to", destination.getAbsolutePath());
+			
+			// Delete old (if exists)
+			if(destination.exists()){
+				if(destination.isDirectory()){
+					FileUtils.deleteDirectory(destination);
+				}else{
+					FileUtils.forceDelete(destination);
+				}
+			}
+			
+			// Copy
+			FileUtils.copyURLToFile(url, destination);
+			
+			index++;
+		}
 	}
 
 	public static boolean downloadVersion(Frame frame, String version) throws Exception {
@@ -205,4 +235,26 @@ public class GameLoader {
 		}		
 	}
 
+	public static String[] getPluginNamesFor(String version) throws Exception {
+		return General.readLines(Main.base + Main.versions + version + "/" + Main.pluginsList);
+	}
+	
+	public static URL[] getPluginsFor(String version) throws Exception{		
+		
+		String[] lines = getPluginNamesFor(version);
+		URL[] urls = new URL[lines.length];
+		
+		int index = 0;
+		for(String line : lines){
+			Main.print("Pending :", line);
+			
+			// Get URL
+			urls[index] = General.newURL(Main.base + Main.versions + version + "/" + "Plugins/" + line);
+			
+			// Next
+			index++;
+		}
+		
+		return urls;
+	}
 }

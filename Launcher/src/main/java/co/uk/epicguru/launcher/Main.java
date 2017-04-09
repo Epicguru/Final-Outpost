@@ -17,6 +17,7 @@ public class Main {
 	public static final String VERSION = "Launcher v0";	
 
 	public static final String FOE = "Final Outpost Engine.jar";
+	public static final String pluginsList = "Plugins.txt";
 	public static final String pluginsInfo = "Plugins.txt";
 	public static final String gameDir = "Game Binaries/";
 	public static final String gameDataDir = "Game Data/";
