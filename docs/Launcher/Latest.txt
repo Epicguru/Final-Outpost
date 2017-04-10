@@ -1,2 +1,2 @@
-Launcher v0
-DOWN
+Launcher v1
+https://epicguru.github.io/Final-Outpost/Launcher/latest/Launcher.jar
