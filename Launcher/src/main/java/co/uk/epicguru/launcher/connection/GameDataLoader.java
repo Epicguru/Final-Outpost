@@ -1,5 +1,6 @@
 package co.uk.epicguru.launcher.connection;
 
+import co.uk.epicguru.game.GameLoader;
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.frame.Frame;
 
@@ -9,6 +10,8 @@ public final class GameDataLoader {
 	
 	public static void run(Frame frame) throws Exception {
 		GameDataLoader.frame = frame;
+		
+		GameLoader.createDirectory();
 		
 		refresh();
 	}

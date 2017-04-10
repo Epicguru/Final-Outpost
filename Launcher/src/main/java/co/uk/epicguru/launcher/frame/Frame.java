@@ -2,17 +2,21 @@ package co.uk.epicguru.launcher.frame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +35,7 @@ import co.uk.epicguru.game.actions.ResetVersions;
 import co.uk.epicguru.launcher.Main;
 import co.uk.epicguru.launcher.connection.GameDataLoader;
 import co.uk.epicguru.launcher.connection.LauncherUpdatesManager;
+import co.uk.epicguru.launcher.frame.image.ImagePanel;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
@@ -42,11 +47,11 @@ public class Frame extends JFrame {
 	private JComboBox versionSelection;
 	private static boolean run = true;
 	private JTextPane news;
-	private JLabel lblLoading;
 	private JProgressBar progressBar;
 	private JPanel options;
 	private JButton runBackup;
-	private JButton runReset;
+	private JButton runCleanup;
+	private JCheckBox copyCustomPluginsBox;
 
 	/**
 	 * Launch the application.
@@ -92,7 +97,7 @@ public class Frame extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Frame() {
+	public Frame() throws Exception{
 		Frame instance = this;
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -104,21 +109,26 @@ public class Frame extends JFrame {
 		setTitle("Final Outpost - " + Main.VERSION);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 899, 449);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.GRAY);
+		InputStream stream = this.getClass().getResourceAsStream("TitleBackground.png");
+		Image image = ImageIO.read(stream);
+		contentPane = new ImagePanel(image);
+		contentPane.setBackground(new Color(0, 204, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		versionSelection = new JComboBox();
+		versionSelection.setToolTipText("The version of the game to play. It will be downloaded if not installed.");
 		versionSelection.setFont(new Font("Segoe Print", Font.BOLD, 12));
 		versionSelection.setModel(new DefaultComboBoxModel(new String[] {"Loading versions..."}));
 		versionSelection.setSelectedIndex(0);
 		versionSelection.setMaximumRowCount(1000);
 		
 		JLabel lblGameVersion = new JLabel("Game version");
-		lblGameVersion.setFont(new Font("Segoe Print", Font.BOLD, 12));
+		lblGameVersion.setForeground(Color.WHITE);
+		lblGameVersion.setFont(new Font("Segoe Print", Font.BOLD, 14));
 		
 		playButton = new JButton("PLAY");
+		playButton.setToolTipText("Play the game! Selected version will be run.");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(() -> {
@@ -127,38 +137,40 @@ public class Frame extends JFrame {
 			}
 		});
 		playButton.setForeground(Color.BLACK);
-		playButton.setBackground(Color.RED);
+		playButton.setBackground(Color.ORANGE);
 		playButton.setFont(new Font("Segoe Print", Font.BOLD, 34));
 		
 		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
-		tabs.setBackground(Color.LIGHT_GRAY);
+		tabs.setBackground(new Color(0, 102, 255));
 		
 		lblLoadingSplash = new JLabel("Loading Splash...");
-		lblLoadingSplash.setFont(new Font("Segoe Print", Font.BOLD, 13));
+		lblLoadingSplash.setForeground(Color.WHITE);
+		lblLoadingSplash.setFont(new Font("Segoe Print", Font.BOLD, 14));
 		
 		progressBar = new JProgressBar();
+		progressBar.setToolTipText("The progress of the current download.");
 		progressBar.setForeground(new Color(219, 112, 147));
 		progressBar.setStringPainted(true);
 		
-		lblLoading = new JLabel("Loading...");
-		lblLoading.setForeground(Color.WHITE);
-		lblLoading.setFont(new Font("Space Bd BT", Font.BOLD, 15));
+		copyCustomPluginsBox = new JCheckBox("Copy custom plugins");
+		copyCustomPluginsBox.setToolTipText("Should the plugins from \"Your Plugins\" be copied?");
+		copyCustomPluginsBox.setSelected(true);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+					.addGap(5)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(tabs, GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
-						.addComponent(playButton, GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
+						.addComponent(tabs, GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
+						.addComponent(playButton, GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblGameVersion, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblLoading)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE))
+							.addGap(14)
+							.addComponent(copyCustomPluginsBox)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
 						.addComponent(lblLoadingSplash, GroupLayout.PREFERRED_SIZE, 853, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
@@ -169,12 +181,13 @@ public class Frame extends JFrame {
 					.addGap(15)
 					.addComponent(tabs, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+							.addComponent(copyCustomPluginsBox, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 							.addComponent(lblGameVersion)
-							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblLoading)))
+							.addComponent(versionSelection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(playButton, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
 		);
@@ -187,12 +200,15 @@ public class Frame extends JFrame {
 		tabs.addTab("News", new ImageIcon(Frame.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Left-Black.png")), news, null);
 		
 		options = new JPanel();
+		options.setBackground(Color.LIGHT_GRAY);
 		tabs.addTab("Options", new ImageIcon(Frame.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")), options, null);
 		
 		JLabel backupLabel = new JLabel("Backup");
-		backupLabel.setFont(new Font("Segoe Print", Font.PLAIN, 14));
+		backupLabel.setFont(new Font("Segoe Print", Font.BOLD, 14));
 		
 		runBackup = new JButton("Run Backup");
+		runBackup.setToolTipText("Backs up the current contents of /Game Data into a backup folder. Please do this before you run a new update.");
+		runBackup.setFont(new Font("Tahoma", Font.BOLD, 11));
 		runBackup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Run backup here
@@ -205,11 +221,14 @@ public class Frame extends JFrame {
 			}
 		});
 		
-		JLabel resetLabel = new JLabel("Reset");
-		resetLabel.setFont(new Font("Segoe Print", Font.PLAIN, 14));
+		JLabel cleanupLabel = new JLabel("Clean");
+		cleanupLabel.setFont(new Font("Segoe Print", Font.BOLD, 14));
 		
-		runReset = new JButton("Run Reset");
-		runReset.addActionListener(new ActionListener() {
+		runCleanup = new JButton("Run Cleanup");
+		runCleanup.setToolTipText("Deletes all downloaded versions, but DOES NOT remove Game Data. That means that you will have to download versions again.");
+		runCleanup.setBackground(Color.RED);
+		runCleanup.setFont(new Font("Tahoma", Font.BOLD, 11));
+		runCleanup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Run reset here
 				boolean worked = ResetVersions.resetVersions(instance);
@@ -230,9 +249,9 @@ public class Frame extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(runBackup))
 						.addGroup(gl_options.createSequentialGroup()
-							.addComponent(resetLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addComponent(cleanupLabel, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
 							.addGap(4)
-							.addComponent(runReset)))
+							.addComponent(runCleanup)))
 					.addContainerGap(683, Short.MAX_VALUE))
 		);
 		gl_options.setVerticalGroup(
@@ -244,10 +263,10 @@ public class Frame extends JFrame {
 						.addComponent(runBackup))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_options.createParallelGroup(Alignment.LEADING)
-						.addComponent(resetLabel, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cleanupLabel, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_options.createSequentialGroup()
 							.addGap(3)
-							.addComponent(runReset)))
+							.addComponent(runCleanup)))
 					.addContainerGap(155, Short.MAX_VALUE))
 		);
 		options.setLayout(gl_options);
@@ -278,6 +297,9 @@ public class Frame extends JFrame {
 		return runBackup;
 	}
 	public JButton getRunReset() {
-		return runReset;
+		return runCleanup;
+	}
+	public JCheckBox getCheckBox() {
+		return copyCustomPluginsBox;
 	}
 }

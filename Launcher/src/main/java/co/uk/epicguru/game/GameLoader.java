@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JProgressBar;
 
@@ -22,6 +24,11 @@ public class GameLoader {
 		if(!file.exists() || !file.isDirectory()){
 			file.mkdirs();
 		}
+		
+		file = new File(Main.pluginsDedicated);
+		if(!file.exists() || !file.isDirectory()){
+			file.mkdirs();
+		}		
 	}
 
 	private static void accomodate(String version){
@@ -32,13 +39,49 @@ public class GameLoader {
 		}
 	}
 
-	private static boolean swap(String newVersion) throws IOException{
-		File target = new File(Main.gameDir + Main.FOE);
+	public static String getCurrentFromFile() throws Exception{
+		File file = new File(Main.gameDir + Main.currentGameVersion);
+		
+		if(!file.exists()){
+			return null;
+		}
+		
+		String line = null;
+		@SuppressWarnings("unchecked")
+		List<String> lines = FileUtils.readLines(file);
+		
+		if(lines.size() != 1){
+			return null;
+		}
+		
+		line = lines.get(0);
+		
+		Main.print("Got", line, "from", file.getAbsolutePath());
+		
+		return line;
+	}
+	
+	public static void saveCurrentToFile(String value) throws Exception{
+		
+		Main.print("Saving current version to file :", value);
+		
+		File file = new File(Main.gameDir + Main.currentGameVersion);
+		
+		if(!file.exists()){
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+		}
+		
+		List<String> list = new ArrayList<String>();
+		list.add(value);
+		FileUtils.writeLines(file, list);
+		
+		Main.print("Done!");
+	}
+	
+	private static boolean swap(String newVersion, boolean installCustomPlugins) throws IOException{
 
-		if(target.exists())
-			FileUtils.forceDelete(target);
-
-		// Copy new
+		// Get version
 		File version = new File(Main.gameDir + Main.gameVersions + newVersion + '/' + Main.FOE);
 
 		Main.print("Activating", version.getAbsolutePath());
@@ -46,14 +89,39 @@ public class GameLoader {
 		if(!version.exists()){
 			Main.print("Version was not found, canceling activation and stopping...");
 			return false;
-		}			
-
-		FileUtils.copyFile(version, target);
+		}
+				
+		// Plugins
+		File plugins = new File(Main.gameDir + Main.gameVersions + newVersion + '/' + "Plugins/");
+		File dest = new File(Main.gameDataDir + "Plugins/");
+		FileUtils.deleteDirectory(dest);
+		dest.mkdir();
+		if(plugins.exists()){
+			FileUtils.copyDirectory(plugins, dest);
+		}else{
+			Main.print("Plugins folder does not exist!");
+		}
+		
+		if(installCustomPlugins){
+			Main.print("Installing custom plugins...");			
+			File custom = new File(Main.pluginsDedicated);
+			
+			if(custom.exists()){
+				FileUtils.copyDirectory(custom, dest);
+				Main.print("Done!");
+			}else{
+				Main.print("Custom plugins folder does not exist!");
+			}
+			
+		}else{
+			Main.print("Custom plugins are disabled.");
+		}
+		
 		Main.print("Done!");
 
 		return true;
 	}
-
+	
 	private static boolean downloadFromServer(Frame frame, String version) throws Exception{
 		Main.checkConnection();
 
@@ -85,7 +153,7 @@ public class GameLoader {
 		int index = 0;
 		for(URL url : urls){
 			
-			File destination = new File(Main.gameDataDir + "Plugins/" + names[index]);
+			File destination = new File(Main.gameDir + Main.gameVersions + version + "/Plugins/" + names[index]);
 			Main.print("Saving to", destination.getAbsolutePath());
 			
 			// Delete old (if exists)
@@ -105,7 +173,8 @@ public class GameLoader {
 	}
 
 	public static boolean downloadVersion(Frame frame, String version) throws Exception {
-		if(swap(version)){
+		boolean copy = frame.getCheckBox().isSelected();
+		if(swap(version, copy)){
 			// Done
 			return true;
 		}else{
@@ -116,21 +185,47 @@ public class GameLoader {
 			}
 
 			// Swap
-			swap(version);
+			swap(version, copy);
 			return true;
 		}
 	}
 
-	public static boolean runCurrent(){
+	private static void deleteExtracted() throws IOException{
+		File file = new File(Main.gameDataDir + "/Extracted");
+		
+		FileUtils.deleteDirectory(file);
+	}
+	
+	public static boolean runCurrent(Frame frame) throws Exception{
 
-		File current = new File(Main.gameDir + Main.FOE);
+		String current = getCurrentFromFile();
+		if(current == null){
+			current = frame.getVersionSelection().getSelectedItem().toString();
+			saveCurrentToFile(current);
+		}else{
+			String selected = frame.getVersionSelection().getSelectedItem().toString();			
+			String read = current;
+			
+			if(!selected.equals(read)){
+				// We are selecting one that is not marked as current, meaning that we just changed version.
+				// Now we need to update the 'current' version to the selected one, and also delete /Extracted data.
+				
+				// Save new
+				saveCurrentToFile(selected);
+				
+				// Delete old /Extracted data, because it will not automatically reload.
+				deleteExtracted();
+			}
+		}
+		
+		File currentFile = new File(Main.gameDir + Main.versions + current + '/' + Main.FOE);
 
-		if(!current.exists() || current.isDirectory()){
+		if(!currentFile.exists() || currentFile.isDirectory()){
 			Main.print("Current version is not named correctly, does not exist or is a directory!");
 			return false;
 		}else{
 			Main.print("Running current version!");
-			Main.cmd("java -jar \"" + current.getAbsolutePath() + "\"");
+			Main.cmd("java -jar \"" + currentFile.getAbsolutePath() + "\"");
 			return true;
 		}		
 	}
@@ -226,7 +321,7 @@ public class GameLoader {
 				Main.print("Download or activation of version did not work!");
 			}else{
 				Main.print("Worked! Yay!");
-				runCurrent();
+				runCurrent(frame);
 				System.exit(0);
 			}
 
