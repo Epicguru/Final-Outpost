@@ -2,6 +2,7 @@ package co.uk.epicguru.entity;
 
 public class Group {
 
+	@SafeVarargs
 	public static Group of(Class<? extends Component>... classes){
 		return new Group(classes);
 	}
