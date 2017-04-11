@@ -9,7 +9,6 @@ import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
-import co.uk.epicguru.physics.JPhysics;
 
 public class DebugHook extends ScreenHook {
 
@@ -35,7 +34,7 @@ public class DebugHook extends ScreenHook {
 		y = 20;
 		
 		draw(batch, String.format("%.2f", used) + "/" + String.format("%.2f", total) + "GB, " + (int)p + "%", Color.WHITE);
-		draw(batch, JPhysics.getActiveBodies().size() + " bodies active. Gravity is " + JPhysics.getGravity().toString() + " and default drag is " + JPhysics.getDefaultDrag() + " @ " + JPhysics.getDragsPerSecond() + " DPS.", Color.WHITE);
+		// TODO physics debug
 		draw(batch, FOE.engine.getAllEntities().size() + " active entities.", Color.YELLOW);
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 		draw(batch, Allocator.getRunningTimers() + " running timers.", Color.WHITE);

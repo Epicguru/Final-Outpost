@@ -6,11 +6,9 @@ import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.engine.Engine;
-import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
-import co.uk.epicguru.physics.JPhysics;
 import co.uk.epicguru.player.PlayerEntity;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
@@ -30,8 +28,7 @@ public class InGameScreen extends GameScreen {
 		FOE.engine = new Engine();
 		
 		// Physics
-		JPhysics.reset();
-		JPhysics.setPPM(Constants.PPM);
+		// TODO Physics setup and clean
 		
 		// Add player
 		FOE.player = new PlayerEntity();
@@ -62,7 +59,7 @@ public class InGameScreen extends GameScreen {
 		FOE.engine = null;
 		
 		// Physics
-		JPhysics.clearWorld();
+		// TODO physics dispose
 		
 		// Clean up
 		System.gc();
@@ -74,7 +71,7 @@ public class InGameScreen extends GameScreen {
 		
 		FOE.map.update(delta); // Map
 		FOE.engine.update(delta); // Entities
-		JPhysics.update(delta); // Physics		
+		// TODO physics update	
 		
 		super.update(delta);
 		
@@ -91,8 +88,7 @@ public class InGameScreen extends GameScreen {
 		
 		super.render(delta, batch);
 		
-		if(DebugHook.active)
-			JPhysics.render(batch, FOE.camera); // Debug
+		// TODO debug physics here
 	}
 	
 	public void renderUI(float delta, Batch batch){	
