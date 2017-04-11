@@ -1,0 +1,20 @@
+
+In repository : 
+	Docs/
+		Extra/
+			Licence.txt #The licence under which the code is maintained.
+			Splash.txt #Maybe some splashes for launching or downloading.
+			News.txt #News to be displayed if not already displayed.
+		Launcher/
+			Latest.txt #Contains info on the latest launcher update. The launcher updates are not optional.
+			Bin/
+				Launcher.jar # Binary file for launcher
+				Notes.txt # Some patch notes, without formatting.
+		Versions/
+			Versions.txt # Lists all versions
+			x.x.x/
+				Notes.txt # Includes some sort of formatting, for all devices.
+				Plugins.txt # Lists everything in Plugins/
+				Game.jar
+				Plugins/
+					Final Outpost Plugin.zip # All default plugins
