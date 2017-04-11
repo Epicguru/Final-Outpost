@@ -47,7 +47,11 @@ public class Engine {
 		flush();	
 	}
 	
-	public void addNew(){
+	public void add(Entity e){
+		this.add.add(e);
+	}
+	
+	protected void addNew(){
 		for(Entity e : add){
 			entities.add(e);
 			e.added();
@@ -55,7 +59,7 @@ public class Engine {
 		add.clear();
 	}
 	
-	public void flush(){
+	protected void flush(){
 		for(Entity e : bin){
 			entities.remove(e);
 			e.removed();

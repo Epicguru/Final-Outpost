@@ -3,12 +3,15 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.entity.Entity;
+import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.physics.JPhysics;
+import co.uk.epicguru.player.PlayerEntity;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
 import ro.fortsoft.pf4j.Extension;
@@ -31,7 +34,11 @@ public class InGameScreen extends GameScreen {
 		JPhysics.setPPM(Constants.PPM);
 		
 		// Add player
-		// TODO create player	
+		FOE.player = new PlayerEntity();
+		FOE.engine.add(FOE.player);
+		Entity e;
+		FOE.engine.add(e = new PlayerEntity());
+		e.getComponent(Position.class).set(5, 5);
 		
 		// Hooks
 		super.clearHooks();
@@ -47,7 +54,8 @@ public class InGameScreen extends GameScreen {
 		FOE.map.dispose();
 		FOE.map = null;
 		
-		// TODO dispose player
+		// Dispose player
+		FOE.player = null;
 		
 		// Clear entities
 		FOE.engine.clearEntities();
@@ -75,7 +83,8 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		// TODO set camera pos
+		Position pos = FOE.player.getComponent(Position.class);
+		FOE.camera.position.set(pos.getX(), pos.getY(), 1);
 		
 		FOE.map.render(); // Map
 		FOE.engine.render(batch, delta);

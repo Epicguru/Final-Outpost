@@ -17,6 +17,25 @@ public class Position extends Component {
 		return y;
 	}
 	
+	public void set(float x, float y){
+		this.setX(x);
+		this.setY(y);
+	}
+	
+	public void set(Position position){
+		if(position == null)
+			return;
+		
+		this.set(position.getX(), position.getY());
+	}
+	
+	public void set(Vector2 position){
+		if(position == null)
+			return;
+		
+		this.set(position.x, position.y);
+	}
+	
 	public void setX(float x){
 		this.x = x;
 	}
@@ -33,6 +52,11 @@ public class Position extends Component {
 		this.setY(this.getY() + offset);
 	}
 	
+	public void add(float x, float y){
+		this.addX(x);
+		this.addY(y);
+	}
+	
 	public void fromVector(Vector2 vector){
 		this.setX(vector.x);
 		this.setY(vector.y);
@@ -44,9 +68,10 @@ public class Position extends Component {
 	
 	public String toString(){
 		return new StringBuilder()
-				.append("Pos : ").append(String.format("%.2f", this.getX()))
+				.append("Position : (").append(String.format("%.2f", this.getX()))
 				.append(", ")
 				.append(String.format("%.2f", this.getY()))
+				.append(')')
 				.toString();
 	}
 }

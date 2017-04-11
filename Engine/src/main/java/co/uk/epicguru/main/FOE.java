@@ -27,6 +27,7 @@ import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.NoPluginsScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
@@ -70,6 +71,7 @@ public class FOE extends Game{
 	
 	public static GameMap map;
 	public static Engine engine;
+	public static Entity player;
 	
 	public static void main(String... args){
 		

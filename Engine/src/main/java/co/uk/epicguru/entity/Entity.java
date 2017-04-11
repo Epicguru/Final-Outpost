@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-public class Entity {
+import co.uk.epicguru.API.Base;
+
+public class Entity extends Base{
 
 	private String name;
 	private ArrayList<Component> components = new ArrayList<Component>();
@@ -26,11 +28,12 @@ public class Entity {
 		return name;
 	}
 	
-	public Component getComponent(Class<? extends Component> component){
-		return this.getComponent(component, true);
+	public <E extends Component> E getComponent(Class<? extends E> component){
+		return (E)this.getComponent(component, true);
 	}
 	
-	public Component getComponent(Class<? extends Component> component, boolean sort){
+	@SuppressWarnings("unchecked")
+	public <E extends Component> E getComponent(Class<? extends E> component, boolean sort){
 		Component found = null;
 		int index = 0;
 		int fI = -1;
@@ -47,7 +50,7 @@ public class Entity {
 			this.components.add(0, found);
 		}
 		
-		return found;
+		return (E)found;
 	}
 	
 	public boolean removeComponent(Class<? extends Component> component){
@@ -69,13 +72,16 @@ public class Entity {
 		}
 	}
 	
-	public void addComponent(Component component){
-		Component comp = this.getComponent(component.getClass(), false);
-		if(comp == null){
-			this.components.add(component);
-		}else{
-			this.components.remove(comp);
-			this.components.add(0, component);
+	public void addComponents(Component... components){
+		
+		for(Component c : components){
+			Component comp = this.getComponent(c.getClass(), false);
+			if(comp == null){
+				this.components.add(c);
+			}else{
+				this.components.remove(comp);
+				this.components.add(0, c);
+			}
 		}
 	}
 
