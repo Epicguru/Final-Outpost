@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.World;
 
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
@@ -71,7 +70,6 @@ public class FOE extends Game{
 	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static GameMap map;
-	public static World physicsWorld;
 	public static Engine engine;
 	public static Entity player;
 	

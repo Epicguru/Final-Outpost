@@ -26,7 +26,7 @@ public class InGameScreen extends GameScreen {
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		// Entities
-		FOE.engine = new Engine();
+		FOE.engine = new Engine(PhysicsWorldUtils.newWorld());
 		
 		// Physics
 		PhysicsWorldUtils.newWorld();

@@ -3,17 +3,32 @@ package co.uk.epicguru.entity.engine;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.physics.box2d.World;
 
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.Group;
 
 public class Engine {
 
+	private World world;
+	
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Entity> bin = new ArrayList<Entity>();
 	private ArrayList<Entity> add = new ArrayList<Entity>();
 	
 	private ArrayList<Entity> group = new ArrayList<Entity>();
+	
+	public Engine(World world){
+		this.world = world;
+	}
+	
+	public World getWorld(){
+		return this.world;
+	}
+	
+	public World setWorld(World world){
+		return this.world = world;
+	}
 	
 	public ArrayList<Entity> ofGroup(Group group){
 		if(group == null){
@@ -67,6 +82,13 @@ public class Engine {
 		bin.clear();
 	}
 
+	public void updateWorld(float delta){
+		if(this.getWorld() == null)
+			return;
+		
+		this.getWorld().step(delta, 8, 3);
+	}
+	
 	public ArrayList<Entity> getAllEntities(){
 		return entities;
 	}

@@ -14,34 +14,34 @@ public final class PhysicsWorldUtils {
 	public static World newWorld(){
 		removeWorld();
 		
-		return FOE.physicsWorld = new World(gravity, true);
+		return FOE.engine.setWorld(new World(gravity, true));
 	}
 	
 	public static void removeWorld(){
-		if(FOE.physicsWorld == null){
+		if(!sim()){
 			return;
 		}
 		
-		FOE.physicsWorld.clearForces();
-		FOE.physicsWorld.dispose();
-		FOE.physicsWorld = null;
+		FOE.engine.getWorld().clearForces();
+		FOE.engine.getWorld().dispose();
+		FOE.engine.setWorld(null);
 	}
 	
 	private static boolean sim(){
-		return FOE.physicsWorld != null;
+		return FOE.engine.getWorld() != null;
 	}
 	
 	public static void update(float delta){
 		if(!sim())
 			return;
 		
-		FOE.physicsWorld.step(delta, 8, 3);
+		FOE.engine.updateWorld(delta);
 	}
 	
 	public static void render(){		
 		if(!sim())
 			return;
 		
-		debug.render(FOE.physicsWorld, FOE.camera.combined);
+		debug.render(FOE.engine.getWorld(), FOE.camera.combined);
 	}
 }

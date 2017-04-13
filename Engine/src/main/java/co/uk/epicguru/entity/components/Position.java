@@ -1,6 +1,7 @@
 package co.uk.epicguru.entity.components;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 import co.uk.epicguru.entity.Component;
 
@@ -8,6 +9,7 @@ public class Position extends Component {
 
 	private float x;
 	private float y;
+	private Body body;
 	
 	public float getX(){
 		return x;
@@ -64,6 +66,23 @@ public class Position extends Component {
 	
 	public Vector2 toVector(Vector2 vector){
 		return vector.set(this.getX(), this.getY());
+	}
+	
+	public Body getBody(){
+		return this.body;
+	}
+	
+	public void setBody(Body body){
+		this.body = body;
+	}
+	
+	public boolean isBody(){
+		return this.getBody() != null;
+	}
+	
+	public void setToBody(){
+		if(this.isBody())
+			this.set(getBody().getPosition());
 	}
 	
 	public String toString(){
