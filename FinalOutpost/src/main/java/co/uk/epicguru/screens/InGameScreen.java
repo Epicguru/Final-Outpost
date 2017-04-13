@@ -9,6 +9,7 @@ import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
+import co.uk.epicguru.physics.PhysicsWorldUtils;
 import co.uk.epicguru.player.PlayerEntity;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
@@ -28,7 +29,7 @@ public class InGameScreen extends GameScreen {
 		FOE.engine = new Engine();
 		
 		// Physics
-		// TODO Physics setup and clean
+		PhysicsWorldUtils.newWorld();
 		
 		// Add player
 		FOE.player = new PlayerEntity();
@@ -59,7 +60,7 @@ public class InGameScreen extends GameScreen {
 		FOE.engine = null;
 		
 		// Physics
-		// TODO physics dispose
+		PhysicsWorldUtils.removeWorld();
 		
 		// Clean up
 		System.gc();
@@ -71,7 +72,7 @@ public class InGameScreen extends GameScreen {
 		
 		FOE.map.update(delta); // Map
 		FOE.engine.update(delta); // Entities
-		// TODO physics update	
+		PhysicsWorldUtils.update(delta); // Physics
 		
 		super.update(delta);
 		
@@ -88,7 +89,9 @@ public class InGameScreen extends GameScreen {
 		
 		super.render(delta, batch);
 		
-		// TODO debug physics here
+		if(DebugHook.active){
+			PhysicsWorldUtils.render();
+		}
 	}
 	
 	public void renderUI(float delta, Batch batch){	
