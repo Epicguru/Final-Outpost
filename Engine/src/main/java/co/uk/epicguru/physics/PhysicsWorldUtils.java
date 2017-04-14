@@ -1,5 +1,6 @@
 package co.uk.epicguru.physics;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -38,10 +39,12 @@ public final class PhysicsWorldUtils {
 		FOE.engine.updateWorld(delta);
 	}
 	
-	public static void render(){		
+	public static void render(Batch batch){		
 		if(!sim())
 			return;
 		
+		batch.end();		
 		debug.render(FOE.engine.getWorld(), FOE.camera.combined);
+		batch.begin();
 	}
 }

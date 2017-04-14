@@ -3,7 +3,6 @@ package co.uk.epicguru.screens;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import co.uk.epicguru.API.screens.GameScreen;
-import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.FOE;
@@ -26,7 +25,8 @@ public class InGameScreen extends GameScreen {
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		// Entities
-		FOE.engine = new Engine(PhysicsWorldUtils.newWorld());
+		FOE.engine = new Engine();
+		FOE.engine.setWorld(PhysicsWorldUtils.newWorld());
 		
 		// Physics
 		PhysicsWorldUtils.newWorld();
@@ -34,9 +34,6 @@ public class InGameScreen extends GameScreen {
 		// Add player
 		FOE.player = new PlayerEntity();
 		FOE.engine.add(FOE.player);
-		Entity e;
-		FOE.engine.add(e = new PlayerEntity());
-		e.getComponent(Position.class).set(5, 5);
 		
 		// Hooks
 		super.clearHooks();
@@ -55,12 +52,12 @@ public class InGameScreen extends GameScreen {
 		// Dispose player
 		FOE.player = null;
 		
+		// Physics
+		PhysicsWorldUtils.removeWorld();
+		
 		// Clear entities
 		FOE.engine.clearEntities();
 		FOE.engine = null;
-		
-		// Physics
-		PhysicsWorldUtils.removeWorld();
 		
 		// Clean up
 		System.gc();
@@ -70,12 +67,13 @@ public class InGameScreen extends GameScreen {
 	
 	public void update(float delta){
 		
+		FOE.engine.flushBodies(); // Physics bodies bin #1
 		FOE.map.update(delta); // Map
 		FOE.engine.update(delta); // Entities
 		PhysicsWorldUtils.update(delta); // Physics
+		FOE.engine.flushBodies(); // Physics bodies bin #2
 		
-		super.update(delta);
-		
+		super.update(delta);		
 	}
 	
 	public void render(float delta, Batch batch){
@@ -90,7 +88,7 @@ public class InGameScreen extends GameScreen {
 		super.render(delta, batch);
 		
 		if(DebugHook.active){
-			PhysicsWorldUtils.render();
+			PhysicsWorldUtils.render(batch);
 		}
 	}
 	
