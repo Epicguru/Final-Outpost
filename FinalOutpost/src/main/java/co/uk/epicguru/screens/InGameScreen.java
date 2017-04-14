@@ -1,13 +1,16 @@
 package co.uk.epicguru.screens;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.engine.Engine;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
+import co.uk.epicguru.map.tiles.TileFactory;
 import co.uk.epicguru.physics.PhysicsWorldUtils;
 import co.uk.epicguru.player.PlayerEntity;
 import co.uk.epicguru.screens.hooks.DebugHook;
@@ -20,16 +23,26 @@ public class InGameScreen extends GameScreen {
 	public void show(){
 		// WIP
 
-		// Map
-		FOE.map = new GameMap(1000, 1000);
-		FOE.map.fill(Tile.getTile("Dirt"));
-		
 		// Entities
 		FOE.engine = new Engine();
 		FOE.engine.setWorld(PhysicsWorldUtils.newWorld());
 		
 		// Physics
 		PhysicsWorldUtils.newWorld();
+		
+		// Map
+		FOE.map = new GameMap(1000, 1000);
+		FOE.map.fill(Tile.getTile("Dirt"));
+		
+		TileFactory tile = Tile.getTile("Stone");
+		Log.info("", tile.getName());
+		for(int x = 0; x < FOE.map.getWidth(); x++){
+			for(int y = 0; y < FOE.map.getHeight(); y++){
+				if(MathUtils.randomBoolean(0.01f)){
+					FOE.map.setTile(tile, x, y);
+				}
+			}
+		}		
 		
 		// Add player
 		FOE.player = new PlayerEntity();

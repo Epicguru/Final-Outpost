@@ -241,7 +241,7 @@ public abstract class Tile extends Base {
 			throw new IllegalArgumentException("Name cannot be null or empty : " + name);
 		
 		for(TileFactory tile : factories){
-			if(tile.getName().equals(name) && plugin != null ? tile.getPlugin() == plugin : true)
+			if(tile.getName().equals(name) && (plugin != null ? tile.getPlugin() == plugin : true))
 				return true;
 		}
 		return false;
@@ -387,5 +387,27 @@ public abstract class Tile extends Base {
 	 */
 	public void render(Batch batch){
 
+	}
+
+	/*
+	 * HOOKS BELOW
+	 */
+	
+	/**
+	 * Called once this tile has been properly placed within the world, and it is 
+	 * safe to now create bodies and interact with other tiles.
+	 * By default does nothing.
+	 */
+	public void added(){
+		
+	}
+	
+	/**
+	 * Called right BEFORE the tile is about to be removed from the world, so it is still safe to interact with other tiles.
+	 * Bodies associated with this tile should be removed here.
+	 * By default does nothing.
+	 */
+	public void removed(){
+		
 	}
 }

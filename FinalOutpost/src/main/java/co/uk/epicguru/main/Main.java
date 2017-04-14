@@ -89,6 +89,8 @@ public class Main extends FinalOutpostPlugin{
 			
 			// WIP tiled map
 			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
+			loadAsset("Textures/Map/Stone.png", TextureRegion.class);
+			
 			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
