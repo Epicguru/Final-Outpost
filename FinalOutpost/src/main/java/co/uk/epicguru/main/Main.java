@@ -22,7 +22,7 @@ public class Main extends FinalOutpostPlugin{
 	public static Config launch;
 	public static Config graphics;
 	
-	public static final String version = "0.0.1";
+	public static final String version = "ANY";
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public static final String UP = "Up";
@@ -89,6 +89,8 @@ public class Main extends FinalOutpostPlugin{
 			
 			// WIP tiled map
 			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
+			loadAsset("Textures/Map/Stone.png", TextureRegion.class);
+			
 			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);

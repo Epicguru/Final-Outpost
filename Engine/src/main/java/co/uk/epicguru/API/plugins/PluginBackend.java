@@ -283,6 +283,7 @@ public abstract class PluginBackend extends Plugin {
 	 * @param clazz The type of asset.
 	 */
 	public void loadAsset(String path, Class<?> clazz){
+		Log.info(super.getWrapper().getPluginId(), "Loading asset '" + path + '\'');
 		getAssetLoader().load(assetsFolder + path.replaceAll("/", "\\\\"), clazz);
 	}
 

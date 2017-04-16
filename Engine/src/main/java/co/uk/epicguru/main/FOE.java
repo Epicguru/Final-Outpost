@@ -27,6 +27,8 @@ import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.NoPluginsScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.entity.Entity;
+import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
@@ -68,6 +70,8 @@ public class FOE extends Game{
 	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static GameMap map;
+	public static Engine engine;
+	public static Entity player;
 	
 	public static void main(String... args){
 		
@@ -239,12 +243,31 @@ public class FOE extends Game{
 		// Custom implementation (WIP)
 		Gdx.app.postRunnable(() -> {
 			if(screen.getClass().getName().equals(screen_Game)){
+				
+				// Entering game screen (world not loaded yet!)
+				// Need to load tiles and assets here
+				
+				// Clear all assets, if you do not have them saved well then goodbye
 				pluginsAssetsLoader.clear();
-				System.gc();
-				Tile.registerTiles();
+				
+				// Cleanup
+				System.gc();				
+				
+				// Load all game assets
 				Log.info(TAG, "Switched to game screen, loading assets...");
 				pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+				
+				// And block until they are loaded (TODO)
 				pluginsAssetsLoader.finishLoading();
+				
+				// Get all tiles
+				Tile.registerTiles();
+				
+				// Load all tile related assets (load into Tile not into memory as above)
+				Tile.gameStart();
+				
+				// Cleanup
+				System.gc();
 			}
 			if(screen.getClass().getName().equals(screen_Menu)){
 				if(!firstTimeMenu){
