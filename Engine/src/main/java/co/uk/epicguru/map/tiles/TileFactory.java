@@ -46,6 +46,13 @@ public abstract class TileFactory extends Base implements Comparable<TileFactory
 	}
 	
 	/**
+	 * Called when a game world is loaded. This may be called MORE THAN ONCE ONE ONE OBJECT.
+	 * Here you should load the default texture ({@link #setDefaultTexture(TextureRegion)}) and
+	 * any other assets required by this tile.
+	 */
+	public abstract void gameStart();
+	
+	/**
 	 * Should return a instance of the {@link Tile} that this factory produces.
 	 * @return A new, fresh copy of the tile that this factory produced.
 	 */

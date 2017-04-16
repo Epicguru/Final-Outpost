@@ -13,7 +13,10 @@ public class DirtFactory extends TileFactory {
 
 	public DirtFactory() {
 		super(Main.INSTANCE, "Dirt");
-		super.setDefaultTexture(Main.INSTANCE.getAsset("Textures/Map/Dirt.png", TextureRegion.class));
+	}
+	
+	public void gameStart(){
+		super.setDefaultTexture(Main.INSTANCE.getAsset("Textures/Map/Dirt.png", TextureRegion.class));		
 	}
 
 	public Tile getInstance() {

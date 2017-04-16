@@ -214,6 +214,12 @@ public abstract class Tile extends Base {
 		doAdvancedSort();
 	}
 	
+	public static void gameStart(){
+		for(TileFactory tile : factories){
+			tile.gameStart();
+		}
+	}
+	
 	public static void reset(){
 		factories.clear();
 		alpha = null;

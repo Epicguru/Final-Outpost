@@ -13,7 +13,10 @@ public class StoneFactory extends TileFactory{
 
 	public StoneFactory() {
 		super(Main.INSTANCE, "Stone");
-		super.setDefaultTexture(Main.INSTANCE.getAsset("Textures/Map/Stone.png", TextureRegion.class));
+	}
+	
+	public void gameStart(){
+		super.setDefaultTexture(Main.INSTANCE.getAsset("Textures/Map/Stone.png", TextureRegion.class));		
 	}
 
 	public Tile getInstance() {
