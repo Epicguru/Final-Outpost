@@ -1,0 +1,7 @@
+- Removed old physics system, which despite being pretty cool was really buggy and not practical.
+- Added good old Box2D :D. Here come the crashes!
+- Made new entity system based of Ashley framework. Implemented with player.
+- Added stone tile, that has a physics body.]
+- Many bugs, much debug, such wow.
+- Made so that having no plugins or parsers makes the game display an error and not start up.
+- Made a launcher. Yay! Rather cool if I say so myself.
