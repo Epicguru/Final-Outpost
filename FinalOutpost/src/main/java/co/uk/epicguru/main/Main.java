@@ -22,7 +22,7 @@ public class Main extends FinalOutpostPlugin{
 	public static Config launch;
 	public static Config graphics;
 	
-	public static final String version = "0.0.1";
+	public static final String version = "ANY";
 	public static final String TAG = "Final Outpost Plugin";	
 	
 	public static final String UP = "Up";
