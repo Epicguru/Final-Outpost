@@ -1,8 +1,17 @@
 package co.uk.epicguru.entity;
 
+/**
+ * Both a utility class and a way to represent groups of entities that share the same {@link Component}s.
+ * @author James Billy
+ *
+ */
 public class Group {
 
 	@SafeVarargs
+	/**
+	 * Gets a new Group object were all entities have those components.
+	 * @return The new Group object. See {@link Engine} on how to use this Group.
+	 */
 	public static Group of(Class<? extends Component>... classes){
 		return new Group(classes);
 	}
