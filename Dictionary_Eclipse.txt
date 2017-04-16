@@ -13,3 +13,4 @@ framerate
 multiplayer
 pythagoras
 tooltips
+github

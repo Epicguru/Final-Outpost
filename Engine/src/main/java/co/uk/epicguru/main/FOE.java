@@ -263,7 +263,7 @@ public class FOE extends Game{
 				// Get all tiles
 				Tile.registerTiles();
 				
-				// Load all tile related assets (load into Tile not into mamory as above)
+				// Load all tile related assets (load into Tile not into memory as above)
 				Tile.gameStart();
 				
 				// Cleanup
