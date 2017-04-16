@@ -36,6 +36,11 @@ public final class JLineParsers {
 			Log.info("Parsers", "Plugin '" + plugin.getWrapper().getPluginId() + "' added " + (parsers.size() - old) + " parsers.");
 		}
 		
+		if(parsers.size() == 0){
+			Log.error("Parsers", "No parsers loaded! Quitting!");
+			return;
+		}
+		
 		Log.info("Parsers", "Loaded Parsers : [" + U.prettify(parsers.toArray(new JLineParser<?>[parsers.size()])) + "]");
 	}
 	

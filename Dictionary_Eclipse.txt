@@ -12,3 +12,5 @@ param
 framerate
 multiplayer
 pythagoras
+tooltips
+github

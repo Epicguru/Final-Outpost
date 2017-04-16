@@ -110,9 +110,16 @@ public class TiledMap extends Base{
 	public void clearTile(int x, int y){
 		if(inBounds(x, y)){
 			Tile old = tiles[x][y];
+			
+			// Remove when still safe
+			if(old != null){
+				old.removed();
+			}
+			
 			tiles[x][y] = null;
-			if(old != null)
+			if(old != null){
 				old.cancelUpdate();
+			}
 		}
 	}
 	
@@ -143,6 +150,9 @@ public class TiledMap extends Base{
 			clearTile(x, y);
 			Tile t = tiles[x][y] = tile;
 			t.setPosition(x, y);
+			
+			// Add when positioned
+			t.added();
 		}
 	}
 	
@@ -158,7 +168,13 @@ public class TiledMap extends Base{
 		if(factory == null){			
 			return;
 		}
-		setTile(factory.getInstance(), x, y);
+		
+		Tile tile = factory.getInstance();
+		if(tile == null){
+			throw new IllegalStateException("The value returned by getInstance() of '" + factory.getName() + "' cannot be null! (It was null)");
+		}
+		
+		setTile(tile, x, y);
 	}
 	
 	/**

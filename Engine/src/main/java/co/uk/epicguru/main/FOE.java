@@ -17,14 +17,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
+import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
+import co.uk.epicguru.API.screens.core.NoPluginsScreen;
 import co.uk.epicguru.IO.JLineParsers;
 import co.uk.epicguru.configs.ConfigLoader;
+import co.uk.epicguru.entity.Entity;
+import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
@@ -58,6 +62,7 @@ public class FOE extends Game{
 	public static String loadingSubText = "Something Goes Here!";
 	
 	public static boolean loaded = false;
+	public static boolean donePluginCheck = false;
 	public static boolean postDone = false;
 	public static boolean firstTimeMenu = true;
 	
@@ -65,6 +70,8 @@ public class FOE extends Game{
 	public static PluginAssetLoader pluginsAssetsLoader;
 	
 	public static GameMap map;
+	public static Engine engine;
+	public static Entity player;
 	
 	public static void main(String... args){
 		
@@ -139,6 +146,11 @@ public class FOE extends Game{
 			loading("Loading plugins' parsers", "...");
 			JLineParsers.loadParsers();
 			Log.info(TAG, "Loaded parsers in " + U.endTimer(parsers) + " seconds.");
+			// Check
+			if(JLineParsers.parsers.size() == 0){
+				loaded = true;
+				return;
+			}
 					
 			// Loading input keys
 			loading("Setting up input", "Just a second M8");
@@ -231,12 +243,31 @@ public class FOE extends Game{
 		// Custom implementation (WIP)
 		Gdx.app.postRunnable(() -> {
 			if(screen.getClass().getName().equals(screen_Game)){
+				
+				// Entering game screen (world not loaded yet!)
+				// Need to load tiles and assets here
+				
+				// Clear all assets, if you do not have them saved well then goodbye
 				pluginsAssetsLoader.clear();
-				System.gc();
-				Tile.registerTiles();
+				
+				// Cleanup
+				System.gc();				
+				
+				// Load all game assets
 				Log.info(TAG, "Switched to game screen, loading assets...");
 				pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.GAME_START);
+				
+				// And block until they are loaded (TODO)
 				pluginsAssetsLoader.finishLoading();
+				
+				// Get all tiles
+				Tile.registerTiles();
+				
+				// Load all tile related assets (load into Tile not into memory as above)
+				Tile.gameStart();
+				
+				// Cleanup
+				System.gc();
 			}
 			if(screen.getClass().getName().equals(screen_Menu)){
 				if(!firstTimeMenu){
@@ -262,6 +293,31 @@ public class FOE extends Game{
 		
 		Input.update();
 		camera.update();
+		
+		if(!donePluginCheck && loaded){
+			FinalOutpostPlugin[] plugins = pluginsLoader.getAllPlugins();
+			
+			if(plugins.length == 0){
+				NoPluginsScreen s = new NoPluginsScreen();
+				s.noPlugins = true;
+				this.setScreen(s);
+			}else{
+				boolean found = false;
+				for(FinalOutpostPlugin plugin : plugins){
+					if(plugin.getWrapper().getPluginId().equals("FinalOutpost")){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					NoPluginsScreen s = new NoPluginsScreen();
+					s.noPlugins = false;
+					this.setScreen(s);
+				}
+			}
+			
+			donePluginCheck = true;
+		}
 		
 		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
 		
