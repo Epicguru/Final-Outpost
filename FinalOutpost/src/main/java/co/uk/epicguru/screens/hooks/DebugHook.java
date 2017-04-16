@@ -34,7 +34,7 @@ public class DebugHook extends ScreenHook {
 		y = 20;
 		
 		draw(batch, String.format("%.2f", used) + "/" + String.format("%.2f", total) + "GB, " + (int)p + "%", Color.WHITE);
-		// TODO physics debug
+		draw(batch, FOE.engine.getWorld() != null ? FOE.engine.getWorld().getBodyCount() + " physics bodies, " + FOE.engine.getWorld().getContactCount() + " contacts." : "No physics world!", Color.GREEN);
 		draw(batch, FOE.engine.getAllEntities().size() + " active entities.", Color.YELLOW);
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 		draw(batch, Allocator.getRunningTimers() + " running timers.", Color.WHITE);
