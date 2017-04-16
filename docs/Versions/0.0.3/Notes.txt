@@ -1,0 +1,9 @@
+- Improved plugin API.
+- Added alphabetical tile sorting and indexing.
+- Made tiles pack into atlases and load.
+- Large changes to JLineIO, now more robust and functional.
+- Added JPhysics, a simple rectangle based physics engine and made a simple character use it.
+- Implemented a entity system, which intergrates into JPhysics with a common class.
+- Added a framerate independent 'allocation' system, which is integreated automatically into the entity system.
+- Improved tile updating system, removed bugs and non working code.
+- Documentation. Lots of it 😃
