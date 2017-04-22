@@ -1,7 +1,6 @@
 package co.uk.epicguru.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -34,9 +33,13 @@ public final class MainMenu extends GameScreen {
 	public Image titleImage;
 	public TextButton playButton;
 	public TextButton quitButton;
+	
+	private boolean toGame = false;
 
 	public void show(){
 
+		this.toGame = false;
+		
 		// Reset UI
 		obs = new Observer();
 
@@ -52,9 +55,10 @@ public final class MainMenu extends GameScreen {
 			print("Play button pressed...");
 			
 			// Move to game screen from here, 
-			// TODO ensure that swapping bakc works (it will not :D)
+			// TODO ensure that swapping back works (it will not :D)
 			
-			FOE.INSTANCE.setScreen(new InGameScreen());
+			this.direction = -1;			
+			this.toGame = true;
 		});
 		this.quitButton = new TextButton(this.button);
 		this.quitButton.addLeftClickListener(() -> {
@@ -106,18 +110,16 @@ public final class MainMenu extends GameScreen {
 		// Interpolation effects percentage
 		float seconds = 2; // Lasts 2 seconds
 		p += (delta * direction) / seconds;
-		if(p > 1)
+		if(p > 1){
+			// End of the line
 			p = 1;
-		if(p < 0)
-			p = 0;
-
-		if(Input.isKeyJustDown(Keys.Z)){
-			this.direction = 1;
-			this.p = 0;
 		}
-		if(Input.isKeyJustDown(Keys.X)){
-			this.direction = -1;
-			this.p = 1;
+		if(p < 0){
+			// We may need to change to game screen here
+			if(this.toGame){
+				FOE.INSTANCE.setScreen(new InGameScreen());
+			}
+			p = 0;
 		}
 
 		// Hooks
