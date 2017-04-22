@@ -56,7 +56,21 @@ public abstract class Button extends UI {
 		}
 	}
 	
-	public void update(float delta){
+	public void update(Observer obs, float delta){
+		
+		String state = super.bounds.toString(); // Kinda cool right :d
+		
+		super.bounds.setSize(this.getFinalWidth(obs), this.getFinalHeight(obs));
+		
+//		obs.getBatch().end();
+//		ShapeRenderer shapes = new ShapeRenderer();
+//		shapes.setColor(Color.RED);
+//		shapes.setAutoShapeType(true);
+//		shapes.begin();
+//		shapes.rect(super.bounds.x, super.bounds.y, super.bounds.width, super.bounds.height);
+//		shapes.end();
+//		obs.getBatch().begin();
+		
 		if(super.bounds.contains(Input.getMousePos())){
 			if(Input.getMouseButtonJustDown(Buttons.LEFT)){
 				// Left click event triggered
@@ -69,6 +83,8 @@ public abstract class Button extends UI {
 				this.clickedUponRight();
 			}
 		}
+		
+		super.bounds.fromString(state); // Great, finally some nice methods in libgdx!
 	}
 	
 	public float getFinalWidth(Observer obs){
@@ -83,7 +99,7 @@ public abstract class Button extends UI {
 	
 	public void render(Observer obs, float delta){
 		
-		this.update(delta);
+		this.update(obs, delta);
 		
 		if(this.getPatch() == null)
 			return;
@@ -91,6 +107,7 @@ public abstract class Button extends UI {
 		float x = super.bounds.x;
 		float y = super.bounds.y;
 		
+		this.getPatch().setColor(UI.mul(super.colour, obs.getColour()));
 		this.getPatch().draw(obs.getBatch(), x, y, this.getFinalWidth(obs), this.getFinalHeight(obs));
 	}	
 }

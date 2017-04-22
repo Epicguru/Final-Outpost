@@ -35,7 +35,7 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 		def.allowSleep = false;
 		def.type = BodyType.DynamicBody;
 		
-		PolygonShape shape = FOE.engine.boxOfSize(1, 1.9f);
+		PolygonShape shape = FOE.engine.boxOfSize(0.95f, 1.95f);
 		
 		FixtureDef fixture = new FixtureDef();
 		fixture.shape = shape;

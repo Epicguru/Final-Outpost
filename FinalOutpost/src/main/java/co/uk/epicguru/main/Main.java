@@ -3,6 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -50,7 +51,7 @@ public class Main extends FinalOutpostPlugin{
 		// Graphics config
 		graphics = newConfig("Graphics");
 		
-		graphics.add("Windowed Resolution", new Vector2(900, 500));	
+		graphics.add("Windowed Resolution", new Vector2(1200, 600));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
 	}
@@ -106,6 +107,7 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
+			loadAsset("Textures/UI/Button.9.png", NinePatch.class);
 			
 			// Loading icon
 			loadAsset("Textures/UI/Loading Cog.png", TextureRegion.class);

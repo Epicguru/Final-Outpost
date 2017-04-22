@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -20,6 +21,7 @@ import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.NinePatchAssetLoader;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
@@ -156,7 +158,7 @@ public class FOE extends Game{
 			loading("Setting up input", "Just a second M8");
 			Input.loadInputs();		
 			
-			// Load assets
+			// Extract assets
 			U.startTimer(pluginsExtraction);
 			loading("Loading plugin assets", "...");
 			pluginsLoader.extractAllAssets();	
@@ -190,10 +192,11 @@ public class FOE extends Game{
 			loading("Optimising (Long packing only happens once)", "...");
 			pluginsAssetsLoader = new PluginAssetLoader();
 			pluginsAssetsLoader.setLoader(TextureRegion.class, "png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
+			pluginsAssetsLoader.setLoader(NinePatch.class, "9.png", new NinePatchAssetLoader(new ExternalFileHandleResolver()));
 			pluginsAssetsLoader.packAllTextures(pluginsLoader);
 			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));
 			
-			// Load initial content before init and post init.
+			// Load initial assets before init and post init.
 			U.startTimer(assetsLoad);
 			loading("Loading core content", "");
 			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);

@@ -36,6 +36,7 @@ public class SpriteImage extends Image {
 		
 		spr.setRegion(super.getTexture());
 		spr.setRotation(this.getRotation());
+		spr.setColor(UI.mul(super.colour, obs.getColour()));
 		
 		Batch batch = obs.getBatch();
 		
