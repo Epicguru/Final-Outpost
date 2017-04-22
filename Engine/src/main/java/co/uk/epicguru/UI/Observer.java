@@ -9,10 +9,21 @@ import co.uk.epicguru.main.FOE;
 
 public class Observer extends Base {
 
-	private OrthographicCamera camera = this.getDefaultCamera();
-	private Color colour = this.getDefaultColour();
-	private float scale = this.getDefaultScale();
-	private Batch batch = this.getDefaultBatch();
+	private OrthographicCamera camera;
+	private Color colour;
+	private float scale;
+	private Batch batch;
+	
+	public Observer(){
+		this.reset();
+	}
+	
+	public void reset(){
+		camera = this.getDefaultCamera();
+		colour = this.getDefaultColour();
+		scale = this.getDefaultScale();
+		batch = this.getDefaultBatch();
+	}
 	
 	public Color getDefaultColour(){
 		return Color.WHITE;

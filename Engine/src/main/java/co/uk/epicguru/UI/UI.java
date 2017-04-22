@@ -11,6 +11,9 @@ public abstract class UI extends Base {
 	public float localScale = 1f;
 	public Color colour = Color.WHITE;
 	
+	public abstract float getFinalWidth(Observer obs);
+	public abstract float getFinalHeight(Observer obs);
+	
 	public abstract void render(Observer obs, float delta);
 	
 	public String toString(){

@@ -19,6 +19,8 @@ public class Image extends UI {
 	
 	public void setTexture(TextureRegion texture){
 		this.texture = texture;
+		if(texture != null)
+			super.bounds.setSize(texture.getRegionWidth(), texture.getRegionHeight());
 	}
 	
 	public TextureRegion getTexture(){
@@ -46,5 +48,15 @@ public class Image extends UI {
 		batch.setColor(UI.mul(super.colour, obs.getColour()));
 		batch.draw(texture, x, y, width, height);
 		batch.setColor(old);
+	}
+
+
+	public float getFinalWidth(Observer obs) {
+		return super.bounds.getWidth() * super.localScale * obs.getScale();
+	}
+
+
+	public float getFinalHeight(Observer obs) {
+		return super.bounds.getHeight() * super.localScale * obs.getScale();
 	}
 }
