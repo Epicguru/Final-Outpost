@@ -2,7 +2,6 @@ package co.uk.epicguru.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.API.screens.GameScreen;
@@ -13,12 +12,22 @@ import ro.fortsoft.pf4j.Extension;
 @Extension
 public final class MainMenu extends GameScreen {
 
-	public TextureRegion texture;
-	public BitmapFont font;
+	public TextureRegion background;
 	
 	public MainMenu(){
-		this.texture = Main.INSTANCE.getAsset("Textures/UI/TitleBackground.png", TextureRegion.class);
-		this.font = Main.INSTANCE.getAsset("Fonts/Title.fnt", BitmapFont.class);
+		this.background = Main.INSTANCE.getAsset("Textures/UI/TitleBackground.png", TextureRegion.class);
+	}
+	
+	public void update(float delta){
+		
+		// Hooks
+		super.update(delta);
+	}
+	
+	public void render(float delta, Batch batch){
+		
+		// Hooks
+		super.render(delta, batch);
 	}
 	
 	public void renderUI(float delta, Batch batch){	
@@ -35,11 +44,8 @@ public final class MainMenu extends GameScreen {
 		addX *= 0.1f;
 		addY *= 0.1f;
 		
-		super.renderToSize(batch, texture, hw + addX, hh + addY, getScreenWidth() * m, getScreenHeight() * m);
-		
-		// Title
-		font.draw(batch, "Final Outpost", getScreenWidth() / 2f, getScreenHeight() - 10, 0, 1, false);
-		
+		// Background
+		super.renderToSize(batch, this.background, hw + addX, hh + addY, getScreenWidth() * m, getScreenHeight() * m);		
 		
 		// Hooks
 		super.renderUI(delta, batch);

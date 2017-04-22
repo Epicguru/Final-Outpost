@@ -87,15 +87,17 @@ public class Main extends FinalOutpostPlugin{
 		switch(type){
 		case GAME_START:
 			
-			// WIP tiled map
+			// Game tiles
 			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
 			loadAsset("Textures/Map/Stone.png", TextureRegion.class);
 			
+			// Player
 			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
 			break;
+
 		case INIT_CORE:
 			
 			// Main menu content
@@ -103,6 +105,15 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
+			
+			// Loading icon
+			loadAsset("Textures/UI/LoadingCog.png", TextureRegion.class);
+			loadAsset("Textures/UI/LoadingGhost.png", TextureRegion.class);
+			loadAsset("Textures/UI/LoadingPoint.png", TextureRegion.class);
+			loadAsset("Textures/UI/LoadingSquare.png", TextureRegion.class);
+			loadAsset("Textures/UI/LoadingTrinagle.png", TextureRegion.class);
+			loadAsset("Textures/UI/Title.png", TextureRegion.class);
+			
 			break;		
 		}	
 		
