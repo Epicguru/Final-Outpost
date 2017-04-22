@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.UI.Image;
 import co.uk.epicguru.UI.Observer;
+import co.uk.epicguru.UI.loading.LoadingSymbol;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Main;
 import ro.fortsoft.pf4j.Extension;
@@ -91,6 +92,11 @@ public final class MainMenu extends GameScreen {
 		
 		// Title
 		titleImage.render(obs, delta);
+		
+		// Just cuz
+		LoadingSymbol.render(0, 0, obs, delta / 3f);
+		LoadingSymbol.render(Gdx.graphics.getWidth(), 0, obs, delta / 3f);
+		LoadingSymbol.render(Input.getMouseX(), Input.getMouseY(), obs, delta / 3f);
 		
 		// Hooks
 		super.renderUI(delta, batch);
