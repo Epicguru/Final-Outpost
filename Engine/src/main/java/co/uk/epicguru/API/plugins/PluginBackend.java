@@ -273,6 +273,14 @@ public abstract class PluginBackend extends Plugin {
 	}
 
 	/**
+	 * Finds the file that the assets comes from and checks to see if it exists.
+	 */
+	private boolean assetExists(String asset){
+		File file = new File(Gdx.files.getExternalStoragePath() + assetsFolder + asset.replaceAll("/", "\\\\"));
+		return file.exists();
+	}
+	
+	/**
 	 * Loads an asset for the whole program, that is able to be used my this plugin.
 	 * <li>
 	 * NOTE : This DOES NOT get the asset to you, it only loads it ready for use. This should be done in the {@link #loadAssets(PluginAssetLoader, AssetLoadType)}.
@@ -283,6 +291,11 @@ public abstract class PluginBackend extends Plugin {
 	 * @param clazz The type of asset.
 	 */
 	public void loadAsset(String path, Class<?> clazz){
+		
+		if(!this.assetExists(path)){
+			throw new IllegalStateException("Asset file for '" + path + "' does not exist! Check spelling and try repacking textures.");
+		}
+		
 		Log.info(super.getWrapper().getPluginId(), "Loading asset '" + path + '\'');
 		getAssetLoader().load(assetsFolder + path.replaceAll("/", "\\\\"), clazz);
 	}

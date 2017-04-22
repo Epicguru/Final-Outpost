@@ -11,7 +11,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.screens.InGameScreen;
+import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -107,11 +107,11 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
 			
 			// Loading icon
-			loadAsset("Textures/UI/LoadingCog.png", TextureRegion.class);
-			loadAsset("Textures/UI/LoadingGhost.png", TextureRegion.class);
-			loadAsset("Textures/UI/LoadingPoint.png", TextureRegion.class);
-			loadAsset("Textures/UI/LoadingSquare.png", TextureRegion.class);
-			loadAsset("Textures/UI/LoadingTrinagle.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Cog.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Ghost.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Point.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Square.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Triangle.png", TextureRegion.class);
 			loadAsset("Textures/UI/Title.png", TextureRegion.class);
 			
 			break;		
@@ -131,6 +131,6 @@ public class Main extends FinalOutpostPlugin{
 	}
 	
 	public void postInit(){
-		FOE.INSTANCE.setScreen(new InGameScreen());
+		FOE.INSTANCE.setScreen(new MainMenu());
 	}
 }
