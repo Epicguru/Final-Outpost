@@ -33,7 +33,7 @@ public class InGameScreen extends GameScreen {
 		
 		FOE.INSTANCE.createEngine();
 		
-		FOE.engine.setRaysPerLight(200);
+		FOE.engine.setRaysPerLight(500);
 		FOE.engine.setLightResolutionScale(1);
 		FOE.engine.setLightBlurPasses(1);
 		
