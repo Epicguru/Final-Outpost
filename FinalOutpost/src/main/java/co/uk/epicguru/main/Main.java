@@ -22,6 +22,7 @@ public class Main extends FinalOutpostPlugin{
 	
 	public static Config launch;
 	public static Config graphics;
+	public static Config lighting;
 	
 	public static final String version = "ANY";
 	public static final String TAG = "Final Outpost Plugin";	
@@ -53,12 +54,26 @@ public class Main extends FinalOutpostPlugin{
 		graphics.add("Windowed Resolution", new Vector2(1200, 600));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
+		
+		// Lighting config	
+		/*
+		 * We need : 
+		 * RAYS per light, maybe scalable?
+		 * RESOLUTION multiplier, for example 1, 2 or 4
+		 * BLUR PASSES around 2 - 10 
+		 */
+		lighting = newConfig("Lighting");
+		
+		Log.info(TAG, "Set lighting!");
+		
+		lighting.add("Rays Per Light", 300);
+		lighting.add("Resolution Scale", 1);
+		lighting.add("Blur Passes", 3);
 	}
 	
 	public boolean config(Config config){
 		
-		if(config.is("Launch")){
-			
+		if(config.is("Launch")){			
 			Gdx.graphics.setTitle((String)config.read("Title"));
 			
 		}
@@ -72,7 +87,13 @@ public class Main extends FinalOutpostPlugin{
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				Log.info(TAG, "Started up in fullscreen mode, @ (" + Gdx.graphics.getWidth() + "x" + Gdx.graphics.getHeight() + ")");
 			}
+			
 		}
+		if(config.is("Lighting")){
+			// For now, ignore. This will be read whenever necessary
+		}
+		
+		Log.info(TAG, "Loaded config - " + config.getName());
 		
 		return true;
 	}

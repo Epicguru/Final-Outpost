@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.entity.components.Position;
-import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
@@ -24,10 +23,19 @@ public class InGameScreen extends GameScreen {
 	
 	public void show(){
 		// WIP
-
-		// Entities
-		FOE.engine = new Engine();
-		FOE.engine.setWorld(PhysicsWorldUtils.newWorld());
+		
+		// Get config values
+//		int rays = (int)Main.lighting.read("Rays Per Light");
+//		int scale = (int)Main.lighting.read("Resolution Scale");
+//		int passes = (int)Main.lighting.read("Blur Passes");
+		
+		//IMPORTANT TODO FIXME!
+		
+		FOE.INSTANCE.createEngine();
+		
+		FOE.engine.setRaysPerLight(200);
+		FOE.engine.setLightResolutionScale(1);
+		FOE.engine.setLightBlurPasses(1);
 		
 		// Physics
 		PhysicsWorldUtils.newWorld();
@@ -80,6 +88,14 @@ public class InGameScreen extends GameScreen {
 		super.hide();
 	}
 	
+	public void resize(int width, int height){
+		
+		FOE.engine.resize(width, height);
+		
+		// Hooks
+		super.resize(width, height);
+	}
+	
 	public void update(float delta){
 		
 		FOE.engine.flushBodies(); // Physics bodies bin #1
@@ -105,6 +121,9 @@ public class InGameScreen extends GameScreen {
 		FOE.engine.render(batch, delta);
 		
 		super.render(delta, batch);
+		
+		// Render light now...
+		FOE.engine.renderLights(batch, delta);
 		
 		if(DebugHook.active){
 			PhysicsWorldUtils.render(batch);

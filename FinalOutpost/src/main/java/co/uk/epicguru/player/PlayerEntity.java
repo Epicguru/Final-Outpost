@@ -1,6 +1,7 @@
 package co.uk.epicguru.player;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
+import box2dLight.PointLight;
 import co.uk.epicguru.API.AllocatedTimer;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.entity.components.ArmouredHealth;
@@ -22,6 +24,7 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 
 	public PlayerRenderer renderer;
 	private AllocatedTimer timer;
+	private PointLight flashlight;
 	
 	public PlayerEntity() {
 		super("Player");		
@@ -48,17 +51,20 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 	}
 	
 	public void update(float delta){
-		super.getComponent(Position.class).setToBody();
+		super.update(delta);
+		
+		if(Input.isKeyJustDown(Keys.L)){
+			super.getComponent(ArmouredHealth.class).setHealth(0);
+		}
 		
 		if(super.getComponent(ArmouredHealth.class).isDead()){
 			dead();
 		}
 		
-		// TODO remove
-		// !!!
-		if(Input.isKeyJustDown(Keys.L)){
-			super.getComponent(ArmouredHealth.class).setHealth(0);
-		}
+		this.flashlight.setColor(0, 0, 0, 1f);
+		this.flashlight.setDistance(30);
+		this.flashlight.attachToBody(null);
+		this.flashlight.setPosition(Input.getMouseWorldPos());
 	}
 	
 	public void dead(){
@@ -110,11 +116,15 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 		
 		// Allocate timer
 		Allocator.add(this.timer);
+		
+		// Create light
+		this.flashlight = new PointLight(FOE.engine.getRayHandler(), FOE.engine.getRaysPerLight(), Color.SCARLET, 10, 0, 0);
 	}
 	
 	public void removed(){
 		super.removed();
 		Allocator.removeTimer(this.timer);
+		this.flashlight.remove();
 	}
 	
 	public void render(Batch batch, float delta){	
