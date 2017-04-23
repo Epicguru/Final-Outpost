@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import box2dLight.RayHandler;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
@@ -35,6 +36,7 @@ import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
+import co.uk.epicguru.physics.PhysicsWorldUtils;
 
 public class FOE extends Game{
 
@@ -163,7 +165,6 @@ public class FOE extends Game{
 			loading("Loading plugin assets", "...");
 			pluginsLoader.extractAllAssets();	
 			Log.info(TAG, "Extracted assets for all plugins in " + U.endTimer(pluginsExtraction));
-
 
 			postDone = false;
 
@@ -303,6 +304,17 @@ public class FOE extends Game{
 				this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			}
 		});		
+	}
+	
+	public void createEngine(){
+		// This needs to be done here due to GL threading stuff...
+		if(FOE.engine != null){
+			FOE.engine.dispose();
+			FOE.engine = null;
+		}
+		FOE.engine = new Engine();
+		FOE.engine.setWorld(PhysicsWorldUtils.newWorld());
+		FOE.engine.setRayHandler(new RayHandler(FOE.engine.getWorld()));
 	}
 
 	public void update(float delta){

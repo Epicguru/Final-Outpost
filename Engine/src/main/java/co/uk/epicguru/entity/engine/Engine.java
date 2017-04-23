@@ -10,13 +10,21 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
+import box2dLight.RayHandler;
+import co.uk.epicguru.API.Base;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.Group;
 import co.uk.epicguru.entity.physics.DeadBody;
+import co.uk.epicguru.main.FOE;
 
-public class Engine implements Disposable{
+public class Engine extends Base implements Disposable{
 
 	private World world;
+	
+	private RayHandler rays;
+	private int RAYS_PER_LIGHT;
+	private float LIGHT_RESOLUTION_SCALE;
+	private int LIGHT_BLUR_PASSES;
 	
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Entity> bin = new ArrayList<Entity>();
@@ -33,6 +41,50 @@ public class Engine implements Disposable{
 		return this.world;
 	}
 	
+	/**
+	 * Gets the ray handler that make lights work!
+	 */
+	public RayHandler getRayHandler(){
+		return this.rays;
+	}
+	
+	/**
+	 * Sets the ray handler. Please do not use this!
+	 */
+	public void setRayHandler(RayHandler ray){
+		this.rays = ray;
+	}
+	
+	public int getRaysPerLight(){
+		return RAYS_PER_LIGHT;
+	}
+	
+
+	public void setRaysPerLight(int rays){
+		this.RAYS_PER_LIGHT = rays;
+	}
+	
+
+	public float getLightResolutionScale(){
+		return LIGHT_RESOLUTION_SCALE;
+	}
+	
+
+	public void setLightResolutionScale(float scale){
+		this.LIGHT_RESOLUTION_SCALE = scale;
+	}
+	
+
+	public int getLightBlurPasses(){
+		return LIGHT_BLUR_PASSES;
+	}
+	
+
+	public void setLightBlurPasses(int passes){
+		LIGHT_BLUR_PASSES = passes;
+	}
+	
+
 	/**
 	 * Sets the Box2D world. Please do not use this!
 	 */
@@ -183,6 +235,36 @@ public class Engine implements Disposable{
 		this.flush();
 	}
 	
+	public void resize(int width, int height){
+
+		int FBOW = (int)(width / this.getLightResolutionScale());
+		int FBOH = (int)(height / this.getLightResolutionScale());
+		print("Resizing to " + width + "x" + height + "px to give " + FBOW + "x" + FBOH + "px FBO @ " + this.getLightResolutionScale() + " RS.");
+		
+		if(this.getRayHandler() != null){
+			this.getRayHandler().resizeFBO(FBOW, FBOH);
+		}
+	}
+	
+	/**
+	 * Renders Box2D lights, if the world is not null.
+	 * This method stops and restarts the batch.
+	 */
+	public void renderLights(Batch batch, float delta){
+		
+		if(this.getWorld() == null)
+			return;
+		
+		batch.end();
+		
+		this.getRayHandler().setBlurNum(this.getLightBlurPasses());
+		this.getRayHandler().setWorld(this.getWorld());
+		this.getRayHandler().setCombinedMatrix(FOE.camera);
+		this.getRayHandler().updateAndRender();
+		
+		batch.begin();
+	}
+	
 	/**
 	 * Internal.
 	 */
@@ -269,6 +351,8 @@ public class Engine implements Disposable{
 	 * Disposes the whole Engine.
 	 */
 	public void dispose(){
+		if(this.getRayHandler() != null)
+			this.getRayHandler().dispose();
 		this.clearEntities();
 		this.flushBodies();
 		this.disposeWorld();

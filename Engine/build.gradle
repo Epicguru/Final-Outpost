@@ -23,7 +23,7 @@ dependencies{
 	
 	compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 	compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-	
+	compile group: 'com.badlogicgames.box2dlights', name: 'box2dlights', version: '1.4'	
 	
     compile "commons-io:commons-io:2.5"
 }

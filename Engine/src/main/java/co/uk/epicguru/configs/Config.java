@@ -119,6 +119,7 @@ public class Config extends Base{
 	 */
 	public boolean set(String key, Object newValue){
 		ConfigVariable config = map.get(key);
+		
 		if(config == null)
 			return false;
 		
