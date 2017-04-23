@@ -3,6 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,7 +12,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.screens.InGameScreen;
+import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -49,7 +50,7 @@ public class Main extends FinalOutpostPlugin{
 		// Graphics config
 		graphics = newConfig("Graphics");
 		
-		graphics.add("Windowed Resolution", new Vector2(900, 500));	
+		graphics.add("Windowed Resolution", new Vector2(1200, 600));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
 	}
@@ -87,15 +88,17 @@ public class Main extends FinalOutpostPlugin{
 		switch(type){
 		case GAME_START:
 			
-			// WIP tiled map
+			// Game tiles
 			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
 			loadAsset("Textures/Map/Stone.png", TextureRegion.class);
 			
+			// Player
 			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
 			break;
+
 		case INIT_CORE:
 			
 			// Main menu content
@@ -103,6 +106,16 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
+			loadAsset("Textures/UI/Button.9.png", NinePatch.class);
+			
+			// Loading icon
+			loadAsset("Textures/UI/Loading Cog.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Ghost.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Point.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Square.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Triangle.png", TextureRegion.class);
+			loadAsset("Textures/UI/Title.png", TextureRegion.class);
+			
 			break;		
 		}	
 		
@@ -120,6 +133,6 @@ public class Main extends FinalOutpostPlugin{
 	}
 	
 	public void postInit(){
-		FOE.INSTANCE.setScreen(new InGameScreen());
+		FOE.INSTANCE.setScreen(new MainMenu());
 	}
 }
