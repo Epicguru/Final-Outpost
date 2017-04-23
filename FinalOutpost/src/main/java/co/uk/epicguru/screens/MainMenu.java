@@ -40,6 +40,9 @@ public final class MainMenu extends GameScreen {
 
 		this.toGame = false;
 		
+		// Loading symbol
+		LoadingSymbol.load();
+		
 		// Reset UI
 		obs = new Observer();
 

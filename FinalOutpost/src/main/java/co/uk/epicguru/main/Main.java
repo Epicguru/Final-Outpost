@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
-import co.uk.epicguru.UI.loading.LoadingSymbol;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.screens.MainMenu;
@@ -131,9 +130,6 @@ public class Main extends FinalOutpostPlugin{
 		addInput(RIGHT, Keys.D);
 		addInput(DEBUG, Keys.F12);
 		addInput(VSYNC, Keys.F1);
-		
-		// Loading symbol
-		LoadingSymbol.load();
 	}
 	
 	public void postInit(){

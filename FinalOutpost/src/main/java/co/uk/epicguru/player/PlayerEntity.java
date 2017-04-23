@@ -54,6 +54,8 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 			dead();
 		}
 		
+		// TODO remove
+		// !!!
 		if(Input.isKeyJustDown(Keys.L)){
 			super.getComponent(ArmouredHealth.class).setHealth(0);
 		}

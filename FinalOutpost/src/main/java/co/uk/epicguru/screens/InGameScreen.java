@@ -1,11 +1,13 @@
 package co.uk.epicguru.screens;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.engine.Engine;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.GameMap;
@@ -85,6 +87,10 @@ public class InGameScreen extends GameScreen {
 		FOE.engine.update(delta); // Entities
 		PhysicsWorldUtils.update(delta); // Physics
 		FOE.engine.flushBodies(); // Physics bodies bin #2
+		
+		if(Input.isKeyJustDown(Keys.ESCAPE)){
+			FOE.INSTANCE.setScreen(new MainMenu());
+		}
 		
 		super.update(delta);		
 	}
