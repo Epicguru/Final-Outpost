@@ -57,9 +57,7 @@ public final class MainMenu extends GameScreen {
 		this.playButton.addLeftClickListener(() -> {
 			print("Play button pressed...");
 			
-			// Move to game screen from here, 
-			// TODO ensure that swapping back works (it will not :D)
-			
+			// Move to game screen from here - AON it does!			
 			this.direction = -1;			
 			this.toGame = true;
 		});
@@ -67,7 +65,7 @@ public final class MainMenu extends GameScreen {
 		this.quitButton.addLeftClickListener(() -> {
 			print("Quit button pressed...");
 			
-			// Quit game : TODO now with Gdx.app.exit()
+			// Quit game
 			Gdx.app.exit();
 		});
 
@@ -177,7 +175,7 @@ public final class MainMenu extends GameScreen {
 
 	public void renderUI(float delta, Batch batch){	
 		batch.setColor(Color.WHITE);
-
+		
 		// Background
 		float hw = getScreenWidth() / 2f;
 		float hh = getScreenHeight() / 2f;
