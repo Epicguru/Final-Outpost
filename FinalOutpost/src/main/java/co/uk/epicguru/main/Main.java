@@ -36,6 +36,8 @@ public class Main extends FinalOutpostPlugin{
 	public static final String DEBUG = "Debug";
 	public static final String VSYNC = "VSync";
 	
+	public static String lang;
+	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
 		INSTANCE = this;
@@ -49,6 +51,7 @@ public class Main extends FinalOutpostPlugin{
 		launch = newConfig("Launch");
 		
 		launch.add("Title", "Final Outpost by Epicguru");
+		launch.add("Language", "English");
 		
 		// Graphics config
 		graphics = newConfig("Graphics");
@@ -77,6 +80,7 @@ public class Main extends FinalOutpostPlugin{
 		
 		if(config.is("Launch")){			
 			Gdx.graphics.setTitle((String)config.read("Title"));
+			lang = (String)config.read("Language");
 			
 		}
 		if(config.is("Graphics")){
@@ -155,7 +159,7 @@ public class Main extends FinalOutpostPlugin{
 		Lan.add(getAsset("Lang/Spanish.lan", LanguagePack.class));
 		
 		// TODO Save and load?
-		Lan.setCurrentLanguage("English");
+		Lan.setCurrentLanguage(lang);
 		
 		return true;
 	}
