@@ -11,6 +11,8 @@ import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.languages.Lan;
+import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
@@ -137,8 +139,23 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Textures/UI/Loading Triangle.png", TextureRegion.class);
 			loadAsset("Textures/UI/Title.png", TextureRegion.class);
 			
+			// Languages
+			loadAsset("Lang/English.lan", LanguagePack.class);
+			loadAsset("Lang/Spanish.lan", LanguagePack.class);
+			
 			break;		
 		}	
+		
+		return true;
+	}
+	
+	public boolean loadLanguages(){
+		
+		Lan.add(getAsset("Lang/English.lan", LanguagePack.class));
+		Lan.add(getAsset("Lang/Spanish.lan", LanguagePack.class));
+		
+		// TODO Save and load?
+		Lan.setCurrentLanguage("English");
 		
 		return true;
 	}

@@ -22,6 +22,7 @@ import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
+import co.uk.epicguru.API.plugins.assets.LanguagePackAssetLoader;
 import co.uk.epicguru.API.plugins.assets.NinePatchAssetLoader;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
@@ -33,6 +34,8 @@ import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
+import co.uk.epicguru.languages.defaults.DefaultLan;
+import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
 import co.uk.epicguru.map.tiles.Tile;
@@ -192,8 +195,12 @@ public class FOE extends Game{
 			U.startTimer(packing);
 			loading("Optimising (Long packing only happens once)", "...");
 			pluginsAssetsLoader = new PluginAssetLoader();
-			pluginsAssetsLoader.setLoader(TextureRegion.class, "png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
+			
+			// Special types of data to be loaded
+			pluginsAssetsLoader.setLoader(TextureRegion.class, ".png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
 			pluginsAssetsLoader.setLoader(NinePatch.class, "9.png", new NinePatchAssetLoader(new ExternalFileHandleResolver()));
+			pluginsAssetsLoader.setLoader(LanguagePack.class, ".lan", new LanguagePackAssetLoader(new ExternalFileHandleResolver()));
+			
 			pluginsAssetsLoader.packAllTextures(pluginsLoader);
 			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));
 
@@ -224,6 +231,14 @@ public class FOE extends Game{
 			pluginsLoader.initAllPlugins();
 			loading("Post-Initialising plugins", "...");
 			pluginsLoader.postInitAllPlugins();
+			
+			// Standard languages
+			loading("Standard Languages", "¿Qué tal, tio? \n¿Todo bien, todo correcto?");
+			DefaultLan.loadDefaultLangs();
+			
+			// Languages now
+			loading("Other Languages", "...");
+			pluginsAssetsLoader.loadAllLanguages(pluginsLoader);
 
 			// Save inputs (also done at shutdown)
 			loading("Saving inputs", "Don't blink");

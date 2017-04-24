@@ -14,6 +14,7 @@ import co.uk.epicguru.UI.Observer;
 import co.uk.epicguru.UI.TextButton;
 import co.uk.epicguru.UI.loading.LoadingSymbol;
 import co.uk.epicguru.input.Input;
+import co.uk.epicguru.languages.Lan;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 import ro.fortsoft.pf4j.Extension;
@@ -160,14 +161,18 @@ public final class MainMenu extends GameScreen {
 		float x = i.apply(-400, 10, this.p);
 		float middle = Gdx.graphics.getHeight() / 2f;
 
+		// TETS
+		Lan.setCurrentLanguage("Spanish");
+		
+		
 		// Play button
-		this.playButton.setText("PLAY GAME");
+		this.playButton.setText(Lan.str("PLAY GAME"));
 		this.playButton.bounds.set(x, middle, 200, this.playButton.getPatch().getTotalHeight());
 		this.playButton.render(obs, delta);
 
 		// Quit button
 		this.quitButton.setColour(Color.RED);
-		this.quitButton.setText("QUIT GAME");
+		this.quitButton.setText(Lan.str("QUIT GAME"));
 		this.quitButton.bounds.set(x, middle - 64, 200, this.playButton.getPatch().getTotalHeight());
 		this.quitButton.render(obs, delta);
 
