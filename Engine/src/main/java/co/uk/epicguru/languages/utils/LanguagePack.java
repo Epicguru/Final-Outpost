@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Disposable;
 
 import co.uk.epicguru.API.Base;
 
@@ -16,7 +17,7 @@ import co.uk.epicguru.API.Base;
  * All lines starting with # are ignored. Use them as comments.
  * @author James Billy
  */
-public class LanguagePack extends Base {
+public class LanguagePack extends Base implements Disposable{
 
 	private HashMap<String, String> values = new HashMap<String, String>();
 	private String name;
@@ -47,6 +48,12 @@ public class LanguagePack extends Base {
 		}
 	}
 	
+	public LanguagePack(String name, LanguagePack other){
+		this.name = name;
+		
+		this.inject(other);
+	}
+	
 	public LanguagePack(String name, String[] lines){
 		this.name = name;
 		this.set(lines);
@@ -67,20 +74,22 @@ public class LanguagePack extends Base {
 		this.clear();
 		for(String s : lines){
 			// There are two parts, one before the '-' character
-			// which is the name, and the part after is the value, that is trimmed.
+			// which is the name, and the part after is the value. Both are trimmed.
 			
+			if(s == null)
+				continue;			
 			if(s.trim().startsWith("#"))
 				continue;
+			if(s.trim().isEmpty())
+				continue;			
 			
 			if(s.contains("-") && s.trim().length() > 1){
 				
 				int index = s.indexOf('-');
 				String name = s.substring(0, index);
-				String value = s.substring(index);
+				name = name.trim();
+				String value = s.substring(index + 1);
 				value = value.trim();
-				
-				print("Name - " + name);
-				print("Value - " + value);
 				
 				this.inject(name, value);
 				
@@ -102,11 +111,52 @@ public class LanguagePack extends Base {
 		this.values.put(name, value);
 	}
 	
+	public LanguagePack merge(String newName, LanguagePack other){
+		LanguagePack newPack = this.clone();
+		newPack.inject(other);
+		
+		return newPack;
+	}
+	
+	public LanguagePack clone(){
+		return this.clone(this.getName());
+	}
+	
+	public LanguagePack clone(String newName){
+		return new LanguagePack(newName, this);
+	}
+	
 	public HashMap<String, String> getHashMap(){
 		return this.values;
 	}
 	
+	public int valueCount(){
+		return this.getHashMap().size();
+	}
+	
+	public String get(final String name){
+		return this.values.get(name);
+	}
+	
 	public String toString(){
-		return this.getName();
+		return this.getName() + ", " + this.valueCount() + " values.";
+	}
+
+	public String getWholeLang(){
+		StringBuilder str = new StringBuilder();
+		
+		for(String key : this.getHashMap().keySet()){
+			str.append(key);
+			str.append("- ");
+			str.append(this.getHashMap().get(key));
+			str.append('\n');
+		}
+		
+		return str.toString();
+	}
+	
+	public void dispose(){
+		this.values.clear();
+		this.values = null;
 	}
 }

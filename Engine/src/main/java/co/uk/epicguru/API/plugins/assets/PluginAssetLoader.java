@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
+import co.uk.epicguru.languages.Lan;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 
@@ -48,6 +49,29 @@ public class PluginAssetLoader extends AssetManager {
 			plugin.loadAssets(this, type);
 			Log.info(TAG, "Plugin '" + plugin.getWrapper().getPluginId() + "' requested to load " + (getQueuedAssets() - temp) + " assets.");
 		}
+	}
+	
+	public void loadAllLanguages(PluginsLoader pluginLoader){
+		Log.info(TAG, "Getting all language packs from all plugins...");
+		Lan.clear();
+		int oldCount = 0;
+		for(FinalOutpostPlugin plugin : pluginLoader.getAllPlugins()){
+			
+			// Responsive, yay!
+			FOE.loadingSubText = plugin.getDisplayName();
+			
+			if(!plugin.loadLanguages()){
+				Log.error(TAG, "Plugin '" + plugin.getWrapper().getPluginId() + "' did NOT handle language packs. Oh well.");
+				if(Lan.getLangCount() > oldCount){
+					Log.error(TAG, "Ooops, I take that back. They added one or more language pack(s). Huh. Odd.");
+				}
+			}
+			
+			Log.info(TAG, plugin.getWrapper().getPluginId() + " added " + (Lan.getLangCount() - oldCount + " language packs."));
+			
+			oldCount = Lan.getLangCount();
+		}
+		Log.info(TAG, "Done, loaded total of " + Lan.getLangCount() + " languages.");
 	}
 
 	/**
