@@ -159,11 +159,7 @@ public final class MainMenu extends GameScreen {
 		Interpolation i = Interpolation.elastic;
 		
 		float x = i.apply(-400, 10, this.p);
-		float middle = Gdx.graphics.getHeight() / 2f;
-
-		// TETS
-		Lan.setCurrentLanguage("Spanish");
-		
+		float middle = Gdx.graphics.getHeight() / 2f;		
 		
 		// Play button
 		this.playButton.setText(Lan.str("PLAY GAME"));

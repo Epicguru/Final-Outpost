@@ -9,9 +9,10 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Disposable;
 
 import co.uk.epicguru.API.Base;
+import co.uk.epicguru.API.plugins.assets.LanguagePackAssetLoader;
+import co.uk.epicguru.languages.Lan;
 
 /**
  * An object that represents a language within the game. For example English, Spanish and French are all language packs.
@@ -19,7 +20,7 @@ import co.uk.epicguru.API.Base;
  * along with the asset loaded, see the example plugin for more info.
  * @author James Billy
  */
-public class LanguagePack extends Base implements Disposable{
+public class LanguagePack extends Base{
 
 	private HashMap<String, String> values = new HashMap<String, String>();
 	private String name;
@@ -194,6 +195,12 @@ public class LanguagePack extends Base implements Disposable{
 	 * @return The value, for example 'Jugar' (for Spanish language pack).
 	 */
 	public String get(final String name){
+		if(this.values == null){
+			return "No Data";
+		}
+		if(name == null){
+			return "Null-Name";		
+		}
 		return this.values.get(name);
 	}
 	
@@ -215,13 +222,5 @@ public class LanguagePack extends Base implements Disposable{
 		}
 		
 		return str.toString();
-	}
-	
-	/**
-	 * Disposes all data, after this this language pack is unusable.
-	 */
-	public void dispose(){
-		this.values.clear();
-		this.values = null;
 	}
 }
