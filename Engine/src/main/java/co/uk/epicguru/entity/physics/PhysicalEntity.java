@@ -16,14 +16,14 @@ public class PhysicalEntity extends Entity{
 		super.addComponents(new Position());		
 	}	
 	
+	/**
+	 * Updates the position component of this PhysicalEntity.
+	 * <li>If you override this, YOU MUST CALL <code>super.update(float)</code>.
+	 */
 	public void update(float delta){
 		Position pos = this.getComponent(Position.class);
 		if(pos == null)
 			return;
-		
-		if(pos.isBody()){
-			pos.setToBody();			
-		}
 		else{
 			if(this.hasBody()){
 				pos.setBody(this.getBody());
@@ -55,7 +55,9 @@ public class PhysicalEntity extends Entity{
 		this.body = null;
 	}
 
-	@Override
+	/**
+	 * Call <code>super.removed()</code> if you override!!!
+	 */
 	public void removed() {
 		this.removeBody();
 	}

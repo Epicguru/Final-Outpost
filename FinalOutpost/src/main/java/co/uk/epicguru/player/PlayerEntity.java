@@ -60,8 +60,7 @@ public class PlayerEntity extends PhysicalEntity{
 		}
 		
 		this.flashlight.setColor(0, 0, 0, 1f);
-		this.flashlight.setDistance(30);
-		this.flashlight.attachToBody(null);
+		this.flashlight.setDistance(10);
 		this.flashlight.setPosition(Input.getMouseWorldPos());
 		
 		timer += delta;
@@ -77,8 +76,7 @@ public class PlayerEntity extends PhysicalEntity{
 			return;
 
 		// Speed (constant for now)
-		float speed = 4f;
-		
+		float speed = 4f;		
 		
 		// This constantly resets speed - Think of a better way to do this!
 		Vector2 vel = new Vector2();
