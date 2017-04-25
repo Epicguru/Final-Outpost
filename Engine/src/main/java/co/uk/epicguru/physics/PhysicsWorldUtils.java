@@ -15,6 +15,8 @@ public final class PhysicsWorldUtils {
 	public static World newWorld(){
 		removeWorld();
 		
+		PhysicsWorldUtils.debug = new Box2DDebugRenderer();
+		
 		return FOE.engine.setWorld(new World(gravity, true));
 	}
 	
@@ -46,5 +48,9 @@ public final class PhysicsWorldUtils {
 		batch.end();		
 		debug.render(FOE.engine.getWorld(), FOE.camera.combined);
 		batch.begin();
+	}
+
+	public static void dispose() {
+		debug = null;		
 	}
 }

@@ -1,6 +1,7 @@
 # Main menu stuff
-PLAY GAME- Jugar
-QUIT GAME- Salir
+PLAY BUTTON- Jugar
+RESTART BUTTON- Reiniciar
+QUIT BUTTON- Salir
 
 # Tiles now
 TILE DIRT- Tierra

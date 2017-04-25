@@ -82,6 +82,9 @@ public class InGameScreen extends GameScreen {
 		FOE.engine.clearEntities();
 		FOE.engine = null;
 		
+		// Physics utils
+		PhysicsWorldUtils.dispose();
+		
 		// Clean up
 		System.gc();
 		
@@ -116,6 +119,7 @@ public class InGameScreen extends GameScreen {
 		// Camera position
 		Position pos = FOE.player.getComponent(Position.class);
 		FOE.camera.position.set(pos.getX(), pos.getY(), 1);
+		FOE.camera.update();
 		
 		FOE.map.render(); // Map
 		FOE.engine.render(batch, delta);

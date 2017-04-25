@@ -11,8 +11,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import box2dLight.PointLight;
-import co.uk.epicguru.API.AllocatedTimer;
-import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.entity.components.ArmouredHealth;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.entity.physics.PhysicalEntity;
@@ -20,11 +18,11 @@ import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
-public class PlayerEntity extends PhysicalEntity implements Runnable{
+public class PlayerEntity extends PhysicalEntity{
 
 	public PlayerRenderer renderer;
-	private AllocatedTimer timer;
 	private PointLight flashlight;
+	private float timer;
 	
 	public PlayerEntity() {
 		super("Player");		
@@ -65,19 +63,18 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 		this.flashlight.setDistance(30);
 		this.flashlight.attachToBody(null);
 		this.flashlight.setPosition(Input.getMouseWorldPos());
-	}
-	
-	public void dead(){
-		FOE.engine.remove(this);
-		print("Player has died!");
-	}
-	
-	public void run(){
 		
-		// Runs 120 times per second, independently in another thread
-		// Need to check body, because of threading
+		timer += delta;
+		float delay = 1f / 120f;
+		while(timer >= delay){
+			timer -= delay;
+			this.doMovement();
+		}
+	}
+	
+	public void doMovement(){
 		if(super.getBody() == null)
-			return; // TODO could still be error...
+			return;
 
 		// Speed (constant for now)
 		float speed = 4f;
@@ -103,19 +100,18 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 		super.getBody().setLinearVelocity(vel.x, vel.y);
 	}
 	
+	public void dead(){
+		FOE.engine.remove(this);
+		print("Player has died!");
+	}
+	
 	public void added(){
 		// Set body
 		super.setBody(this.makeBody());
 		super.getComponent(Position.class).setBody(super.getBody());
 		
-		// Set timer
-		this.timer = AllocatedTimer.inSecond(120f, this);
-		
 		// Set renderer
 		this.renderer = new PlayerRenderer();
-		
-		// Allocate timer
-		Allocator.add(this.timer);
 		
 		// Create light
 		this.flashlight = new PointLight(FOE.engine.getRayHandler(), FOE.engine.getRaysPerLight(), Color.SCARLET, 10, 0, 0);
@@ -123,7 +119,6 @@ public class PlayerEntity extends PhysicalEntity implements Runnable{
 	
 	public void removed(){
 		super.removed();
-		Allocator.removeTimer(this.timer);
 		this.flashlight.remove();
 	}
 	

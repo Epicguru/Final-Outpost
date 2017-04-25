@@ -2,6 +2,10 @@ package co.uk.epicguru.main;
 
 import static co.uk.epicguru.main.Constants.PPM;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -82,10 +86,7 @@ public class FOE extends Game{
 
 	public static void main(String... args){
 
-		// Debug
-		for(String s : args){
-			System.out.println(" --" + s);
-		}
+		FOE.args(args);
 
 		// Create game instance
 		INSTANCE = new FOE();
@@ -335,7 +336,6 @@ public class FOE extends Game{
 	public void update(float delta){
 
 		Input.update();
-		camera.update();
 
 		if(!donePluginCheck && loaded){
 			FinalOutpostPlugin[] plugins = pluginsLoader.getAllPlugins();
@@ -365,6 +365,7 @@ public class FOE extends Game{
 		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
 
 		if(getScreen() != null && getScreen() instanceof GameScreen) ((GameScreen)getScreen()).update(delta);
+		camera.update();
 	}
 
 	public void resize(int width, int height){
@@ -402,7 +403,91 @@ public class FOE extends Game{
 		GameScreen screen = (GameScreen) getScreen();
 		screen.renderUI(Gdx.graphics.getDeltaTime(), batch);
 	}
+	
+	public static void args(String[] args){
 
+		// Debug
+		for(String s : args){
+			System.out.println(" --" + s);
+		}
+		
+		// See if is command
+		if(args.length > 0){
+			if(args[0].toLowerCase().equals("-c")){
+				// Is command!
+				Log.info(TAG, "Executing args command!");
+				String[] comm = new String[args.length - 1];
+				System.arraycopy(args, 1, comm, 0, args.length - 1);
+				
+				if(comm.length < 1){
+					Log.error(TAG, "Empty command!");
+				}else{
+					try {
+						FOE.argsCommand(comm);
+					} catch (Exception e) {
+						Log.error(TAG, "Error in args command! : " + e.getClass().getName() + " - " + e.getMessage(), e);
+					}
+				}
+			}
+		}
+	}
+	
+	public static void argsCommand(String[] parts) throws Exception {
+		Log.info(TAG, "Executing command '" + parts[0] + "'");
+		
+		String commandName = parts[0];
+		
+		switch(commandName){
+		// Here commands are executed!
+		}
+	}
+	
+	public static void cmd(String command){
+		
+		// Runs a command from the current execution path.		
+		Log.info(TAG, "Executing command '" + command + "'");
+		
+		try {
+			Runtime.getRuntime().exec(command);
+		} catch (IOException e) {
+			Log.error(TAG, "Error in command '" + command + "' : " + e.getClass().getName() + " - " + e.getMessage(), e);
+		}
+	}
+
+	public static File getJarFile(){
+		try {
+			return new File(FOE.class.getProtectionDomain()
+					.getCodeSource()
+					.getLocation().toURI());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}				
+	}
+	
+	public static void restart(){
+		
+		// Runs new version of game and exits		
+		Log.info(TAG, "Restarting game...");		
+
+		Gdx.app.postRunnable(() -> {	
+			
+			// Exit game
+			Gdx.app.exit();
+			
+			// Run game again
+			File jar = FOE.getJarFile();
+			FOE.cmd("java -jar \"" + jar.getAbsolutePath() + "\"");
+		});
+	}
+	
+	public static void exit(){
+		Log.info(TAG, "Quitting game via FOE.exit()");
+		
+		Gdx.app.postRunnable(() -> {			
+			Gdx.app.exit();
+		});
+	}
+	
 	public void dispose(){
 		Allocator.stop();
 		batch.dispose();		
