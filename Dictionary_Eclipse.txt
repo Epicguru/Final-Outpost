@@ -14,3 +14,6 @@ multiplayer
 pythagoras
 tooltips
 github
+kinda
+libgdx
+utils

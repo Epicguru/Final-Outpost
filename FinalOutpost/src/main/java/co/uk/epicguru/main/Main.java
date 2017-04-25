@@ -3,6 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -10,8 +11,10 @@ import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.languages.Lan;
+import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
-import co.uk.epicguru.screens.InGameScreen;
+import co.uk.epicguru.screens.MainMenu;
 import ro.fortsoft.pf4j.PluginException;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -21,6 +24,7 @@ public class Main extends FinalOutpostPlugin{
 	
 	public static Config launch;
 	public static Config graphics;
+	public static Config lighting;
 	
 	public static final String version = "ANY";
 	public static final String TAG = "Final Outpost Plugin";	
@@ -31,6 +35,8 @@ public class Main extends FinalOutpostPlugin{
 	public static final String RIGHT = "Right";
 	public static final String DEBUG = "Debug";
 	public static final String VSYNC = "VSync";
+	
+	public static String lang;
 	
 	public Main(PluginWrapper wrapper) {
 		super(wrapper, "Core", version);
@@ -45,20 +51,36 @@ public class Main extends FinalOutpostPlugin{
 		launch = newConfig("Launch");
 		
 		launch.add("Title", "Final Outpost by Epicguru");
+		launch.add("Language", "English");
 		
 		// Graphics config
 		graphics = newConfig("Graphics");
 		
-		graphics.add("Windowed Resolution", new Vector2(900, 500));	
+		graphics.add("Windowed Resolution", new Vector2(1200, 600));	
 		graphics.add("Fullscreen", false);
 		graphics.add("VSync", false);
+		
+		// Lighting config	
+		/*
+		 * We need : 
+		 * RAYS per light, maybe scalable?
+		 * RESOLUTION multiplier, for example 1, 2 or 4
+		 * BLUR PASSES around 2 - 10 
+		 */
+		lighting = newConfig("Lighting");
+		
+		Log.info(TAG, "Set lighting!");
+		
+		lighting.add("Rays Per Light", 300);
+		lighting.add("Resolution Scale", 1);
+		lighting.add("Blur Passes", 3);
 	}
 	
 	public boolean config(Config config){
 		
-		if(config.is("Launch")){
-			
+		if(config.is("Launch")){			
 			Gdx.graphics.setTitle((String)config.read("Title"));
+			lang = (String)config.read("Language");
 			
 		}
 		if(config.is("Graphics")){
@@ -71,7 +93,13 @@ public class Main extends FinalOutpostPlugin{
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				Log.info(TAG, "Started up in fullscreen mode, @ (" + Gdx.graphics.getWidth() + "x" + Gdx.graphics.getHeight() + ")");
 			}
+			
 		}
+		if(config.is("Lighting")){
+			// For now, ignore. This will be read whenever necessary
+		}
+		
+		Log.info(TAG, "Loaded config - " + config.getName());
 		
 		return true;
 	}
@@ -87,15 +115,17 @@ public class Main extends FinalOutpostPlugin{
 		switch(type){
 		case GAME_START:
 			
-			// WIP tiled map
+			// Game tiles
 			loadAsset("Textures/Map/Dirt.png", TextureRegion.class);
 			loadAsset("Textures/Map/Stone.png", TextureRegion.class);
 			
+			// Player
 			loadAsset("Textures/Player/Walk0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
 			break;
+
 		case INIT_CORE:
 			
 			// Main menu content
@@ -103,8 +133,33 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Fonts/Default.fnt", BitmapFont.class);
 			loadAsset("Fonts/Small.fnt", BitmapFont.class);
 			loadAsset("Fonts/Title.fnt", BitmapFont.class);
+			loadAsset("Textures/UI/Button.9.png", NinePatch.class);
+			
+			// Loading icon
+			loadAsset("Textures/UI/Loading Cog.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Ghost.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Point.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Square.png", TextureRegion.class);
+			loadAsset("Textures/UI/Loading Triangle.png", TextureRegion.class);
+			loadAsset("Textures/UI/Title.png", TextureRegion.class);
+			
+			// Languages
+			loadAsset("Lang/English.lan", LanguagePack.class);
+			loadAsset("Lang/Spanish.lan", LanguagePack.class);
+			
 			break;		
 		}	
+		
+		return true;
+	}
+	
+	public boolean loadLanguages(){
+		
+		Lan.add(getAsset("Lang/English.lan", LanguagePack.class));
+		Lan.add(getAsset("Lang/Spanish.lan", LanguagePack.class));
+		
+		// TODO Save and load?
+		Lan.setCurrentLanguage(lang);
 		
 		return true;
 	}
@@ -120,6 +175,6 @@ public class Main extends FinalOutpostPlugin{
 	}
 	
 	public void postInit(){
-		FOE.INSTANCE.setScreen(new InGameScreen());
+		FOE.INSTANCE.setScreen(new MainMenu());
 	}
 }

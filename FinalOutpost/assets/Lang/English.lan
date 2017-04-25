@@ -1,0 +1,8 @@
+# Main menu stuff here
+PLAY BUTTON- Play Game
+RESTART BUTTON- Restart
+QUIT BUTTON- Exit
+
+# Tiles, unused for now
+TILE DIRT- Dirt
+TILE STONE- Stone

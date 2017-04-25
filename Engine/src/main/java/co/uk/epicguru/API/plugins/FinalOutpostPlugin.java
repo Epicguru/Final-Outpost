@@ -64,7 +64,16 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 	}
 	
 	/**
-	 * Called after ALL plugins have been loaded and ALL content has been loaded and ALL configs have been loaded.
+	 * Called AFTER {@link #postInit()} and this is where you should load
+	 * {@link LanguagePack}s. Use the {@link Lan} class to put the language packs in.
+	 * @return
+	 */
+	public boolean loadLanguages(){
+		return false;
+	}
+	
+	/**
+	 * Called after ALL plugins have been loaded and INIT_CORE content has been loaded and ALL configs have been loaded.
 	 * Here is where you should define, check and maintain inputs using {@link #addInput(String, int)} and other methods.
 	 * This allows for interaction between plugins at start up if required.
 	 */
@@ -73,7 +82,7 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 	}
 	
 	/**
-	 * Called after ALL plugins have been loaded and ALL content has been loaded and after ALL configs have been loaded AND after {@link #init()}.
+	 * Called after ALL plugins have been loaded and INIT_CORE content has been loaded and after ALL configs have been loaded AND after {@link #init()}.
 	 * This serves as a second layer to interaction. Adding inputs is also valid here and after this.
 	 */
 	public void postInit() {

@@ -10,10 +10,12 @@ import co.uk.epicguru.main.FOE;
 public final class PhysicsWorldUtils {
 
 	public static final Vector2 gravity = new Vector2(0, 0);
-	private static Box2DDebugRenderer debug = new Box2DDebugRenderer();
+	private static Box2DDebugRenderer debug;
 	
 	public static World newWorld(){
 		removeWorld();
+		
+		PhysicsWorldUtils.debug = new Box2DDebugRenderer();
 		
 		return FOE.engine.setWorld(new World(gravity, true));
 	}
@@ -46,5 +48,9 @@ public final class PhysicsWorldUtils {
 		batch.end();		
 		debug.render(FOE.engine.getWorld(), FOE.camera.combined);
 		batch.begin();
+	}
+
+	public static void dispose() {
+		debug = null;		
 	}
 }

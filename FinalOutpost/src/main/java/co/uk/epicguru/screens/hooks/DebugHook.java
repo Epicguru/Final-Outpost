@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.screens.ScreenHook;
+import co.uk.epicguru.languages.Lan;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
@@ -38,6 +39,7 @@ public class DebugHook extends ScreenHook {
 		draw(batch, FOE.engine.getAllEntities().size() + " active entities.", Color.YELLOW);
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 		draw(batch, Allocator.getRunningTimers() + " running timers.", Color.WHITE);
+		draw(batch, Lan.getLangCount() + " languages loaded and ready to hot-swap.", Color.FIREBRICK);
 	}
 	
 	private void draw(Batch batch, String text, Color color){
