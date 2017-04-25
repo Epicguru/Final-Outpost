@@ -17,6 +17,7 @@ public class GameTime {
 	private static float time; // All hail!
 	private static final int HOURS_IN_DAY = 24;
 	private static final int MINUTES_IN_HOUR = 60;
+	private static final int SECONDS_IN_MINUTE = 60;
 	
 	public static void reset(){
 		// TODO
@@ -24,6 +25,10 @@ public class GameTime {
 		
 		time = 0f;		
 	}	
+	
+	/*
+	 * Getter methods, utility.
+	 */
 	
 	private static int wholeDay(){
 		return (int)time;
@@ -65,5 +70,59 @@ public class GameTime {
 	
 	public static int wholeMinute(){
 		return (int)minute();
+	}
+	
+	public static float partMinute(){
+		return minute() - wholeMinute();
+	}
+	
+	public static float second(){
+		float part = partMinute();
+		float minutes = SECONDS_IN_MINUTE * part;
+		
+		return minutes;
+	}
+	
+	public static int wholeSecond(){
+		return (int)second();
+	}
+	
+	public static float partSecond(){
+		return second() - wholeSecond();
+	}
+
+	/*
+	 * Setter methods, functional.
+	 * TODO Optimise addX() methods.
+	 */
+	
+	private static void add(float time){
+		// Log, dunno?
+		time += time;		
+	}
+	
+	public static void addDays(float days){
+		add(days); // Already in correct format
+	}
+	
+	public static void addHours(float hours){
+		// (1 day / 24 hours) * hours == hours in terms of days. Clear as mud!
+		float hoursInDays = (1f / HOURS_IN_DAY) * hours;
+		
+		add(hoursInDays);
+	}
+	
+	public static void addMinutes(float minutes){
+		// ((1 day / 24 hours) / 60 minutes) * minutes == minutes in terms of days.
+		float minutesInDays = ((1f / HOURS_IN_DAY) / MINUTES_IN_HOUR) * minutes;
+		
+		add(minutesInDays);
+	}
+	
+	public static void addSeconds(float seconds){
+		// (((1 day / 24 hours) / 60 minutes) / 60 seconds) * seconds = seconds in terms of days. Very efficient.
+		float secondsInDays = (((1f / HOURS_IN_DAY) / MINUTES_IN_HOUR) / SECONDS_IN_MINUTE) * seconds;
+		
+		add(secondsInDays);
 	}
 }
