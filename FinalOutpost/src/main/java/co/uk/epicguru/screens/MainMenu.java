@@ -33,17 +33,18 @@ public final class MainMenu extends GameScreen {
 
 	public Image titleImage;
 	public TextButton playButton;
+	public TextButton restartButton;
 	public TextButton quitButton;
-	
+
 	private boolean toGame = false;
 
 	public void show(){
 
 		this.toGame = false;
-		
+
 		// Loading symbol
 		LoadingSymbol.load();
-		
+
 		// Reset UI
 		obs = new Observer();
 
@@ -54,20 +55,33 @@ public final class MainMenu extends GameScreen {
 
 		// UI elements
 		this.titleImage = new Image(this.title);
+		
+		// Play button code
 		this.playButton = new TextButton(this.button);
 		this.playButton.addLeftClickListener(() -> {
 			print("Play button pressed...");
-			
+
 			// Move to game screen from here - AON it does!			
 			this.direction = -1;			
 			this.toGame = true;
 		});
+		
+		// Restart button code
+		this.restartButton = new TextButton(this.button);
+		this.restartButton.addLeftClickListener(() -> {
+			print("Restart button pressed...");
+
+			// Quit game
+			FOE.restart();
+		});
+		
+		// Quit game button code
 		this.quitButton = new TextButton(this.button);
 		this.quitButton.addLeftClickListener(() -> {
 			print("Quit button pressed...");
-			
+
 			// Quit game
-			Gdx.app.exit();
+			FOE.exit();
 		});
 
 		// Interpolation effects
@@ -89,6 +103,7 @@ public final class MainMenu extends GameScreen {
 		this.titleImage = null;
 		this.button = null;
 		this.playButton = null;
+		this.restartButton = null;
 		this.quitButton = null;
 
 		// Hooks
@@ -157,26 +172,32 @@ public final class MainMenu extends GameScreen {
 	public void buttons(float delta, Batch batch){
 
 		Interpolation i = Interpolation.elastic;
-		
+
 		float x = i.apply(-400, 10, this.p);
 		float middle = Gdx.graphics.getHeight() / 2f;		
-		
+
 		// Play button
-		this.playButton.setText(Lan.str("PLAY GAME"));
+		this.playButton.setText(Lan.str("PLAY BUTTON"));
 		this.playButton.bounds.set(x, middle, 200, this.playButton.getPatch().getTotalHeight());
 		this.playButton.render(obs, delta);
 
 		// Quit button
-		this.quitButton.setColour(Color.RED);
-		this.quitButton.setText(Lan.str("QUIT GAME"));
-		this.quitButton.bounds.set(x, middle - 64, 200, this.playButton.getPatch().getTotalHeight());
+		this.restartButton.setColour(Color.FIREBRICK);
+		this.restartButton.setText(Lan.str("RESTART BUTTON"));
+		this.restartButton.bounds.set(x, middle - 64, 200, this.restartButton.getPatch().getTotalHeight());
+		this.restartButton.render(obs, delta);
+
+		// Quit button
+		this.quitButton.setColour(Color.FIREBRICK);
+		this.quitButton.setText(Lan.str("QUIT BUTTON"));
+		this.quitButton.bounds.set(x, middle - 128, 200, this.playButton.getPatch().getTotalHeight());
 		this.quitButton.render(obs, delta);
 
 	}
 
 	public void renderUI(float delta, Batch batch){	
 		batch.setColor(Color.WHITE);
-		
+
 		// Background
 		float hw = getScreenWidth() / 2f;
 		float hh = getScreenHeight() / 2f;
