@@ -1,0 +1,6 @@
+- Main menu re-done and activated, looks pretty good.
+- Fixed many many bugs.
+- Did LAMDA exam.
+- Added Box2D lighting, and a simple light controlled by the mouse. Works very well.
+- Added multi-language support! Now in English and Spanish, changeable in the Final Outpost/Launch.FO_Config.
+- Minor camera bug fixed.
