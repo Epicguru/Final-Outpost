@@ -11,18 +11,25 @@ public class GameTime {
 	 * Day 2.9	 	is day 2 around 11 pm.
 	 * 
 	 * This means that every 0.5 days is obviously 12 hours, with the day starting at x.0.
-	 * Utility methods will be limited to 
 	 */
 	
 	private static float time; // All hail!
 	private static final int HOURS_IN_DAY = 24;
 	private static final int MINUTES_IN_HOUR = 60;
 	private static final int SECONDS_IN_MINUTE = 60;
+	private static final int DAYS_IN_WEEK = 7;
+	
+	// Common time values
+	public static final float ONE_DAY = (1f);
+	public static final float ONE_HOUR = (ONE_DAY / HOURS_IN_DAY);
+	public static final float ONE_MINUTE = (ONE_HOUR / MINUTES_IN_HOUR);
+	public static final float ONE_SECOND = (ONE_MINUTE / SECONDS_IN_MINUTE);
+	
+	// Other time values
+	public static final float ONE_WEEK = (ONE_DAY * DAYS_IN_WEEK);
 	
 	public static void reset(){
-		// TODO
-		// Reset all time here
-		
+		// Reset all time here		
 		time = 0f;		
 	}	
 	
@@ -96,7 +103,7 @@ public class GameTime {
 	 * TODO Optimise addX() methods.
 	 */
 	
-	private static void add(float time){
+	public static void add(float time){
 		// Log, dunno?
 		time += time;		
 	}
@@ -107,22 +114,40 @@ public class GameTime {
 	
 	public static void addHours(float hours){
 		// (1 day / 24 hours) * hours == hours in terms of days. Clear as mud!
-		float hoursInDays = (1f / HOURS_IN_DAY) * hours;
+		float hoursInDays = ONE_HOUR * hours;
 		
 		add(hoursInDays);
 	}
 	
 	public static void addMinutes(float minutes){
 		// ((1 day / 24 hours) / 60 minutes) * minutes == minutes in terms of days.
-		float minutesInDays = ((1f / HOURS_IN_DAY) / MINUTES_IN_HOUR) * minutes;
+		float minutesInDays = ONE_MINUTE * minutes;
 		
 		add(minutesInDays);
 	}
 	
 	public static void addSeconds(float seconds){
 		// (((1 day / 24 hours) / 60 minutes) / 60 seconds) * seconds = seconds in terms of days. Very efficient.
-		float secondsInDays = (((1f / HOURS_IN_DAY) / MINUTES_IN_HOUR) / SECONDS_IN_MINUTE) * seconds;
+		float secondsInDays = ONE_SECOND * seconds;
 		
 		add(secondsInDays);
+	}
+	
+	/*
+	 * String representation methods below.
+	 * WIP!
+	*/
+	
+	private static final StringBuilder stringBuilder = new StringBuilder();
+	
+	public static String timeString(){
+		int hour = wholeHour();
+		int minute = wholeMinute();
+		
+	}
+	
+	public static String toString(){
+		// TODO
+		return null;
 	}
 }
