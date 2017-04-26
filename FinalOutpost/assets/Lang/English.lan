@@ -6,3 +6,14 @@ QUIT BUTTON- Exit
 # Tiles, unused for now
 TILE DIRT- Dirt
 TILE STONE- Stone
+
+# Time and Date
+MONDAY- Monday
+TUESDAY- Tuesday
+WEDNESDAY- Wednesday
+THURSDAY- Thursday
+FRIDAY- Friday
+SATURDAY- Saturday
+SUNDAY- Sunday
+DAY- Day
+WEEK- Week
