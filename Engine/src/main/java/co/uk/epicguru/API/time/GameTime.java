@@ -339,7 +339,7 @@ public class GameTime {
 		 * END: 24:00 PM
 		 */
 
-		float maxRed = 0.1f;
+		float maxRed = 0.07f;
 
 		Interpolation i = Interpolation.linear;
 		
@@ -359,17 +359,17 @@ public class GameTime {
 			}
 		}else{
 			// Sunset
-			if(partDay() >= 16.5f * ONE_HOUR && partDay() <= 20.5f * ONE_HOUR){
+			if(partDay() >= 15.5f * ONE_HOUR && partDay() <= 20.5f * ONE_HOUR){
 				// Before peak
-				float p = percentage(16.5f * ONE_HOUR, 20.5f * ONE_HOUR, partDay());
+				float p = percentage(15.5f * ONE_HOUR, 20.5f * ONE_HOUR, partDay());
 
-				red = maxRed * 1.5f * i.apply(p);
+				red = maxRed * 2f * i.apply(p);
 			}else if(partDay() > 20.5f * ONE_HOUR){
 				// After peak
 				float p = percentage(20.5f * ONE_HOUR, 24f * ONE_HOUR, partDay());
 				
 				p = 1f - p;
-				red = maxRed * 1.5f * i.apply(p);
+				red = maxRed * 2f * i.apply(p);
 			}
 		}
 

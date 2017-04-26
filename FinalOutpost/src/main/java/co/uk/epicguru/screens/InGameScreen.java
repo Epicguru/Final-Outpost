@@ -106,7 +106,7 @@ public class InGameScreen extends GameScreen {
 	public void update(float delta){
 		
 		// Update in-game time.
-		GameTime.addMinutes(delta * 100f); // Means that every second a whole minute is added.
+		GameTime.addMinutes(delta * 20f); // Means that every second a whole minute is added.
 		
 		FOE.engine.flushBodies(); // Physics bodies bin #1
 		FOE.map.update(delta); // Map
