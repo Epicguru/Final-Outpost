@@ -33,6 +33,7 @@ public final class MainMenu extends GameScreen {
 
 	public Image titleImage;
 	public TextButton playButton;
+	public TextButton pluginsButton;
 	public TextButton restartButton;
 	public TextButton quitButton;
 
