@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 
 import co.uk.epicguru.API.screens.GameScreen;
+import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
@@ -36,6 +37,9 @@ public class InGameScreen extends GameScreen {
 		FOE.engine.setRaysPerLight(500);
 		FOE.engine.setLightResolutionScale(1);
 		FOE.engine.setLightBlurPasses(1);
+		
+		// Reset time
+		GameTime.reset();
 		
 		// Physics
 		PhysicsWorldUtils.newWorld();
@@ -101,6 +105,9 @@ public class InGameScreen extends GameScreen {
 	
 	public void update(float delta){
 		
+		// Update in-game time.
+		GameTime.addMinutes(delta * 20f); // Means that every second a whole minute is added.
+		
 		FOE.engine.flushBodies(); // Physics bodies bin #1
 		FOE.map.update(delta); // Map
 		FOE.engine.update(delta); // Entities
@@ -127,6 +134,7 @@ public class InGameScreen extends GameScreen {
 		super.render(delta, batch);
 		
 		// Render light now...
+		FOE.engine.getRayHandler().setAmbientLight(GameTime.getAmbientLightRedLevel(), 0, 0, GameTime.getAmbientLightAlphaLevel());
 		FOE.engine.renderLights(batch, delta);
 		
 		if(DebugHook.active){

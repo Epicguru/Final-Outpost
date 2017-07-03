@@ -6,3 +6,14 @@ QUIT BUTTON- Salir
 # Tiles now
 TILE DIRT- Tierra
 TILE STONE- Piedra
+
+# Time and Date
+MONDAY- lunes
+TUESDAY- martes
+WEDNESDAY- miercoles
+THURSDAY- jueves
+FRIDAY- viernes
+SATURDAY- sábado
+SUNDAY- domingo
+DAY- Día
+WEEK- Semana
