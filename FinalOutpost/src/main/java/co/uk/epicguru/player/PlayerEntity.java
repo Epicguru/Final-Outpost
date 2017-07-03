@@ -11,22 +11,25 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import box2dLight.PointLight;
+import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.components.ArmouredHealth;
-import co.uk.epicguru.entity.components.Position;
-import co.uk.epicguru.entity.physics.PhysicalEntity;
+import co.uk.epicguru.entity.physics.EntityBody;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
-public class PlayerEntity extends PhysicalEntity{
+public class PlayerEntity extends Entity {
 
 	public PlayerRenderer renderer;
+	
+	private ArmouredHealth health;
+	private EntityBody body;
 	private PointLight flashlight;
 	private float timer;
 	
 	public PlayerEntity() {
 		super("Player");		
-		super.addComponents(new Position(), new ArmouredHealth(100f, 100f, 0f));
+		super.addComponents(health = new ArmouredHealth(100f, 100f, 0f));
 	}
 	
 	private Body makeBody(){
@@ -48,21 +51,19 @@ public class PlayerEntity extends PhysicalEntity{
 		return b;
 	}
 	
-	public void update(float delta){
-		super.update(delta);
-		
-		if(Input.isKeyJustDown(Keys.L)){
-			super.getComponent(ArmouredHealth.class).setHealth(0);
-		}
-		
-		if(super.getComponent(ArmouredHealth.class).isDead()){
-			dead();
-		}
-		
+	public void updateLightPos(){
 		this.flashlight.setColor(0, 0, 0, 1f);
 		this.flashlight.setDistance(10);
 		this.flashlight.setPosition(Input.getMouseWorldPos());
-		
+	}
+	
+	public void checkForDeath(){
+		if(health.isDead()){
+			dead();
+		}
+	}
+	
+	public void updateMovement(float delta){
 		timer += delta;
 		float delay = 1f / 120f;
 		while(timer >= delay){
@@ -72,7 +73,7 @@ public class PlayerEntity extends PhysicalEntity{
 	}
 	
 	public void doMovement(){
-		if(super.getBody() == null)
+		if(body.getBody() == null)
 			return;
 
 		// Speed (constant for now)
@@ -95,7 +96,7 @@ public class PlayerEntity extends PhysicalEntity{
 			vel.y -= speed;
 		}
 		
-		super.getBody().setLinearVelocity(vel.x, vel.y);
+		body.getBody().setLinearVelocity(vel.x, vel.y);
 	}
 	
 	public void dead(){
@@ -103,10 +104,29 @@ public class PlayerEntity extends PhysicalEntity{
 		print("Player has died!");
 	}
 	
+	public void update(float delta){
+		
+		// TEST!
+		if(Input.isKeyJustDown(Keys.L)){
+			super.getComponent(ArmouredHealth.class).setHealth(0);
+		}
+		
+		// Ensure that we are not dead!
+		checkForDeath();
+		
+		// Light
+		updateLightPos();
+		
+		// Movement on timer.
+		updateMovement(delta);
+		
+		// Check for death again, in case we were killed by movement.
+		checkForDeath();
+	}
+	
 	public void added(){
 		// Set body
-		super.setBody(this.makeBody());
-		super.getComponent(Position.class).setBody(super.getBody());
+		super.addComponents(body = new EntityBody(makeBody()));
 		
 		// Set renderer
 		this.renderer = new PlayerRenderer();
@@ -116,8 +136,9 @@ public class PlayerEntity extends PhysicalEntity{
 	}
 	
 	public void removed(){
-		super.removed();
 		this.flashlight.remove();
+		this.body.destroyBody();
+		print("Player removed.");
 	}
 	
 	public void render(Batch batch, float delta){	

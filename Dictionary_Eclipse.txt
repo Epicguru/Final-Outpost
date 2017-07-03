@@ -17,3 +17,4 @@ github
 kinda
 libgdx
 utils
+projectile

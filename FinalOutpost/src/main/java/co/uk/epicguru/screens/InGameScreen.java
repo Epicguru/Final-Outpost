@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.time.GameTime;
-import co.uk.epicguru.entity.components.Position;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
@@ -45,7 +44,7 @@ public class InGameScreen extends GameScreen {
 		PhysicsWorldUtils.newWorld();
 		
 		// Map
-		FOE.map = new GameMap(1000, 1000);
+		FOE.map = new GameMap(128, 128);
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
 		TileFactory tile = Tile.getTile("Stone");
@@ -124,8 +123,7 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		Position pos = FOE.player.getComponent(Position.class);
-		FOE.camera.position.set(pos.getX(), pos.getY(), 1);
+		FOE.camera.position.set(FOE.player.getX(), FOE.player.getY(), 1);
 		FOE.camera.update();
 		
 		FOE.map.render(); // Map
