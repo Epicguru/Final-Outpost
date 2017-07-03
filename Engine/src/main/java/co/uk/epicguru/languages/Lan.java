@@ -5,6 +5,12 @@ import java.util.Set;
 
 import co.uk.epicguru.languages.utils.LanguagePack;
 
+/**
+ * This class is the way in which language data is stored and accessed in Final Outpost.
+ * This is where multiple languages are managed and where custom names can be given to objects.
+ * This system works using {@link LanguagePack}s
+ * @author James Billy
+ */
 public final class Lan {
 
 	private static HashMap<String, LanguagePack> packs = new HashMap<String, LanguagePack>();
@@ -14,6 +20,11 @@ public final class Lan {
 	 * We need to have a system that both allows for official languages, such as
 	 * English or Spanish. However we also want to enable other users to have custom languages and
 	 * random LanguagePacks. Lets use a HashMap and a simple 'current language' system.
+	 * 
+	 * A LanguagePack is a language file that is loaded from file, using our asset system. However these packs can also be
+	 * edited at runtime, allowing plugins to change names in official languages. These changes will not persist because
+	 * language packs cannot save to file.
+	 * 
 	 */
 
 	/**

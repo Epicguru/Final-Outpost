@@ -38,7 +38,6 @@ import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
-import co.uk.epicguru.languages.defaults.DefaultLan;
 import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
@@ -235,7 +234,6 @@ public class FOE extends Game{
 			
 			// Standard languages
 			loading("Standard Languages", "¿Qué tal, tio? \n¿Todo bien, todo correcto?");
-			DefaultLan.loadDefaultLangs();
 			
 			// Languages now
 			loading("Other Languages", "...");

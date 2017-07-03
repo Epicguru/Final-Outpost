@@ -33,10 +33,12 @@ public final class MainMenu extends GameScreen {
 
 	public Image titleImage;
 	public TextButton playButton;
+	public TextButton pluginsButton;
 	public TextButton restartButton;
 	public TextButton quitButton;
 
 	private boolean toGame = false;
+	private boolean toPlugins = false;
 
 	public void show(){
 
@@ -55,7 +57,7 @@ public final class MainMenu extends GameScreen {
 
 		// UI elements
 		this.titleImage = new Image(this.title);
-		
+
 		// Play button code
 		this.playButton = new TextButton(this.button);
 		this.playButton.addLeftClickListener(() -> {
@@ -64,8 +66,20 @@ public final class MainMenu extends GameScreen {
 			// Move to game screen from here - AON it does!			
 			this.direction = -1;			
 			this.toGame = true;
+			this.toPlugins = false;
 		});
-		
+
+		// Plugins button code
+		this.pluginsButton = new TextButton(this.button);
+		this.pluginsButton.addLeftClickListener(() -> {
+			print("Plugin button pressed...");
+
+			// Move to game screen from here - AON it does!			
+			this.direction = -1;			
+			this.toGame = false;
+			this.toPlugins = true;
+		});
+
 		// Restart button code
 		this.restartButton = new TextButton(this.button);
 		this.restartButton.addLeftClickListener(() -> {
@@ -74,7 +88,7 @@ public final class MainMenu extends GameScreen {
 			// Quit game
 			FOE.restart();
 		});
-		
+
 		// Quit game button code
 		this.quitButton = new TextButton(this.button);
 		this.quitButton.addLeftClickListener(() -> {
@@ -105,6 +119,7 @@ public final class MainMenu extends GameScreen {
 		this.playButton = null;
 		this.restartButton = null;
 		this.quitButton = null;
+		this.pluginsButton = null;
 
 		// Hooks
 		super.hide();
@@ -135,6 +150,9 @@ public final class MainMenu extends GameScreen {
 			// We may need to change to game screen here
 			if(this.toGame){
 				FOE.INSTANCE.setScreen(new InGameScreen());
+			}
+			if(this.toPlugins){
+				FOE.INSTANCE.setScreen(new PluginsScreen());				
 			}
 			p = 0;
 		}
@@ -177,20 +195,27 @@ public final class MainMenu extends GameScreen {
 		float middle = Gdx.graphics.getHeight() / 2f;		
 
 		// Play button
+		this.playButton.setColour(Color.WHITE);
 		this.playButton.setText(Lan.str("PLAY BUTTON"));
 		this.playButton.bounds.set(x, middle, 200, this.playButton.getPatch().getTotalHeight());
 		this.playButton.render(obs, delta);
 
-		// Quit button
+		// Plugins screen button
+		this.pluginsButton.setColour(Color.WHITE);
+		this.pluginsButton.setText(Lan.str("PLUGINS BUTTON"));
+		this.pluginsButton.bounds.set(x, middle - 64, 200, this.pluginsButton.getPatch().getTotalHeight());
+		this.pluginsButton.render(obs, delta);
+
+		// Restart button
 		this.restartButton.setColour(Color.FIREBRICK);
 		this.restartButton.setText(Lan.str("RESTART BUTTON"));
-		this.restartButton.bounds.set(x, middle - 64, 200, this.restartButton.getPatch().getTotalHeight());
+		this.restartButton.bounds.set(x, middle - 64 * 2f, 200, this.restartButton.getPatch().getTotalHeight());
 		this.restartButton.render(obs, delta);
 
 		// Quit button
 		this.quitButton.setColour(Color.FIREBRICK);
 		this.quitButton.setText(Lan.str("QUIT BUTTON"));
-		this.quitButton.bounds.set(x, middle - 128, 200, this.playButton.getPatch().getTotalHeight());
+		this.quitButton.bounds.set(x, middle - 64 * 3f, 200, this.playButton.getPatch().getTotalHeight());
 		this.quitButton.render(obs, delta);
 
 	}

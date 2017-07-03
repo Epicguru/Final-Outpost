@@ -146,12 +146,13 @@ public class LanguagePack extends Base{
 	
 	/**
 	 * Creates a NEW language by merging the data of this pack and the other one, to create a new pack.
+	 * The 'other' language pack will have priority and will replace conflicting values.
 	 * @param newName The name of the combination of these two packs.
 	 * @param other The other pack.
 	 * @return The new language pack.
 	 */
 	public LanguagePack merge(String newName, LanguagePack other){
-		LanguagePack newPack = this.clone();
+		LanguagePack newPack = this.clone(newName);
 		newPack.inject(other);
 		
 		return newPack;
