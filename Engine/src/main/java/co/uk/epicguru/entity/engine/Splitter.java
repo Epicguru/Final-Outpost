@@ -29,9 +29,9 @@ public class Splitter {
 	
 	public void setMap(TiledMap map){
 		this.map = map;
-		if(map != null){
+		//if(map != null){
 			makeEntityMap();
-		}
+		//}
 	}
 	
 	public void makeEntityMap(){
@@ -49,14 +49,16 @@ public class Splitter {
 			for(int y = 0; y < height; y++){
 				
 				// TODO make dimensions for world borders.
-				float w = width;
-				float h = height;
+				float w = sectorSize;
+				float h = sectorSize;
 				
 				float X = x * width;
 				float Y = y * height;
 				
 				Rectangle rect = new Rectangle(X, Y, w, h);
 				rects[i++] = rect;
+				
+				Log.debug("Splitter", rect.toString());
 			}
 		}
 		

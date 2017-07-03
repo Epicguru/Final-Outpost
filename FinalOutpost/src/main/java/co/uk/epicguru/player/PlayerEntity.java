@@ -111,6 +111,9 @@ public class PlayerEntity extends Entity {
 			super.getComponent(ArmouredHealth.class).setHealth(0);
 		}
 		
+		// Update position
+		body.update(this);
+		
 		// Ensure that we are not dead!
 		checkForDeath();
 		
@@ -118,7 +121,7 @@ public class PlayerEntity extends Entity {
 		updateLightPos();
 		
 		// Movement on timer.
-		updateMovement(delta);
+		updateMovement(delta);		
 		
 		// Check for death again, in case we were killed by movement.
 		checkForDeath();

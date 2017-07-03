@@ -47,6 +47,8 @@ public class InGameScreen extends GameScreen {
 		FOE.map = new GameMap(128, 128);
 		FOE.map.fill(Tile.getTile("Dirt"));
 		
+		FOE.engine.setTiledMap(FOE.map);
+		
 		TileFactory tile = Tile.getTile("Stone");
 		Log.info("", tile.getName());
 		for(int x = 0; x < FOE.map.getWidth(); x++){
