@@ -38,6 +38,7 @@ public final class MainMenu extends GameScreen {
 	public TextButton quitButton;
 
 	private boolean toGame = false;
+	private boolean toPlugins = false;
 
 	public void show(){
 
@@ -65,6 +66,7 @@ public final class MainMenu extends GameScreen {
 			// Move to game screen from here - AON it does!			
 			this.direction = -1;			
 			this.toGame = true;
+			this.toPlugins = false;
 		});
 
 		// Plugins button code
@@ -74,7 +76,8 @@ public final class MainMenu extends GameScreen {
 
 			// Move to game screen from here - AON it does!			
 			this.direction = -1;			
-			this.toGame = true;
+			this.toGame = false;
+			this.toPlugins = true;
 		});
 
 		// Restart button code
@@ -148,6 +151,9 @@ public final class MainMenu extends GameScreen {
 			if(this.toGame){
 				FOE.INSTANCE.setScreen(new InGameScreen());
 			}
+			if(this.toPlugins){
+				FOE.INSTANCE.setScreen(new PluginsScreen());				
+			}
 			p = 0;
 		}
 
@@ -197,7 +203,7 @@ public final class MainMenu extends GameScreen {
 		// Plugins screen button
 		this.pluginsButton.setColour(Color.WHITE);
 		this.pluginsButton.setText(Lan.str("PLUGINS BUTTON"));
-		this.pluginsButton.bounds.set(x, middle - 64, 200, this.restartButton.getPatch().getTotalHeight());
+		this.pluginsButton.bounds.set(x, middle - 64, 200, this.pluginsButton.getPatch().getTotalHeight());
 		this.pluginsButton.render(obs, delta);
 
 		// Restart button

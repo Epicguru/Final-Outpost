@@ -32,8 +32,13 @@ public class PluginsScreen extends GameScreen {
 			positions[i] = Interpolation.pow4.apply(getStart(i), getEnd(i), p);
 		}
 		
-		if(Input.isKeyJustDown(Keys.SPACE)){
-			show();
+		//if(Input.isKeyJustDown(Keys.SPACE)){
+		//	show();
+		//}
+		
+		if(Input.isKeyJustDown(Keys.ESCAPE)){
+			// Leave to main menu
+			FOE.INSTANCE.setScreen(new MainMenu());
 		}
 		
 		// For hooks, if any
