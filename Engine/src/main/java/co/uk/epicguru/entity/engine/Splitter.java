@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.logging.Log;
@@ -95,10 +96,9 @@ public class Splitter {
 		}
 	}
 	
-	public void placeEntity(Entity e){
-		// Get coord.
-		int x = (int)(e.getX() / this.sectorSize);
-		int y = (int)(e.getY() / this.sectorSize);
+	public Rectangle getRectFromPos(float posX, float posY){
+		int x = (int)(posX / this.sectorSize);
+		int y = (int)(posY / this.sectorSize);
 		
 		Rectangle found = null;
 		
@@ -110,8 +110,26 @@ public class Splitter {
 			}
 		}
 		
+		return found;
+	}
+	
+	public ArrayList<Entity> getEntitiesIn(Rectangle rect){
+		return this.e.get(rect);
+	}
+	
+	public ArrayList<Entity> getEntitiesIn(Vector2 position){
+		return this.getEntitiesIn(getRectFromPos(position.x, position.y));
+	}
+	
+	public void placeEntity(Entity e){
+		// Get coord.
+		float posX = e.getX();
+		float posY = e.getY();
+		
+		Rectangle found = getRectFromPos(posX, posY);
+		
 		if(found == null){
-			Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition() + " (" + x + "," + y + ")");
+			Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition());
 			return;
 		}
 		

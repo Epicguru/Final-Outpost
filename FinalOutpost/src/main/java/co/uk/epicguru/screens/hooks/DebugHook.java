@@ -1,5 +1,7 @@
 package co.uk.epicguru.screens.hooks;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -11,7 +13,10 @@ import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.API.time.TimeStyle;
+import co.uk.epicguru.entity.Entity;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.languages.Lan;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
@@ -50,9 +55,13 @@ public class DebugHook extends ScreenHook {
 		draw(batch, FOE.map.getRenderCalls() + " / " + FOE.map.getRenderLoops() + " Calls/Loops " + String.format("(%.1f", (float)FOE.map.getRenderCalls()/FOE.map.getRenderLoops() * 100f) + "%)", Color.YELLOW);
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 		draw(batch, Allocator.getRunningTimers() + " running timers.", Color.WHITE);
-		draw(batch, Lan.getLangCount() + " languages loaded and ready to hot-swap.", Color.FIREBRICK);
+		draw(batch, Lan.getLangCount() + " languages loaded and ready to hot-swap.", Color.ORANGE);		
 		
 		drawRight(batch, "Time - " + String.format("%.3f", GameTime.getTime()), Color.WHITE);
+		ArrayList<Entity> entities = FOE.engine.getSplitter().getEntitiesIn(Input.getMouseWorldPos());
+		Log.info("DEBUG", entities);
+		drawRight(batch, "Entities in mouse region : " + (entities == null ? "NOT IN REGION" : entities.size()), Color.ORANGE);
+		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getSectorSize(), Color.ORANGE);
 		
 	}
 	

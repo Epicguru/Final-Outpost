@@ -19,9 +19,9 @@ public final class Log {
 
 	private static ArrayList<String> log = new ArrayList<String>();
 	
-	private static boolean defaultPrint(String tag, String text){
+	private static boolean defaultPrint(String tag, Object text){
 		if(Gdx.app == null){
-			System.out.println(tag + " : " + text);
+			System.out.println(tag + " : " + text.toString());
 			return true;
 		}
 		return false;
@@ -32,12 +32,16 @@ public final class Log {
 	 * @param tag The tag to submit the message with.
 	 * @param text The text to log.
 	 */
-	public static void info(String tag, String text) {
+	public static void info(String tag, Object text) {
+		
+		if(text == null){
+			text = "NULL";
+		}
 		
 		if(defaultPrint(tag, text))
 			return;
 		
-		Gdx.app.log(tag, text);
+		Gdx.app.log(tag, text.toString());
 		log.add("[" + tag + "][INFO] " + text);
 	}
 
@@ -46,12 +50,16 @@ public final class Log {
 	 * @param tag The tag to submit the message with.
 	 * @param text The text to log.
 	 */
-	public static void debug(String tag, String text) {
+	public static void debug(String tag, Object text) {
+		
+		if(text == null){
+			text = "NULL";
+		}
 		
 		if(defaultPrint(tag, text))
 			return;
 		
-		Gdx.app.debug(tag, text);
+		Gdx.app.debug(tag, text.toString());
 		log.add("[" + tag + "][DEBUG] " + text);
 	}
 
@@ -60,12 +68,16 @@ public final class Log {
 	 * @param tag The tag to submit the message with.
 	 * @param text The text to log.
 	 */
-	public static void error(String tag, String text) {
+	public static void error(String tag, Object text) {
+		
+		if(text == null){
+			text = "NULL";
+		}
 		
 		if(defaultPrint(tag, text))
 			return;
 		
-		Gdx.app.error(tag, text);
+		Gdx.app.error(tag, text.toString());
 		log.add("[" + tag + "][ERROR] " + text);
 	}
 	
@@ -75,12 +87,16 @@ public final class Log {
 	 * @param text The text to log.
 	 * @param e The exception to log details upon.
 	 */
-	public static void error(String tag, String text, Exception e) {
+	public static void error(String tag, Object text, Exception e) {
+		
+		if(text == null){
+			text = "NULL";
+		}
 		
 		if(defaultPrint(tag, text))
 			return;
 		
-		Gdx.app.error(tag, text, e);
+		Gdx.app.error(tag, text.toString());
 		log.add("[" + tag + "][ERROR] " + text);
 		log.add("Exception info:");
 		log.add("Class - " + e.getClass().getSimpleName());

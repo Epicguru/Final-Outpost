@@ -46,6 +46,9 @@ public class EntityBody extends Component {
 		float offY = 0;
 		if(offset != null) offY = offset.y;
 		
+		if(e.getPosition().x < 0)
+			e.setPosition(0, e.getPosition().y);
+		
 		e.setPosition(body.getPosition().x + offX, body.getPosition().y + offY);
 	}
 	

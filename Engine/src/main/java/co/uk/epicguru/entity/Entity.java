@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.Base;
 import co.uk.epicguru.entity.engine.Engine;
+import co.uk.epicguru.main.FOE;
 
 /**
  * An object that populates the game world that contains components. Examples include a player, an enemy, a projectile or even a particle.
@@ -69,6 +70,20 @@ public class Entity extends Base{
 	}
 	
 	public Vector2 setPosition(float x, float y){
+		
+		// Limit entity position to world bounds, because of the Splitter system.
+		if(true){
+			if(x < 0)
+				x = 0;
+			if(y < 0)
+				y = 0;
+			if(x > FOE.map.getWidth())
+				x = FOE.map.getWidth();
+			if(y > FOE.map.getHeight())
+				y = FOE.map.getHeight();
+			
+		}
+
 		return this.getPosition().set(x, y);
 	}
 	
@@ -79,7 +94,7 @@ public class Entity extends Base{
 	}
 	
 	public Vector2 offset(float x, float y){
-		return this.getPosition().add(x, y);
+		return this.setPosition(getX() + x, getY() + y);
 	}
 	
 	public Vector2 offset(Vector2 offset){
