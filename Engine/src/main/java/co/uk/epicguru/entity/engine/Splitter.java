@@ -23,6 +23,9 @@ public class Splitter {
 	
 	private int sectorSize = 16; // Lets try to keep both this and the world size Po2.
 	private HashMap<Rectangle, ArrayList<Entity>> e;
+	private ArrayList<Entity> returnValue = new ArrayList<Entity>();
+	private ArrayList<Entity> buffer = new ArrayList<Entity>();
+	private Rectangle bounds = new Rectangle();
 	
 	public Splitter(Engine engine){
 		this.engine = engine;
@@ -134,5 +137,73 @@ public class Splitter {
 		}
 		
 		this.e.get(found).add(e);
+	}
+
+
+	// ACCESSING METHODS BELOW
+	
+	public ArrayList<Entity> getInRect(float x, float y, float width, float height){
+		
+		// Checks
+		if(x < 0)
+			x = 0;
+		if(y < 0)
+			y = 0;
+		if(x > map.getWidth())
+			x = map.getWidth();
+		if(y > map.getHeight())
+			y = map.getHeight();
+		if(x + width > map.getWidth())
+			width = map.getWidth() - x;
+		if(y + height > map.getHeight())
+			height = map.getHeight() - y;
+		
+		bounds.set(x, y, width, height);
+		
+		int X = (int)(x / this.sectorSize);
+		int Y = (int)(y / this.sectorSize);
+		int topX = (int)((x + width) / this.sectorSize);
+		int topY = (int)((y + height) / this.sectorSize);
+		
+		this.returnValue.clear();
+		
+		for(int i = X; i < topX; i++){
+			for(int j = Y; j < topY; j++){
+				FINDING : for(Rectangle r : this.e.keySet()){
+					if((int)(r.x / this.sectorSize) == i && (int)(r.y / this.sectorSize) == j){
+						for(Entity entity : this.e.get(r)){
+							if(bounds.contains(entity.getPosition()))
+								returnValue.add(entity);
+						}
+						break FINDING;
+					}
+				}
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	public ArrayList<Entity> getInRange(float x, float y, float radius){
+		
+		float bottomX = x - radius;
+		float bottomY = y - radius;
+		
+		getInRect(bottomX, bottomY, radius * 2f + this.sectorSize, radius * 2f + this.sectorSize);
+		
+		buffer.clear();
+		for(Entity e : this.returnValue){
+			if(e.distanceTo(x, y) > radius){
+				buffer.add(e);
+			}
+		}
+		
+		for(Entity e : buffer){
+			this.returnValue.remove(e);
+		}
+		
+		buffer.clear();
+		
+		return this.returnValue;
 	}
 }

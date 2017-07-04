@@ -111,6 +111,18 @@ public class Entity extends Base{
 		return this.offset(0, y);
 	}
 	
+	public float distanceTo(float x, float y){
+		return Vector2.dst(getX(), getY(), x, y);
+	}
+	
+	public float distanceTo(Vector2 position){
+		return position == null ? -1f : this.distanceTo(position.x, position.y);
+	}
+	
+	public float distanceTo(Entity e){
+		return e == null ? -1f : this.distanceTo(e.getPosition());
+	}
+	
 	/**
 	 * Gets a component within this entity, given the class of that component. When you access a component using this method, it will
 	 * automatically be sorted to the top of the component list, meaning that subsequent calls to the same component will be faster. To

@@ -16,7 +16,6 @@ import co.uk.epicguru.API.time.TimeStyle;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.languages.Lan;
-import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.main.Main;
 
@@ -56,11 +55,14 @@ public class DebugHook extends ScreenHook {
 		draw(batch, Gdx.graphics.getFramesPerSecond() + " FPS (" + (int)(1f / Gdx.graphics.getDeltaTime()) + ")", Color.WHITE);
 		draw(batch, Allocator.getRunningTimers() + " running timers.", Color.WHITE);
 		draw(batch, Lan.getLangCount() + " languages loaded and ready to hot-swap.", Color.ORANGE);		
+		draw(batch, "Mouse pos: " + (int)Input.getMouseWorldPos().x + ", " + (int)Input.getMouseWorldPos().y, Color.WHITE);
 		
 		drawRight(batch, "Time - " + String.format("%.3f", GameTime.getTime()), Color.WHITE);
 		ArrayList<Entity> entities = FOE.engine.getSplitter().getEntitiesIn(Input.getMouseWorldPos());
 		drawRight(batch, "Entities in mouse region : " + (entities == null ? "NOT IN REGION" : entities.size()), Color.ORANGE);
 		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getSectorSize(), Color.ORANGE);
+		drawRight(batch, "Within 2 chunks of origin : " + FOE.engine.getSplitter().getInRect(0, 0, 32, 32), Color.ORANGE);
+		drawRight(batch, "Within 1.5 round chunks : " + FOE.engine.getSplitter().getInRange(32, 32, 19f), Color.ORANGE);
 		
 	}
 	
@@ -95,6 +97,12 @@ public class DebugHook extends ScreenHook {
 			shapes.setColor((i++ % 2) == 0 ? a : b);
 			shapes.line(0, y * size, FOE.map.getWidth(), y * size);
 		}
+		
+		shapes.setColor(0, 1, 0, 1);
+		shapes.circle(32, 32, 19f, 100);
+		
+		shapes.setColor(0.9f, 0.9f, 0.9f, 1);
+		shapes.rect(13, 13, 38, 38);
 		
 		shapes.end();
 		
