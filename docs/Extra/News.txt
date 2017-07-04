@@ -1,6 +1,6 @@
 Version 0.0.5 :D
 So from here out I am focusing on the game rather than the framework, since the API is almost complete. Documentation has been paused and now functionality will be paramount until the point where I feel that the game is playable and 'fun' for example when the game can be played 10 minutes straight without the gameplay feeling boring or repetitive.
-A reasonable target, as I am sure you will agree! So, ladies and gentleman, sit back and enjoy the development ride!
+A reasonable target, as I am sure you will agree! (!Cringe alert!) So, ladies and gentlemen, sit back and enjoy the development ride!
 
 Github 		: https://github.com/Epicguru/Final-Outpost
 Email me 	: james@epicguru.co.uk
