@@ -59,7 +59,6 @@ public class DebugHook extends ScreenHook {
 		
 		drawRight(batch, "Time - " + String.format("%.3f", GameTime.getTime()), Color.WHITE);
 		ArrayList<Entity> entities = FOE.engine.getSplitter().getEntitiesIn(Input.getMouseWorldPos());
-		Log.info("DEBUG", entities);
 		drawRight(batch, "Entities in mouse region : " + (entities == null ? "NOT IN REGION" : entities.size()), Color.ORANGE);
 		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getSectorSize(), Color.ORANGE);
 		
