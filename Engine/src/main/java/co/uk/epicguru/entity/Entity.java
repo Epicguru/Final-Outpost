@@ -53,6 +53,9 @@ public class Entity extends Base{
 		return name;
 	}
 	
+	/**
+	 * Gets the world space position of this entity.
+	 */
 	public Vector2 getPosition(){
 		if(this.position == null){
 			this.position = new Vector2();
@@ -61,14 +64,26 @@ public class Entity extends Base{
 		return this.position;
 	}
 	
+	/**
+	 * Gets the world space x position of this entity.
+	 */
 	public float getX(){
 		return this.getPosition().x;
 	}
 	
+	/**
+	 * Gets the world space y position of this entity.
+	 */
 	public float getY(){
 		return this.getPosition().y;
 	}
 	
+	/**
+	 * Sets the world space position of this entity.
+	 * @param x The x position, in world space (tiles).
+	 * @param y The y position, in world space (tiles).
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 setPosition(float x, float y){
 		
 		// Limit entity position to world bounds, because of the Splitter system.
@@ -87,38 +102,80 @@ public class Entity extends Base{
 		return this.getPosition().set(x, y);
 	}
 	
+	/**
+	 * Sets the world space position of this entity.
+	 * @param position The position, in world space (tiles). If null, null is returned and nothing is done to position.
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 setPosition(Vector2 position){
 		if(position == null)
 			return null;
 		return this.setPosition(position.x, position.y);
 	}
 	
+	/**
+	 * Moves this entity by a given amount.
+	 * @param x The x value to add to the current position.
+	 * @param y The y value to add to the current position.
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 offset(float x, float y){
 		return this.setPosition(getX() + x, getY() + y);
 	}
 	
+	/**
+	 * Moves this entity by a given amount.
+	 * @param offset The value to add to the current position. If null, null is returned and nothing is done to position.
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 offset(Vector2 offset){
 		if(offset == null)
 			return null;
 		return this.offset(offset.x, offset.y);
 	}
 	
+	/**
+	 * Moves this entity by a given amount.
+	 * @param x The value to add to the current x position.
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 offsetX(float x){
 		return this.offset(x, 0);
 	}
 	
+	/**
+	 * Moves this entity by a given amount.
+	 * @param y The value to add to the current x position.
+	 * @return The new position, for chaining.
+	 */
 	public Vector2 offsetY(float y){
 		return this.offset(0, y);
 	}
 	
+	/**
+	 * Returns the perfect distance from this entities' position to a world point.
+	 * @param x The x position, in world space (tiles).
+	 * @param y The y position, in world space (tiles).
+	 * @return The mathematical distance, calculated using square root.
+	 */
 	public float distanceTo(float x, float y){
 		return Vector2.dst(getX(), getY(), x, y);
 	}
 	
+	/**
+	 * Returns the perfect distance from this entities' position to a world point.
+	 * @param position The position, in world space (tiles). If null, -1 is returned.
+	 * @return The mathematical distance, calculated using square root.
+	 */
 	public float distanceTo(Vector2 position){
 		return position == null ? -1f : this.distanceTo(position.x, position.y);
 	}
 	
+	/**
+	 * Returns the perfect distance from this entity to another entity.
+	 * @param e The other entity. If null, -1 is returned.
+	 * @return The mathematical distance, calculated using square root.
+	 */
 	public float distanceTo(Entity e){
 		return e == null ? -1f : this.distanceTo(e.getPosition());
 	}
