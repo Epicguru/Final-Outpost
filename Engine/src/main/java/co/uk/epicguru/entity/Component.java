@@ -7,5 +7,6 @@ import co.uk.epicguru.API.Base;
  * @author James Billy
  */
 public class Component extends Base {
+
 	
 }

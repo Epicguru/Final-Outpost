@@ -39,13 +39,13 @@ public class GameMap extends TiledMap {
 		// Get camera
 		OrthographicCamera camera = FOE.camera;
 		
-		float x = camera.position.x - camera.viewportWidth / 2f;
+		float x = camera.position.x - (camera.viewportWidth / 2f) * camera.zoom;
 		x -= 2;	
-		float y = camera.position.y - camera.viewportHeight / 2f;
+		float y = camera.position.y - (camera.viewportHeight / 2f) * camera.zoom;
 		y -= 2;
 		
-		float width = camera.viewportWidth + 4;
-		float height = camera.viewportHeight + 4;
+		float width = (camera.viewportWidth + 4) * camera.zoom;
+		float height = (camera.viewportHeight + 4) * camera.zoom;
 		
 		// Cast variables
 		int X = (int) x;

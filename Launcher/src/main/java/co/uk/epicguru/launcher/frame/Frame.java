@@ -132,7 +132,11 @@ public class Frame extends JFrame {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(() -> {
-					GameLoader.play(instance);					
+					if(GameLoader.downloading){
+						JOptionPane.showMessageDialog(null, "A new version is being downloaded. The game cannot be opened yet! (A watched pot never boils...)", "Download in progress...", JOptionPane.INFORMATION_MESSAGE);
+					}else{						
+						GameLoader.play(instance);					
+					}
 				}).start();
 			}
 		});
@@ -215,8 +219,10 @@ public class Frame extends JFrame {
 				boolean worked = Backup.backup(instance);
 				
 				if(worked){
-					JOptionPane.showConfirmDialog(null, "Game data has been backed up. See " + new File(Main.gameBackup).getAbsolutePath() + 
-							" for all backups.");
+					JOptionPane.showMessageDialog(null, "Game data has been backed up. See " + new File(Main.gameBackup).getAbsolutePath() + 
+							" for all backups.", "Backup successful", JOptionPane.INFORMATION_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(null, "Game data backup failed! Ensure that files backed up today are not open in other programs.", "Backup failed", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -234,7 +240,9 @@ public class Frame extends JFrame {
 				boolean worked = ResetVersions.resetVersions(instance);
 				
 				if(worked){
-					JOptionPane.showConfirmDialog(null, "All versions (NOT GAME DATA) have been reset. They will have to be downloaded again.");
+					JOptionPane.showMessageDialog(null, "All versions (NOT GAME DATA) have been reset. They will have to be downloaded again.", "Versions reset", JOptionPane.WARNING_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(null, "All versions could not be reset. Try closing the Final Outpost game!", "Version reset failed", JOptionPane.ERROR_MESSAGE);					
 				}
 			}
 		});

@@ -16,12 +16,14 @@ import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.Group;
 import co.uk.epicguru.entity.physics.DeadBody;
 import co.uk.epicguru.main.FOE;
+import co.uk.epicguru.map.TiledMap;
 
 public class Engine extends Base implements Disposable{
 
 	private World world;
+	private Splitter splitter;
 	
-	private RayHandler rays;
+	private RayHandler rays;	
 	private int RAYS_PER_LIGHT;
 	private float LIGHT_RESOLUTION_SCALE;
 	private int LIGHT_BLUR_PASSES;
@@ -84,12 +86,21 @@ public class Engine extends Base implements Disposable{
 		LIGHT_BLUR_PASSES = passes;
 	}
 	
+	
+	public Splitter getSplitter(){
+		return this.splitter;
+	}
 
 	/**
 	 * Sets the Box2D world. Please do not use this!
 	 */
-	public World setWorld(World world){
+	public World setWorld(World world) {
 		return this.world = world;
+	}
+	
+	public void setTiledMap(TiledMap map){
+		this.splitter = new Splitter(this);
+		splitter.setMap(map);		
 	}
 	
 	/**
@@ -208,6 +219,11 @@ public class Engine extends Base implements Disposable{
 		}
 		
 		this.flush();
+		
+		if(this.splitter != null){
+			this.splitter.clearEntities();
+			this.splitter.placeEntities();
+		}
 	}
 	
 	/**
@@ -356,5 +372,7 @@ public class Engine extends Base implements Disposable{
 		this.clearEntities();
 		this.flushBodies();
 		this.disposeWorld();
+		splitter.clearEntities();
+		splitter = null;
 	}
 }
