@@ -58,9 +58,9 @@ public class DebugHook extends ScreenHook {
 		draw(batch, "Mouse pos: " + (int)Input.getMouseWorldPos().x + ", " + (int)Input.getMouseWorldPos().y, Color.WHITE);
 		
 		drawRight(batch, "Time - " + String.format("%.3f", GameTime.getTime()), Color.WHITE);
-		ArrayList<Entity> entities = FOE.engine.getSplitter().getEntitiesIn(Input.getMouseWorldPos());
+		ArrayList<Entity> entities = FOE.engine.getSplitter().getInPoint(Input.getMouseWorldPos());
 		drawRight(batch, "Entities in mouse region : " + (entities == null ? "NOT IN REGION" : entities.size()), Color.ORANGE);
-		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getSectorSize(), Color.ORANGE);
+		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getRegionSize(), Color.ORANGE);
 		drawRight(batch, "Within 2 chunks of origin : " + FOE.engine.getSplitter().getInRect(0, 0, 32, 32), Color.ORANGE);
 		drawRight(batch, "Within 1.5 round chunks : " + FOE.engine.getSplitter().getInRange(32, 32, 19f), Color.ORANGE);
 		
@@ -88,7 +88,7 @@ public class DebugHook extends ScreenHook {
 		shapes.setProjectionMatrix(batch.getProjectionMatrix());
 		shapes.begin(ShapeType.Line);
 		
-		float size = FOE.engine.getSplitter().getSectorSize();
+		float size = FOE.engine.getSplitter().getRegionSize();
 		for(int x = 0; x < FOE.engine.getSplitter().getWidth(); x++){
 			shapes.setColor((i++ % 2) == 0 ? a : b);
 			shapes.line(x * size, 0, x * size, FOE.map.getHeight());
