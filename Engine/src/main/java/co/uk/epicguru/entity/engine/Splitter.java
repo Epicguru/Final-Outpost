@@ -52,6 +52,8 @@ public class Splitter {
 		int width = (int)(map.getWidth() / sectorSize);
 		int height = (int)(map.getHeight() / sectorSize);
 		
+		Log.info("Splitter", "Map is " + map.getWidth() + " by " + map.getHeight() + ", so we will have " + width + " by " + height + " regions. (" + width * height + " regions)");
+		
 		Rectangle[] rects = new Rectangle[width * height];
 		int i = 0;
 		
@@ -64,13 +66,13 @@ public class Splitter {
 				float w = sectorSize;
 				float h = sectorSize;
 				
-				float X = x * width;
-				float Y = y * height;
+				float X = x * sectorSize;
+				float Y = y * sectorSize;
 				
 				Rectangle rect = new Rectangle(X, Y, w, h);
 				rects[i++] = rect;
 				
-				Log.info("Splitter", "Region " + rect.x + ", " + rect.y + " size " + rect.width);
+				Log.info("Splitter", "Region " + (int)(rect.x / this.sectorSize) + ", " + (int)(rect.y / this.sectorSize) + " size " + rect.width);
 			}
 		}
 		
@@ -102,7 +104,7 @@ public class Splitter {
 		
 		// Get rectangle.
 		for(Rectangle r : this.e.keySet()){
-			if(((int)r.x / this.sectorSize) == x && ((int)r.y / this.sectorSize) == y){
+			if((int)(r.x / this.sectorSize) == x && (int)(r.y / this.sectorSize) == y){
 				found = r;
 				break;
 			}
@@ -110,7 +112,6 @@ public class Splitter {
 		
 		if(found == null){
 			Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition() + " (" + x + "," + y + ")");
-			//Log.error("Splitter", "There are " + this.e.size() + " regions.");
 			return;
 		}
 		

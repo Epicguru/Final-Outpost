@@ -127,7 +127,7 @@ public class InGameScreen extends GameScreen {
 		// Camera position
 		FOE.camera.position.set(FOE.player.getX(), FOE.player.getY(), 1);
 		FOE.camera.update();
-		FOE.camera.zoom = 2f;
+		FOE.camera.zoom = 1f;
 		
 		FOE.map.render(); // Map
 		FOE.engine.render(batch, delta);
