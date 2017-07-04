@@ -127,6 +127,7 @@ public class InGameScreen extends GameScreen {
 		// Camera position
 		FOE.camera.position.set(FOE.player.getX(), FOE.player.getY(), 1);
 		FOE.camera.update();
+		FOE.camera.zoom = 2f;
 		
 		FOE.map.render(); // Map
 		FOE.engine.render(batch, delta);
@@ -135,7 +136,8 @@ public class InGameScreen extends GameScreen {
 		
 		// Render light now...
 		FOE.engine.getRayHandler().setAmbientLight(GameTime.getAmbientLightRedLevel(), 0, 0, GameTime.getAmbientLightAlphaLevel());
-		FOE.engine.renderLights(batch, delta);
+		if(!DebugHook.active)
+			FOE.engine.renderLights(batch, delta);
 		
 		if(DebugHook.active){
 			PhysicsWorldUtils.render(batch);

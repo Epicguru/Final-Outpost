@@ -19,6 +19,8 @@ import co.uk.epicguru.launcher.frame.Frame;
 
 public class GameLoader {
 
+	public static boolean downloading;
+	
 	public static void createDirectory(){
 		File file = new File(Main.gameDir);
 		if(!file.exists() || !file.isDirectory()){
@@ -133,6 +135,8 @@ public class GameLoader {
 
 		URL gameJar = General.newURL(Main.base + Main.versions + version + "/Game.jar");
 
+		downloading = true;
+		
 		// Download - Quick for now
 		accomodate(version);
 		File destination = new File(Main.gameDir + Main.gameVersions + version + '/' + Main.FOE);
@@ -141,7 +145,9 @@ public class GameLoader {
 		
 		// Download plugins
 		Main.print("Now downloading plugins...");
-		downloadPlugins(version);		
+		downloadPlugins(version);	
+		
+		downloading = false;
 
 		return true;
 	}

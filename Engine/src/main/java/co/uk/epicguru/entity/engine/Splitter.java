@@ -16,7 +16,7 @@ import co.uk.epicguru.map.TiledMap;
  * @author James Billy
  */
 public class Splitter {
-
+	
 	private TiledMap map;
 	private Engine engine;
 	
@@ -25,6 +25,18 @@ public class Splitter {
 	
 	public Splitter(Engine engine){
 		this.engine = engine;
+	}
+	
+	public int getSectorSize(){
+		return this.sectorSize;
+	}
+	
+	public int getWidth(){
+		return this.map == null ? 0 : (int)(this.map.getWidth() / this.getSectorSize());
+	}
+	
+	public int getHeight(){
+		return this.map == null ? 0 : (int)(this.map.getHeight() / this.getSectorSize());
 	}
 	
 	public void setMap(TiledMap map){
@@ -58,7 +70,7 @@ public class Splitter {
 				Rectangle rect = new Rectangle(X, Y, w, h);
 				rects[i++] = rect;
 				
-				Log.debug("Splitter", rect.toString());
+				Log.info("Splitter", "Region " + rect.x + ", " + rect.y + " size " + rect.width);
 			}
 		}
 		
@@ -90,7 +102,7 @@ public class Splitter {
 		
 		// Get rectangle.
 		for(Rectangle r : this.e.keySet()){
-			if(r.x == x && r.y == y){
+			if(((int)r.x / this.sectorSize) == x && ((int)r.y / this.sectorSize) == y){
 				found = r;
 				break;
 			}
@@ -98,6 +110,7 @@ public class Splitter {
 		
 		if(found == null){
 			Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition() + " (" + x + "," + y + ")");
+			//Log.error("Splitter", "There are " + this.e.size() + " regions.");
 			return;
 		}
 		

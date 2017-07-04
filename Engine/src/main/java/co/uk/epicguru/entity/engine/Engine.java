@@ -86,6 +86,10 @@ public class Engine extends Base implements Disposable{
 		LIGHT_BLUR_PASSES = passes;
 	}
 	
+	
+	public Splitter getSplitter(){
+		return this.splitter;
+	}
 
 	/**
 	 * Sets the Box2D world. Please do not use this!
@@ -215,6 +219,11 @@ public class Engine extends Base implements Disposable{
 		}
 		
 		this.flush();
+		
+		if(this.splitter != null){
+			this.splitter.clearEntities();
+			this.splitter.placeEntities();
+		}
 	}
 	
 	/**
