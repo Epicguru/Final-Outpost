@@ -19,3 +19,5 @@ libgdx
 utils
 projectile
 automagically
+json
+multi
