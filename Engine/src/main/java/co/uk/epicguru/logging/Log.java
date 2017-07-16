@@ -96,7 +96,7 @@ public final class Log {
 		if(defaultPrint(tag, text))
 			return;
 		
-		Gdx.app.error(tag, text.toString());
+		Gdx.app.error(tag, text.toString(), e);
 		log.add("[" + tag + "][ERROR] " + text);
 		log.add("Exception info:");
 		log.add("Class - " + e.getClass().getSimpleName());

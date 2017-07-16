@@ -14,6 +14,10 @@ public abstract class Dataset<T> extends Base{
 		return this.data.containsKey(key);
 	}
 	
+	public T remove(String key){
+		return this.data.remove(key);
+	}
+	
 	public void put(String key, T value){
 		data.put(key, value);
 	}
@@ -25,7 +29,6 @@ public abstract class Dataset<T> extends Base{
 	public Set<String> keys(){
 		return this.data.keySet();
 	}
-
 	
 	public Collection<T> values(){
 		return this.data.values();
@@ -33,5 +36,9 @@ public abstract class Dataset<T> extends Base{
 	
 	public HashMap<String, T> getMap(){
 		return this.data;
+	}
+	
+	public void set(Dataset<T> other){
+		this.data = other.getMap();
 	}
 }

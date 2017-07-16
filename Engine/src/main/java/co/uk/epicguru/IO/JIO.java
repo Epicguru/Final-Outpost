@@ -2,25 +2,27 @@ package co.uk.epicguru.IO;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Json;
 
 public final class JIO {
 
 	private JIO() { }
 	
-	private static final String TAG = "JIO";
-	private static Json json;
+	//private static final String TAG = "JIO";
+	private static MyJson json;
 	
 	private static void createJson(){
-		json = new Json();
+		json = new MyJson();
+		json.setIgnoreDeprecated(true);
+		
+		// Defaults, for the pretties :D (and space).
+		json.addClassTag("Bool", Boolean.class);
+		json.addClassTag("String", String.class);
 		json.addClassTag("Vector2", Vector2.class);
 		json.addClassTag("Vector3", Vector3.class);
-	}
-	
-	public static void main(String... args){
-		
-
-		
+		json.addClassTag("Integer", Integer.class);
+		json.addClassTag("Float", Float.class);
+		json.addClassTag("Double", Double.class);
+		json.addClassTag("Byte", Byte.class);
 	}
 	
 	/**

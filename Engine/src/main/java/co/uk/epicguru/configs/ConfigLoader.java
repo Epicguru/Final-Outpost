@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
-import co.uk.epicguru.IO.JLIOException;
-import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 
@@ -63,9 +61,7 @@ public final class ConfigLoader {
 		
 		// Load configs into plugin.
 		for(File file : files){
-			try {
-				JLineReader reader = new JLineReader(file);
-				Config config = new Config(reader, plugin);
+				Config config = new Config(file, plugin);
 				boolean worked = plugin.config(config);
 				if(!worked){
 					Log.error(TAG, "The plugin '" + pluginID + "' did not manage to process the config " + config.getName());
@@ -73,11 +69,6 @@ public final class ConfigLoader {
 				
 				FOE.loadingSubText = pluginID + ":\n" + config.getName();
 				names.add(config.getName());
-				
-			} catch (JLIOException e) {
-				Log.error(TAG, "Could not open reader!", e);
-				continue;
-			}
 		}
 		
 		// Make sure all requested configs were loaded
@@ -94,7 +85,6 @@ public final class ConfigLoader {
 			if(!found){
 				// Load local copy
 				Log.info(TAG, "Could not find local config '" + c.getName() + "', loading a local copy.");
-				c.setDefault(); // Apply defaults if not explicitly set.
 				plugin.config(c);
 			}
 		}
