@@ -79,17 +79,17 @@ public class Main extends FinalOutpostPlugin{
 	public boolean config(Config config){
 		
 		if(config.is("Launch")){			
-			Gdx.graphics.setTitle((String)config.read("Title"));
-			lang = (String)config.read("Language");
+			Gdx.graphics.setTitle((String)config.get("Title"));
+			lang = (String)config.get("Language");
 			
 		}
 		if(config.is("Graphics")){
-			Gdx.graphics.setVSync((boolean)config.read("VSync"));
+			Gdx.graphics.setVSync((boolean)config.get("VSync"));
 			
-			Vector2 size = (Vector2)config.read("Windowed Resolution");
+			Vector2 size = (Vector2)config.get("Windowed Resolution");
 			Gdx.graphics.setWindowedMode((int)size.x, (int)size.y);
 			
-			if((boolean)config.read("Fullscreen")){
+			if((boolean)config.get("Fullscreen")){
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				Log.info(TAG, "Started up in fullscreen mode, @ (" + Gdx.graphics.getWidth() + "x" + Gdx.graphics.getHeight() + ")");
 			}

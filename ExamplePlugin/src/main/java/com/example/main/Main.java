@@ -63,9 +63,9 @@ public class Main extends FinalOutpostPlugin {
 		if(config.is("ExampleConfig")){
 			
 			// Read the values.
-			String a = 	(String) config.read("MyVariable");
-			int b = 	(int) config.read("MyNumber");
-			Vector3 c = (Vector3) config.read("MyVector");
+			String a = 	(String) config.get("MyVariable");
+			int b = 	(int) config.get("MyNumber");
+			Vector3 c = (Vector3) config.get("MyVector");
 			
 			// Do something with them.
 			Log.info(TAG, "MyVaraible : " + a);

@@ -1,13 +1,8 @@
 package co.uk.epicguru.IO;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
-
-import co.uk.epicguru.logging.Log;
 
 public final class JIO {
 
@@ -15,20 +10,16 @@ public final class JIO {
 	
 	private static final String TAG = "JIO";
 	private static Json json;
-	private static boolean writing;
 	
 	private static void createJson(){
 		json = new Json();
+		json.addClassTag("Vector2", Vector2.class);
+		json.addClassTag("Vector3", Vector3.class);
 	}
 	
 	public static void main(String... args){
 		
-		Json j = startWrite();
-		
-		j.writeValue("Test Thing", new Vector3(1, 2, 3));	
-		j.writeValue("Int Thing", 123);
-		
-		Log.info(TAG, endWrite(true));
+
 		
 	}
 	
@@ -41,10 +32,6 @@ public final class JIO {
 	public static String toJson(Object o, boolean pretty){
 		if(o == null)
 			return null;
-		if(writing){
-			Log.error(TAG, "Cannot convert to json when the json is writing!");
-			return null;
-		}
 		
 		if(json == null) createJson();
 		
@@ -56,63 +43,11 @@ public final class JIO {
 			return json.prettyPrint(value);
 	}
 	
-	public static Json writeValue(String key, Object value){
-		return writeValue(key, value, null, null);
-	}
-	
-	public static Json writeValue(String key, Object value, Class<?> base, Class<?> real){
-		if(json == null)
-			createJson();
-		if(!writing)
-			return json;
-		if(key == null){
-			Log.error(TAG, "Key (field name) cannot be null!");
-			return json;
-		}
-		
-		json.writeValue(key, value, base, real);
-		
-		return json;
-	}
-	
-	public static Json startWrite(){
-		if(json == null)
-			createJson();
-		if(writing){
-			Log.error(TAG, "Json is already in write mode!");
+	public static <T> T fromJson(String Json, Class<T> clazz){
+		if(Json == null || Json.isEmpty())
 			return null;
-		}
-
-		json.setWriter(new JsonWriter(new StringWriter()));
-		json.writeObjectStart();
+		if(json == null) createJson();
 		
-		writing = true;
-		return json;
-	}
-	
-	public static String endWrite(boolean pretty){
-		if(json == null){
-			return null;
-		}
-		if(!writing){
-			Log.error(TAG, "Json not in write mode!");
-			return null;
-		}
-		
-		json.writeObjectEnd();
-		
-		String value = json.getWriter().getWriter().toString();
-		
-		try {
-			json.getWriter().flush();
-		} catch (IOException e) {
-			Log.error(TAG, "Could not flush writer!", e);
-		}
-		json.setWriter(null);
-		
-		if(!pretty)
-			return value;
-		else
-			return json.prettyPrint(value);
+		return json.fromJson(clazz, Json);
 	}
 }

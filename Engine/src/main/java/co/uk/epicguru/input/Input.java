@@ -150,7 +150,7 @@ public final class Input {
 				
 				String plugin = key.split(":")[0];
 				String name = key.split(":")[1];
-				String value = (String)reader.read(key);
+				String value = (String)reader.get(key);
 							
 				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, Keys.valueOf(value));
 				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + value + "(" + Keys.valueOf(value) + ")");
