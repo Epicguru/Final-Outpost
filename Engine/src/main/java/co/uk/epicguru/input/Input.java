@@ -144,7 +144,7 @@ public final class Input {
 		}
 		
 		try {
-			KeysDataset loaded = JIO.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), KeysDataset.class);
+			KeysIODataset loaded = JIO.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), KeysIODataset.class);
 			if(loaded == null){
 				Log.error(TAG, "Empty file, gave a null object.");
 				return;
@@ -155,14 +155,14 @@ public final class Input {
 				String plugin = key.split(":")[0].trim();
 				String name = key.split(":")[1].trim();
 				
-				Integer value = loaded.get(key);
-				String string = Keys.toString(value);
+				String str = loaded.get(key);
+				Integer i = Keys.valueOf(str);
 				
-				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + string + "(" + value + ")");
-				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, value); 
+				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + str + "(" + i + ")");
+				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, i); 
 			}
 			
-			keys = loaded;
+			keys = loaded.toRealDataset();
 			
 		} catch (Exception e){
 			Log.error(TAG, "Error loading input keys!", e);
@@ -179,7 +179,10 @@ public final class Input {
 		
 		File file = new File(FOE.gameDirectory + FOE.inputDirectory + "Keys.txt");
 		try {
-			String json = JIO.toJson(keys, true);
+			// Make IO dataset
+			KeysIODataset IO = keys.toIODataset();
+			
+			String json = JIO.toJson(IO, true);
 			
 			FileUtils.write(file, json, Charset.defaultCharset());
 			
