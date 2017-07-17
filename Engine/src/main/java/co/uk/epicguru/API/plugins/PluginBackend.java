@@ -62,6 +62,7 @@ public abstract class PluginBackend extends Plugin {
 
 	/**
 	 * Gets a config given its name.
+	 * @return The config object or null if not found.
 	 */
 	public Config getConfig(String name){
 		for(Config config : configs){

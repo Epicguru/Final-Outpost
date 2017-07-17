@@ -3,11 +3,13 @@ package co.uk.epicguru.IO;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import co.uk.epicguru.logging.Log;
+
 public final class JIO {
 
 	private JIO() { }
 	
-	//private static final String TAG = "JIO";
+	private static final String TAG = "JIO";
 	private static MyJson json;
 	
 	private static void createJson(){
@@ -49,7 +51,16 @@ public final class JIO {
 		if(Json == null || Json.isEmpty())
 			return null;
 		if(json == null) createJson();
-		
-		return json.fromJson(clazz, Json);
+		try{			
+			return json.fromJson(clazz, Json);
+		}catch(Exception e){
+			Log.error(TAG, "Error parsing json into object type '" + clazz.getName() + "'\n"
+					+ "File - UKN" + "\n"
+					+ "Contents - " + Json + "\n"
+					+ "Game will exit.", e);
+			Log.saveLog();
+			System.exit(-1); // Crashing the hard way! Yea!
+			return null;
+		}
 	}
 }

@@ -46,7 +46,63 @@ public class Config extends Dataset<Object> {
 
 		// Parse from file json into dataset format, and apply to parent.
 		Dataset<Object> dataset = JIO.fromJson(contents, Config.class);
-		super.set(dataset);		
+		super.set(dataset);	
+		
+		// Apply to the default config file.
+		this.applyToExisting();
+	}
+	
+	private void applyToExisting(){
+		
+		// Get existing default config file.
+		Config existing = this.plugin.getConfig(this.getName());
+		
+		// Null check
+		if(existing == null){ 
+			error("Loaded config '" + this.getName() + "', but no default version was found!");
+			return;
+		}
+		
+		if(this.plugin == null){
+			error("Could not apply config '" + this.getName() + "' to old verison because plugin is null!");
+			return;
+		}
+		
+		HashMap<String, Object> newMap = new HashMap<String, Object>();
+		
+		// Get all the old values, and add new values, replace old ones.
+		for(String key : keys()){
+			// Key is the loaded keys.
+			
+			if(existing.contains(key)){
+				// If default config contains the key...
+				newMap.put(key, this.get(key)); // Put (replace) the loaded version.
+			}else{
+				// We have a variable that is not in the default config. 
+				// Strange, but will be added anyway, with a warning message.
+				error("Unexpected config variable loaded - " + key + ": " + this.get(key) + " in loaded config '" + this.getName() + "' of plugin " + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()));
+				newMap.put(key, this.get(key)); // Add new.
+			}
+		}
+		
+		// Second pass to ensure all data is present.
+		for(String key : existing.keys()){
+			if(newMap.containsKey(key))
+				continue;
+			
+			// Does not contain! Add now.
+			newMap.put(key, existing.get(key));
+			error("Config '" + this.getName() + "' ( + " + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()) + ") that is FROM FILE is missing variable '" + key + "' that is currently '" + existing.get(key) + "'. Current value applied.");
+		}
+		
+		// NOTE: This will be the config applied when it is just loaded, but we must update the default and existing config
+		// because it is the one that is saved and that will be edited in real-time.
+		
+		// Apply
+		this.set(newMap);
+		
+		// Apply to plugin
+		this.plugin.getConfig(this.getName()).set(newMap);
 	}
 	
 	public HashMap<String, Object> cloneMap(){

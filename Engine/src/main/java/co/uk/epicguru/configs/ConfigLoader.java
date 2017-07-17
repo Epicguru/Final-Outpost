@@ -61,14 +61,14 @@ public final class ConfigLoader {
 		
 		// Load configs into plugin.
 		for(File file : files){
-				Config config = new Config(file, plugin);
-				boolean worked = plugin.config(config);
-				if(!worked){
-					Log.error(TAG, "The plugin '" + pluginID + "' did not manage to process the config " + config.getName());
-				}
-				
-				FOE.loadingSubText = pluginID + ":\n" + config.getName();
-				names.add(config.getName());
+			Config config = new Config(file, plugin);
+			boolean worked = plugin.config(config);
+			if (!worked) {
+				Log.error(TAG, "The plugin '" + pluginID + "' did not manage to process the config " + config.getName());
+			}
+
+			FOE.loadingSubText = pluginID + ":\n" + config.getName();
+			names.add(config.getName());
 		}
 		
 		// Make sure all requested configs were loaded

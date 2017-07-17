@@ -38,7 +38,11 @@ public abstract class Dataset<T> extends Base{
 		return this.data;
 	}
 	
+	public void set(HashMap<String, T> map){		
+		this.data = map;
+	}
+	
 	public void set(Dataset<T> other){
-		this.data = other.getMap();
+		this.set(other.getMap());
 	}
 }

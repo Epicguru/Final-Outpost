@@ -99,8 +99,6 @@ public class Main extends FinalOutpostPlugin{
 			// For now, ignore. This will be read whenever necessary
 		}
 		
-		Log.info(TAG, "Loaded config - " + config.getName());
-		
 		return true;
 	}
 
