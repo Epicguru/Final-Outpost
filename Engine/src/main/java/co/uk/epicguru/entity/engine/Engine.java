@@ -61,31 +61,25 @@ public class Engine extends Base implements Disposable{
 		return RAYS_PER_LIGHT;
 	}
 	
-
 	public void setRaysPerLight(int rays){
 		this.RAYS_PER_LIGHT = rays;
 	}
 	
-
 	public float getLightResolutionScale(){
 		return LIGHT_RESOLUTION_SCALE;
 	}
 	
-
 	public void setLightResolutionScale(float scale){
 		this.LIGHT_RESOLUTION_SCALE = scale;
 	}
 	
-
 	public int getLightBlurPasses(){
 		return LIGHT_BLUR_PASSES;
 	}
 	
-
 	public void setLightBlurPasses(int passes){
 		LIGHT_BLUR_PASSES = passes;
 	}
-	
 	
 	public Splitter getSplitter(){
 		return this.splitter;
@@ -170,6 +164,14 @@ public class Engine extends Base implements Disposable{
 	public void remove(Entity e){
 		if(e != null)
 			this.bin.add(e);
+	}
+	
+	public void saveEntities(){
+		// Step 1: Put all entities in a data structure. EDIT - Just use the arraylist.
+		// Step 2: Serialize
+		// Step 3: Save to file.
+		
+		//String serialized = 
 	}
 	
 	protected void addNew(){
