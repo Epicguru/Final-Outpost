@@ -82,7 +82,6 @@ public class GameScreen extends Base implements Screen {
 	/**
 	 * Called 60 times a second when this screen is active.
 	 * By default this calls hook methods.
-	 * By default this calls hook methods.
 	 * @param delta The time in seconds between this frame and the previous one.
 	 */
 	public void update(float delta){

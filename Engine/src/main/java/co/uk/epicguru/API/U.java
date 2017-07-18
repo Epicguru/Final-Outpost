@@ -230,7 +230,7 @@ public final class U {
 	 * Starts a new timer called timerName.
 	 */
 	public static void startTimer(final String timerName){
-		timers.put(timerName, System.currentTimeMillis());
+		timers.put(timerName, System.nanoTime());
 	}
 	
 	/**
@@ -244,7 +244,7 @@ public final class U {
 			Log.error(TAG, "Timer called " +  timerName + " does not exist!");
 			return -1;
 		}
-		return (System.currentTimeMillis() - l) / 1000f;
+		return (System.nanoTime() - l) / (1000f * 1000f * 1000f);
 	}
 	
 	/**
@@ -258,6 +258,26 @@ public final class U {
 			Log.error(TAG, "Timer called " +  timerName + " does not exist!");
 			return -1;
 		}
-		return System.currentTimeMillis() - l;
+		return (System.nanoTime() - l) / (1000 * 1000);
+	}
+	
+	/**
+	 * Gets the time elapsed since the timer was started. (In NANOSECONDS. 1,000,000,000 nanos = 1 second)
+	 * <li>
+	 * Fun fact: Your processor (at 4Gz) has a cycle time of 0.25 nanoseconds, and the average life of a molecule of positronium hydride is 0.5 nanoseconds.
+	 * <li>
+	 * Also, in one cycle of said CPU light will travel around 7.5cm.
+	 * <li>
+	 * Now you know. You're welcome.
+	 * @param timerName The name of the timer.
+	 * @return The time in seconds since the timer was started.
+	 */
+	public static long endTimerNanos(final String timerName){
+		Long l = timers.remove(timerName);
+		if(l == null){
+			Log.error(TAG, "Timer called " +  timerName + " does not exist!");
+			return -1;
+		}
+		return (System.nanoTime() - l);
 	}
 }

@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import box2dLight.RayHandler;
 import co.uk.epicguru.API.Allocator;
+import co.uk.epicguru.API.Timers;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
@@ -320,7 +321,7 @@ public class FOE extends Game{
 	}
 
 	public void update(float delta){
-
+		
 		Input.update();
 
 		if(!donePluginCheck && loaded){
@@ -364,9 +365,12 @@ public class FOE extends Game{
 
 	public void render(){
 
+		// Start timer logging
+		Timers.startAll();
+		
 		// Update
 		update(Gdx.graphics.getDeltaTime());
-
+		
 		Gdx.gl.glClearColor(BG_Colour.r, BG_Colour.g, BG_Colour.b, BG_Colour.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -375,11 +379,16 @@ public class FOE extends Game{
 		// Render current screen, normal mode
 		super.render();		
 		batch.end();		
+		Timers.startRenderUI();
 		batch.setProjectionMatrix(UIcamera.combined);
 		batch.begin();	
 		// Render current screen, UI mode
 		renderUI();	
 		batch.end();
+		Timers.endRenderUI();
+		
+		// End timer logging
+		Timers.endAll();
 	}
 
 	public void renderUI(){
