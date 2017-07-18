@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 
+import co.uk.epicguru.API.Timers;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.input.Input;
@@ -108,12 +109,15 @@ public class InGameScreen extends GameScreen {
 		
 		// Update in-game time.
 		GameTime.addMinutes(delta * 20f); // Means that every second a whole minute is added.
-		
+		Timers.startEntities();
 		FOE.engine.flushBodies(); // Physics bodies bin #1
 		FOE.map.update(delta); // Map
 		FOE.engine.update(delta); // Entities
+		Timers.endEntities();
+		Timers.startPhysics();
 		PhysicsWorldUtils.update(delta); // Physics
 		FOE.engine.flushBodies(); // Physics bodies bin #2
+		Timers.endPhysics();
 		
 		if(Input.isKeyJustDown(Keys.ESCAPE)){
 			FOE.INSTANCE.setScreen(new MainMenu());
@@ -129,15 +133,25 @@ public class InGameScreen extends GameScreen {
 		FOE.camera.update();
 		FOE.camera.zoom = 1f;
 		
+		Timers.startTiles();
 		FOE.map.render(); // Map
-		FOE.engine.render(batch, delta);
+		Timers.endTiles();
+		Timers.startEntitiesRender();
+		FOE.engine.render(batch, delta); // Entities
+		Timers.endEntitiesRender();
 		
 		super.render(delta, batch);
 		
 		// Render light now...
 		FOE.engine.getRayHandler().setAmbientLight(GameTime.getAmbientLightRedLevel(), 0, 0, GameTime.getAmbientLightAlphaLevel());
-		if(!DebugHook.active)
-			FOE.engine.renderLights(batch, delta);
+			
+		if(DebugHook.active){
+			FOE.engine.getRayHandler().setAmbientLight(0, 0, 0, 1);
+		}
+		Timers.startLight();
+		FOE.engine.renderLights(batch, delta);
+		Timers.endLight();
+		
 		
 		if(DebugHook.active){
 			PhysicsWorldUtils.render(batch);

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.API.plugins.AddTag;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
@@ -66,7 +67,8 @@ public class Main extends FinalOutpostPlugin{
 		 * RAYS per light, maybe scalable?
 		 * RESOLUTION multiplier, for example 1, 2 or 4
 		 * BLUR PASSES around 2 - 10 
-		 */
+		 */		
+		
 		lighting = newConfig("Lighting");
 		
 		Log.info(TAG, "Set lighting!");
@@ -79,17 +81,17 @@ public class Main extends FinalOutpostPlugin{
 	public boolean config(Config config){
 		
 		if(config.is("Launch")){			
-			Gdx.graphics.setTitle((String)config.read("Title"));
-			lang = (String)config.read("Language");
+			Gdx.graphics.setTitle((String)config.get("Title"));
+			lang = (String)config.get("Language");
 			
 		}
 		if(config.is("Graphics")){
-			Gdx.graphics.setVSync((boolean)config.read("VSync"));
+			Gdx.graphics.setVSync((boolean)config.get("VSync"));
 			
-			Vector2 size = (Vector2)config.read("Windowed Resolution");
+			Vector2 size = (Vector2)config.get("Windowed Resolution");
 			Gdx.graphics.setWindowedMode((int)size.x, (int)size.y);
 			
-			if((boolean)config.read("Fullscreen")){
+			if((boolean)config.get("Fullscreen")){
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				Log.info(TAG, "Started up in fullscreen mode, @ (" + Gdx.graphics.getWidth() + "x" + Gdx.graphics.getHeight() + ")");
 			}
@@ -98,8 +100,6 @@ public class Main extends FinalOutpostPlugin{
 		if(config.is("Lighting")){
 			// For now, ignore. This will be read whenever necessary
 		}
-		
-		Log.info(TAG, "Loaded config - " + config.getName());
 		
 		return true;
 	}
@@ -177,4 +177,9 @@ public class Main extends FinalOutpostPlugin{
 	public void postInit(){
 		FOE.INSTANCE.setScreen(new MainMenu());
 	}
+
+
+	public void addClassTags(AddTag tag) {
+
+	}	
 }

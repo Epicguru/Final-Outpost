@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import co.uk.epicguru.API.Allocator;
+import co.uk.epicguru.API.Timers;
+import co.uk.epicguru.API.TimersRenderOutput;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.API.time.TimeStyle;
@@ -38,6 +40,10 @@ public class DebugHook extends ScreenHook {
 		if(!active)
 			return;
 		
+		if(shapes == null){
+			shapes = new ShapeRenderer();
+		}
+		
 		float total = (float) (Runtime.getRuntime().totalMemory() / Math.pow(1024, 3));
 		float used = (float) (total - Runtime.getRuntime().freeMemory() / Math.pow(1024, 3));
 		float p = used / total;
@@ -63,6 +69,8 @@ public class DebugHook extends ScreenHook {
 		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getRegionSize(), Color.ORANGE);
 		drawRight(batch, "Within 2 chunks of origin : " + FOE.engine.getSplitter().getInRect(0, 0, 32, 32), Color.ORANGE);
 		drawRight(batch, "Within 1.5 round chunks : " + FOE.engine.getSplitter().getInRange(32, 32, 19f), Color.ORANGE);
+		
+		drawTimers(batch);
 		
 	}
 	
@@ -107,6 +115,70 @@ public class DebugHook extends ScreenHook {
 		shapes.end();
 		
 		batch.begin();
+	}
+	
+	private void drawTimers(Batch batch){
+		
+		batch.end();
+		shapes.setProjectionMatrix(batch.getProjectionMatrix());
+		shapes.begin(ShapeType.Filled);		
+		
+		TimersRenderOutput out = Timers.getOutput();
+		int parts = out.percentages.length;
+		float currentAngle = 0;
+		
+		
+		final float degInCircle = 360f;
+		final float totalSegments = 360f;
+		final float x = 120;
+		final float y = Gdx.graphics.getHeight() - 120;
+		final float totalRadius = 100f;
+		
+		shapes.setColor(Color.WHITE);
+		shapes.circle(x, y, totalRadius * 1.1f, (int)(totalSegments * 1.1f));
+		
+		for(int i = 0; i < parts; i++){
+			
+			float degrees = degInCircle * out.percentages[i] + 2f;
+			int segments = (int)(totalSegments * out.percentages[i] * out.radi[i]);
+			if(segments <= 0)
+				segments = 1;
+			float radius = out.radi[i] * totalRadius;
+			
+			shapes.setColor(out.colours[i]);
+			shapes.arc(x, y, radius, currentAngle - 1, degrees, segments);
+			
+			currentAngle += degrees;
+		}
+		
+		shapes.end();
+		batch.begin();
+//		t,
+//		er,
+//		l,
+//		rUI,
+//		e,
+//		p,
+//		o
+		String[] names = new String[]{
+			"Render - Tiles",
+			"Render - Entities",
+			"Render - Light",
+			"Render - UI",
+			"Update - Entities",
+			"Update - Physics",
+			"Other"
+		};
+		
+		int i = 0;
+		for(String s : names){
+			
+			font.setColor(out.colours[i]);
+			font.draw(batch, s, 10, (y - totalRadius * 1.3f) - (i * 20f));
+			
+			i++;
+		}
+		
 	}
 	
 	private void drawRight(Batch batch, String text, Color color){

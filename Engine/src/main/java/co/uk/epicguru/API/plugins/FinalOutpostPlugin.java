@@ -109,4 +109,18 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 		
 		return settings;
 	}	
+
+	/**
+	 * Called at potentially any time, when the JSON serialization system creates the serializer.
+	 * You can add 'tags' for classes to shorten class names. For example, JSON serializes the class
+	 * <code>Integer</code> as "java.lang.Integer". This is inefficient and ugly, so instead here you could do:
+	 * <code>tag.add(Integer.class, "Int")</code>. You can do this for any class you want, but note that the
+	 * basic classes such as <code>String, Boolean, Float, Integer</code> have already been done.
+	 * <li>
+	 * IMPORTANT: Once you add a class tag, DO NOT REMOVE IT OR MODIFY IT. This could lead to crashes in serialization.
+	 * @param tag A functional interface that has the <code>add</code> method.
+	 */
+	public void addClassTags(AddTag tag){
+		
+	}
 }

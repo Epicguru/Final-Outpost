@@ -1,244 +1,166 @@
 package co.uk.epicguru.configs;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
-import co.uk.epicguru.API.Base;
+import org.apache.commons.io.FileUtils;
+
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
-import co.uk.epicguru.IO.JLIOException;
-import co.uk.epicguru.IO.JLineReader;
-import co.uk.epicguru.IO.JLineWriter;
+import co.uk.epicguru.IO.Dataset;
+import co.uk.epicguru.IO.JIO;
+import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.main.FOE;
 
 /**
- * A config local to one plugin that is saved and loaded using JLineIO.
+ * A config local to one plugin that is saved and loaded using the IO system.
  */
-public class Config extends Base{
+public class Config extends Dataset<Object> {
 	
-	private HashMap<String, ConfigVariable> map = new HashMap<>();
-	private String name;
+	@NotSerialized private String name;	
+	@NotSerialized private FinalOutpostPlugin plugin;
 	
-	public Config(JLineReader reader, FinalOutpostPlugin plugin){
+	public Config() { }
+	
+	public Config(File file, FinalOutpostPlugin plugin){
 		
-		// Set name
-		this.name = U.nameFromPathNoExtension(reader.getFile().getAbsolutePath(), '\\');
+		this.name = U.nameFromPathNoExtension(file.getAbsolutePath(), '\\');
+		this.plugin = plugin;
 		
-		// Gets all variables
-		reader.readAllLines();
-		
-		Config oldConfig = plugin.getConfig(this.name);
-		HashMap<String, ConfigVariable> oldMap = null;
-		if(oldConfig != null){
-			oldMap = oldConfig.cloneMap();
-		}
-		// Add all variables to list.
-		for(String key : reader.getLoadedValues().keySet()){
-			Object object = null;
-			if(oldMap != null && oldMap.containsKey(key)){
-				object = oldMap.get(key).getDefaultValue();
-			}
-			add(key, object);
-			set(key, reader.read(key));
-		}
-		
-		if(oldMap == null)
+		// Ensure file exists
+		if(!file.exists()){
+			error("Config file does not exist! (" + file.getAbsolutePath() + ")");
 			return;
-		for(String oldKey : oldMap.keySet()){
-			if(!map.containsKey(oldKey)){
-				add(oldKey, oldMap.get(oldKey).getDefaultValue());
-				if(oldMap.get(oldKey).getValue() != null){
-					set(oldKey, oldMap.get(oldKey).getValue());					
-				}else{
-					set(oldKey, oldMap.get(oldKey).getDefaultValue());
-					print("Variable '" + oldKey + "' was not loaded in file but was designated as one in start(). Created a default value var.");
-				}
+		}
+		
+		// Load all the json data
+		String contents = null;
+		try {
+			contents = FileUtils.readFileToString(file, Charset.defaultCharset());
+		} catch (IOException e) {
+			error("Error reading config file.", e);
+			return;
+		}
+
+		// Parse from file json into dataset format, and apply to parent.
+		Dataset<Object> dataset = JIO.fromJson(contents, Config.class);
+		super.set(dataset);	
+		
+		// Apply to the default config file.
+		this.applyToExisting();
+	}
+	
+	private void applyToExisting(){
+		
+		// Get existing default config file.
+		Config existing = this.plugin.getConfig(this.getName());
+		
+		// Null check
+		if(existing == null){ 
+			error("Loaded config '" + this.getName() + "', but no default version was found!");
+			return;
+		}
+		
+		if(this.plugin == null){
+			error("Could not apply config '" + this.getName() + "' to old verison because plugin is null!");
+			return;
+		}
+		
+		HashMap<String, Object> newMap = new HashMap<String, Object>();
+		
+		// Get all the old values, and add new values, replace old ones.
+		for(String key : keys()){
+			// Key is the loaded keys.
+			
+			if(existing.contains(key)){
+				// If default config contains the key...
+				newMap.put(key, this.get(key)); // Put (replace) the loaded version.
+			}else{
+				// We have a variable that is not in the default config. 
+				// Strange, but will be added anyway, with a warning message.
+				error("Unexpected config variable loaded - " + key + ": " + this.get(key) + " in loaded config '" + this.getName() + "' of plugin " + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()));
+				newMap.put(key, this.get(key)); // Add new.
 			}
 		}
-	}
-	
-	private HashMap<String, ConfigVariable> cloneMap(){
-		HashMap<String, ConfigVariable> newMap = new HashMap<>();
 		
-		for(String key : this.map.keySet()){
-			newMap.put(key, map.get(key).clone());
+		// Second pass to ensure all data is present.
+		for(String key : existing.keys()){
+			if(newMap.containsKey(key))
+				continue;
+			
+			// Does not contain! Add now.
+			newMap.put(key, existing.get(key));
+			error("Config '" + this.getName() + "' (" + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()) + ") that is FROM FILE is missing variable '" + key + "' that is currently '" + existing.get(key) + "'. Current value applied.");
 		}
 		
-		return newMap;
+		// NOTE: This will be the config applied when it is just loaded, but we must update the default and existing config
+		// because it is the one that is saved and that will be edited in real-time.
+		
+		// Apply
+		this.set(newMap);
+		
+		// Apply to plugin
+		this.plugin.getConfig(this.getName()).set(newMap);
 	}
 	
-	/**
-	 * Gets the name of this config, as specified in the constructor OR as loaded from file.
-	 * @return
-	 */
+	public HashMap<String, Object> cloneMap(){
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		
+		for(String key : super.keys()){
+			data.put(key, super.get(key));
+		}
+		
+		return data;
+	}
+	
+	public String getPath(){
+		return FOE.gameDirectory + FOE.configsDirectory + plugin.getWrapper().getPluginId() + "/" + getName() + FOE.configsExtension;
+	}
+	
+	public boolean onDisk(){
+		return new File(getPath()).exists();
+	}
+	
+	public boolean is(String other){
+		return this.getName().equals(other);
+	}
+	
+	public Config(String name){
+		this.name = name;
+	}
+	
 	public String getName(){
 		return this.name;
 	}
 	
-	/**
-	 * Sets all variables to their default values IF the variables are null.
-	 */
-	public void setDefault(){
-		for(ConfigVariable var : map.values()){
-			if(var.getValue() == null)
-				var.setDefault();
-		}
-	}
-	
-	/**
-	 * Shorthand for <code>getName().eqauls(name)</code>
-	 */
-	public boolean is(String name){
-		return getName().equals(name);
-	}
-	
-	/**
-	 * Creates a new local config called <code>name</code>
-	 */
-	public Config(String name) { this.name = name; }
-	
-	/**
-	 * Adds a new variable to this config.
-	 * The value and default value of all variables must have JLineIO parsers. See JLineIO for more info.
-	 * @param key The key (name) of the variable.
-	 * @param defaultValue The default value that this variable will have. Use {@link #set(String, Object)} to set the value.
-	 * @see {@link #read(String)}, {@link #set(String, Object)}
-	 */
 	public void add(String key, Object defaultValue){
-		if(!map.containsKey(key))
-			map.put(key, new ConfigVariable(key, defaultValue));
+		if(!super.contains(key))
+			super.put(key, defaultValue);
 	}
 	
-	/**
-	 * Sets the real value of a variable. Use this when the variable needs changing, for example
-	 * when the user changes something that needs to be saved in the config.
-	 * @param key The key of the variable to change.
-	 * @param newValue The value that will be set.
-	 * @return True if the variable exists.
-	 * @see {@link #add(String, Object)}
-	 */
-	public boolean set(String key, Object newValue){
-		ConfigVariable config = map.get(key);
-		
-		if(config == null)
-			return false;
-		
-		config.setValue(newValue);
-		return true;
+	public void set(String key, Object newObject){
+		super.put(key, newObject);
 	}
 	
-	/**
-	 * Reads a variables REAL value.
-	 * @param key The key of the variable.
-	 */
-	public Object read(String key){
-		if(map.containsKey(key))
-			return map.get(key).getValue();
-		else{
-			error("Could not find variable of name '" + key + "'! Check spelling...");
-			return null;
-		}
-	}
-	
-	/**
-	 * Gets the underlying HashMap.
-	 */
-	public HashMap<String, ConfigVariable> getMap(){
-		return map;
-	}
-	
-	/**
-	 * Gets all keys, made pretty for your precious eyes. :D
-	 */
-	public String getKeysPretty(){
-		StringBuilder str = new StringBuilder();
-		for(String key : getMap().keySet()){
-			str.append(key);
-			str.append('\n');
-		}
-		return str.toString();
-	}
-	
-	/**
-	 * Saves the config to disk.
-	 * @param plugin The plugin to save as.
-	 */
 	public void save(FinalOutpostPlugin plugin){
-		save(FOE.gameDirectory + FOE.configsDirectory + plugin.getWrapper().getPluginId() + "/" + getName() + FOE.configsExtension);
+		this.plugin = plugin;
+		save();
 	}
 	
-	/**
-	 * Saves the config to disk.
-	 * @param path The path of the file to save to.
-	 */
-	public void save(String path){
-		save(new File(path));
+	public void save(){
+		this.save(new File(getPath()));
 	}
 	
-	/**
-	 * Saves the config to disk.
-	 * @param file The file to save to.
-	 */
-	public void save(File file){
-		try {
-			JLineWriter writer = new JLineWriter(file);
-			
-			boolean tryRead = false;
-			if(file.exists())
-				tryRead = true;
-			
-			JLineReader reader = null;
-			if(tryRead){
-				try{
-					reader = new JLineReader(file);
-					reader.readAllLines();
-				}catch(JLIOException e2){
-					// No debug
-					tryRead = false;
-				}
-			}
-			
-			for(ConfigVariable var : map.values()){
-				Object value = var.getValue();
-				if(value == null){
-					if(tryRead){
-						Object value2 = reader.read(var.getKey());
-						writer.writeLine(var.getKey(), value2 == null ? var.getDefaultValue() : value2);	
-					}else{						
-						writer.writeLine(var.getKey(), var.getDefaultValue());					
-					}
-				}else{
-					writer.writeLine(var.getKey(), var.getValue());					
-				}
-			}
-			
-			if(!writer.save()){
-				throw new Exception("Failed to write the config file!");
-			}
-			
-		} catch (Exception e){
-			error("The writer for config '" + file.getAbsolutePath() + "' could not be created.", e);
-		}
-	}
-	
-	/**
-	 * Gets the names of all keys registered with {@link #add(String, Object)}.
-	 */
-	public String[] getKeys(){
-		return getKeysPretty().split("\n");
-	}
-	
-	/**
-	 * Gets an underlying ConfigVariable given a key.
-	 */
-	public Object getVariable(String key){
-		if(!map.containsKey(key)){
-			error("Unable to find value for key '" + key + "' (Loaded " + map.size() + " vars)");
-			return null;
-		}
+	public void save(File file){	
 		
-		ConfigVariable var = map.get(key);
-		return var.getValue();
+		String json = JIO.toJson((Dataset<Object>)this, FOE.prettyConfigs);
+		
+		try {
+			FileUtils.write(file, json, Charset.defaultCharset());
+		} catch (IOException e) {
+			error("Error writing config file!", e);
+		}		
 	}
-	
 }

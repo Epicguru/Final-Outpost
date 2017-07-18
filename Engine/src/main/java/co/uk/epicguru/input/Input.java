@@ -2,7 +2,9 @@ package co.uk.epicguru.input;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -12,8 +14,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import co.uk.epicguru.IO.JLineReader;
-import co.uk.epicguru.IO.JLineWriter;
+import co.uk.epicguru.IO.JIO;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.FOE;
@@ -21,7 +22,7 @@ import ro.fortsoft.pf4j.Plugin;
 
 public final class Input {
 	
-	private static HashMap<String, Integer> keys = new HashMap<>();
+	private static KeysDataset keys = new KeysDataset();
 	
 	static Vector2 tempVec = new Vector2();
 	static Vector3 tempVec3 = new Vector3();
@@ -85,7 +86,7 @@ public final class Input {
 		}
 		
 		String key = plugin.getWrapper().getPluginId() + ":" + name;
-		if(!keys.containsKey(key)){
+		if(!keys.contains(key)){
 			keys.put(key, keyNumber);			
 		}else{
 			// Loaded from file or already present.
@@ -103,7 +104,7 @@ public final class Input {
 		}
 		
 		String key = plugin.getWrapper().getPluginId() + ":" + name;
-		if(keys.containsKey(name)){
+		if(keys.contains(name)){
 			keys.put(key, newKeyNumber);
 		}
 	}
@@ -143,18 +144,25 @@ public final class Input {
 		}
 		
 		try {
-			JLineReader reader = new JLineReader(file);
-			reader.readAllLines();
-			
-			for(String key : reader.getLoadedValues().keySet()){
-				
-				String plugin = key.split(":")[0];
-				String name = key.split(":")[1];
-				String value = (String)reader.read(key);
-							
-				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, Keys.valueOf(value));
-				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + value + "(" + Keys.valueOf(value) + ")");
+			KeysIODataset loaded = JIO.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), KeysIODataset.class);
+			if(loaded == null){
+				Log.error(TAG, "Empty file, gave a null object.");
+				return;
 			}
+			for(String key : loaded.keys()){	
+				
+				// Get plugin and name.
+				String plugin = key.split(":")[0].trim();
+				String name = key.split(":")[1].trim();
+				
+				String str = loaded.get(key);
+				Integer i = Keys.valueOf(str);
+				
+				Log.info(TAG, plugin + "'s input '" + name + "' is mapped to " + str + "(" + i + ")");
+				addInput(FOE.pluginsLoader.getFOPlugin(plugin), name, i); 
+			}
+			
+			keys = loaded.toRealDataset();
 			
 		} catch (Exception e){
 			Log.error(TAG, "Error loading input keys!", e);
@@ -171,14 +179,12 @@ public final class Input {
 		
 		File file = new File(FOE.gameDirectory + FOE.inputDirectory + "Keys.txt");
 		try {
-			JLineWriter writer = new JLineWriter(file);
+			// Make IO dataset
+			KeysIODataset IO = keys.toIODataset();
 			
-			for(String key : keys.keySet()){
-				Log.info(TAG, key);
-				writer.writeLine(key, Keys.toString(keys.get(key)));
-			}
+			String json = JIO.toJson(IO, true);
 			
-			writer.save();
+			FileUtils.write(file, json, Charset.defaultCharset());
 			
 		} catch (Exception e){
 			Log.error(TAG, "Error saving inputs!", e);
