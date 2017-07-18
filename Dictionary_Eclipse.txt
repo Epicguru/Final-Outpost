@@ -21,3 +21,5 @@ projectile
 automagically
 json
 multi
+serializable
+classloader

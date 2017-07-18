@@ -92,14 +92,12 @@ public class Splitter {
 				Rectangle rect = new Rectangle(X, Y, w, h);
 				rects[i++] = rect;
 				
-				Log.info("Splitter", "Region " + (int)(rect.x / this.regionSize) + ", " + (int)(rect.y / this.regionSize) + " size " + rect.width);
+				// Log.info("Splitter", "Region " + (int)(rect.x / this.regionSize) + ", " + (int)(rect.y / this.regionSize) + " size " + rect.width);
 			}
 		}
 		
-		for(Rectangle r : rects){
-			
-			e.put(r, new ArrayList<Entity>());
-			
+		for(Rectangle r : rects){			
+			e.put(r, new ArrayList<Entity>());			
 		}
 	}	
 	

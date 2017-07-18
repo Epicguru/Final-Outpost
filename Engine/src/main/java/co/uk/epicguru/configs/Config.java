@@ -92,7 +92,7 @@ public class Config extends Dataset<Object> {
 			
 			// Does not contain! Add now.
 			newMap.put(key, existing.get(key));
-			error("Config '" + this.getName() + "' ( + " + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()) + ") that is FROM FILE is missing variable '" + key + "' that is currently '" + existing.get(key) + "'. Current value applied.");
+			error("Config '" + this.getName() + "' (" + (this.plugin == null ? "Null" : this.plugin.getWrapper().getPluginId()) + ") that is FROM FILE is missing variable '" + key + "' that is currently '" + existing.get(key) + "'. Current value applied.");
 		}
 		
 		// NOTE: This will be the config applied when it is just loaded, but we must update the default and existing config

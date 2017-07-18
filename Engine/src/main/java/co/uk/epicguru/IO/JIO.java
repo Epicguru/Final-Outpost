@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.main.FOE;
 
 public final class JIO {
 
@@ -25,6 +26,11 @@ public final class JIO {
 		json.addClassTag("Float", Float.class);
 		json.addClassTag("Double", Double.class);
 		json.addClassTag("Byte", Byte.class);
+		
+		// Get from plugins.
+		FOE.pluginsLoader.getAllClassTags((clazz, tag) -> {
+			json.addClassTag(tag, clazz);
+		});
 	}
 	
 	/**

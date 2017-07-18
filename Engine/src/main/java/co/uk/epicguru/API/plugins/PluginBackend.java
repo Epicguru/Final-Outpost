@@ -25,7 +25,7 @@ import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 /**
- * Contains all methods that are not intended to be overridden, but may be overridden if you want to.
+ * Contains all methods that are not intended to be overridden, but provide utility.
  * @author James Billy
  */
 public abstract class PluginBackend extends Plugin {
@@ -120,7 +120,7 @@ public abstract class PluginBackend extends Plugin {
 	public String getDisplayVersion(){
 		return displayVersion;
 	}
-
+	
 	public abstract boolean config(Config config);
 	public abstract Settings getPackerSettings();
 

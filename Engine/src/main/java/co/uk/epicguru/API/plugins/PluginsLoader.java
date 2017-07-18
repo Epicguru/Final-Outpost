@@ -3,6 +3,7 @@ package co.uk.epicguru.API.plugins;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 
@@ -21,8 +22,10 @@ import ro.fortsoft.pf4j.PluginWrapper;
 public final class PluginsLoader extends DefaultPluginManager implements Disposable{
 
 	public static final String TAG = "Plugin Loader";
-	private static FinalOutpostPlugin[] _plugins;
-	private static ArrayList<PluginWrapper> errorPlugins;
+	public HashMap<String, Class<?>> serializables;
+	
+	private FinalOutpostPlugin[] _plugins;
+	private ArrayList<PluginWrapper> errorPlugins;
 	private ZipFile zip;
 
 	public PluginsLoader(){
@@ -51,6 +54,7 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 				pluginsTemp.add((FinalOutpostPlugin)pluginLoaded);				
 			}
 		}
+		
 		_plugins = new FinalOutpostPlugin[pluginsTemp.size()];
 		_plugins = pluginsTemp.toArray(_plugins);
 		
@@ -58,8 +62,53 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 		for(FinalOutpostPlugin plugin : _plugins){
 			Log.info(TAG, "  -[" + plugin.getWrapper().getPluginId() + "] " + plugin.getDisplayName() + " v" + plugin.getDisplayVersion() + " for game version " + plugin.getWrapper().getDescriptor().getVersion().toString());
 		}
+		
+		// Get serializable classes
+		Log.info(TAG, "Getting serializable classes...");
+		this.serializables = new HashMap<String, Class<?>>();
+		for(Class<?> c : this.getSerializableClasses()){
+			this.serializables.put(c.getName(), c);
+		}
 	}
 
+	/**
+	 * Gets all serializable objects from the plugin.
+	 */
+	public void getSerializableClassesFor(FinalOutpostPlugin plugin, ArrayList<Class<?>> array){
+		
+		Log.info(TAG, "Getting serializable extensions for plugin : " + plugin.getWrapper().getPluginId());
+		
+		for(String s : super.getExtensionClassNames(plugin.getWrapper().getPluginId())){			
+			Class<?> got;
+			try {
+				got = super.getPluginClassLoader(plugin.getWrapper().getPluginId()).loadClass(s);
+			} catch (ClassNotFoundException e) {
+				Log.error(TAG, "Error getting class when looking for serializable objects. (plugin " + plugin.getWrapper().getPluginId() + ")", e);
+				return;
+			}
+			
+			if(got.isAnnotationPresent(Serializable.class)){
+				Log.info(TAG, "  -> " + got.getName());
+				array.add(got);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Gets all serializable objects from all plugins.
+	 */
+	public ArrayList<Class<?>> getSerializableClasses(){
+		ArrayList<Class<?>> array = new ArrayList<Class<?>>();
+		
+		for(FinalOutpostPlugin plugin : this.getAllPlugins()){
+			this.getSerializableClassesFor(plugin, array);
+		}
+		
+		Log.info(TAG, "Done! Got " + array.size() + " classes.");
+		return array;
+	}
+	
 	/**
 	 * Does various checks to see if a potential plugin is valid.
 	 */
@@ -180,6 +229,15 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	}
 	
 	/**
+	 * Gets all JSON serialization class tags from running plugins.
+	 */
+	public void getAllClassTags(AddTag tag){
+		for(FinalOutpostPlugin plugin : getAllPlugins()){
+			plugin.addClassTags(tag);
+		}
+	}
+	
+	/**
 	 * Checks to see if the plugin has been loaded successfuly.
 	 * @param pluginID The ID of the plugin, as in plugin.getWrapper().getPluginId().
 	 */
@@ -284,6 +342,8 @@ public final class PluginsLoader extends DefaultPluginManager implements Disposa
 	public void dispose(){
 		_plugins = null;
 		errorPlugins = null;
+		serializables.clear();
+		serializables = null;
 		for(PluginClassLoader clazz : super.pluginClassLoaders.values()){
 			clazz.dispose();
 		}

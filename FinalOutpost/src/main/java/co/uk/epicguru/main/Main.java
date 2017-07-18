@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.API.plugins.AddTag;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
@@ -66,7 +67,8 @@ public class Main extends FinalOutpostPlugin{
 		 * RAYS per light, maybe scalable?
 		 * RESOLUTION multiplier, for example 1, 2 or 4
 		 * BLUR PASSES around 2 - 10 
-		 */
+		 */		
+		
 		lighting = newConfig("Lighting");
 		
 		Log.info(TAG, "Set lighting!");
@@ -175,4 +177,9 @@ public class Main extends FinalOutpostPlugin{
 	public void postInit(){
 		FOE.INSTANCE.setScreen(new MainMenu());
 	}
+
+
+	public void addClassTags(AddTag tag) {
+
+	}	
 }

@@ -55,6 +55,7 @@ import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import co.uk.epicguru.logging.Log;
+import co.uk.epicguru.main.FOE;
 
 /** Reads/writes Java objects to/from JSON, automatically. See the wiki for usage:
  * https://github.com/libgdx/libgdx/wiki/Reading-%26-writing-JSON
@@ -121,6 +122,7 @@ public class MyJson {
 	public void addClassTag (String tag, Class type) {
 		tagToClass.put(tag, type);
 		classToTag.put(type, tag);
+		Log.info("JIO", "Added tag '" + tag + "' to class '" + type.getName() + "'");
 	}
 
 	/** Returns the class for the specified tag, or null. */
@@ -895,10 +897,21 @@ public class MyJson {
 			if (className != null) {
 				type = getClass(className);
 				if (type == null) {
-					try {
-						type = (Class<T>)ClassReflection.forName(className);
-					} catch (ReflectionException ex) {
-						throw new SerializationException(ex);
+					
+					// EDIT HERE
+					// Due to plugins working in another classloader (a parallel dimension in the astral plane),
+					// we have a system that allows annotations to load classes for serialization.
+					
+					Class<?> c = FOE.pluginsLoader.serializables.get(className);
+					
+					if(c != null) type = (Class<T>)c;					
+					
+					if(type == null){
+						try {
+							type = (Class<T>)ClassReflection.forName(className);
+						} catch (ReflectionException ex) {
+							throw new SerializationException(ex);
+						}
 					}
 				}
 			}
