@@ -1,8 +1,12 @@
 package co.uk.epicguru.entity.components;
 
+import javax.swing.text.Position;
+
 public class ArmouredHealth extends Health {
 
 	private float armour;
+	
+	public ArmouredHealth() { }
 	
 	public ArmouredHealth(float start, float max, float armour) {
 		super(start, max);

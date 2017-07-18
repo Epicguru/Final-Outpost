@@ -7,6 +7,8 @@ public class Health extends Component {
 	private float max;
 	private float health;
 	
+	public Health() { }
+	
 	public Health(float start, float max){
 		this.health = start;
 		this.max = max;

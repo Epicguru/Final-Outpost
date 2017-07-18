@@ -29,9 +29,12 @@ public class PlayerEntity extends Entity {
 	@NotSerialized private float timer;
 	
 	public PlayerEntity() {
-		super("Player");		
+		super("Player");	
+		
 		// SAVE/LOAD with this = not gud
-		super.addComponents(health = new ArmouredHealth(100f, 100f, 0f));
+		
+		if(super.getComponent(ArmouredHealth.class) == null)
+			super.addComponents(health = new ArmouredHealth(100f, 100f, 0f));
 	}
 	
 	private Body makeBody(){
@@ -108,11 +111,6 @@ public class PlayerEntity extends Entity {
 	
 	public void update(float delta){
 		
-		// TEST!
-		if(Input.isKeyJustDown(Keys.L)){
-			super.getComponent(ArmouredHealth.class).setHealth(0);
-		}
-		
 		// Update position
 		body.update(this);
 		
@@ -127,23 +125,45 @@ public class PlayerEntity extends Entity {
 		
 		// Check for death again, in case we were killed by movement.
 		checkForDeath();
+		
+		// TEST
+		if(Input.isKeyDown(Keys.F)){
+			TestEntity e;
+			FOE.engine.add(e = new TestEntity());
+			e.setPosition(Input.getMouseWorldPos());
+			
+			
+		}
 	}
 	
-	public void added(){
+	public void added(boolean loaded){
 		// Set body
-		super.addComponents(body = new EntityBody(makeBody()));
+		if(!loaded){
+			// New entity, this will happen when player is created.
+			super.addComponents(body = new EntityBody(makeBody()));
+		}
+		else{
+			// Loaded entity...
+			body = super.getComponent(EntityBody.class);
+			body.setBody(makeBody(), true);
+		}
 		
 		// Set renderer
 		this.renderer = new PlayerRenderer();
 		
 		// Create light
-		this.flashlight = new PointLight(FOE.engine.getRayHandler(), FOE.engine.getRaysPerLight(), Color.SCARLET, 10, 0, 0);
+		this.flashlight = new PointLight(FOE.engine.getRayHandler(), FOE.engine.getRaysPerLight(), Color.SCARLET, 20, 0, 0);
+		
+		FOE.player = this;
+		
+		print("Added player.");
 	}
 	
 	public void removed(){
-		this.flashlight.remove();
+		FOE.engine.getRayHandler().removeAll(); // LOL FIXME 
 		this.body.destroyBody();
-		print("Player removed.");
+		FOE.player = null;
+		print("Player removed.");		
 	}
 	
 	public void render(Batch batch, float delta){	

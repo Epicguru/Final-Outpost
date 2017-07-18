@@ -139,6 +139,18 @@ public class Entity extends Base{
 	
 	/**
 	 * Moves this entity by a given amount.
+	 * @param offset The value to add to the current position. If null, null is returned and nothing is done to position.
+	 * @param delta The delta time value that the offset is multiplied by.
+	 * @return The new position, for chaining.
+	 */
+	public Vector2 offset(Vector2 offset, float delta){
+		if(offset == null)
+			return null;
+		return this.offset(offset.x * delta, offset.y * delta);
+	}
+	
+	/**
+	 * Moves this entity by a given amount.
 	 * @param x The value to add to the current x position.
 	 * @return The new position, for chaining.
 	 */
@@ -304,8 +316,9 @@ public class Entity extends Base{
 	/**
 	 * Called when this entity is added to the world, and is ready for use.
 	 * By default does nothing.
+	 * @param loaded True if this entity has just been loaded, false if this has been added dynamically.
 	 */
-	public void added(){
+	public void added(boolean loaded){
 		// Callback
 	}
 	
