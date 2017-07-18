@@ -124,6 +124,13 @@ public class Main extends FinalOutpostPlugin{
 			loadAsset("Textures/Player/Walk1.png", TextureRegion.class);
 			loadAsset("Textures/Player/Hit0.png", TextureRegion.class);
 			loadAsset("Textures/Player/Headshot0.png", TextureRegion.class);
+			
+			// TEST			
+			loadAsset("Textures/Player/TestEntity.png", TextureRegion.class);
+			
+			// Entities
+			loadAsset("Textures/Entities/Bonfire.png", TextureRegion.class);
+			
 			break;
 
 		case INIT_CORE:
@@ -177,7 +184,6 @@ public class Main extends FinalOutpostPlugin{
 	public void postInit(){
 		FOE.INSTANCE.setScreen(new MainMenu());
 	}
-
 
 	public void addClassTags(AddTag tag) {
 

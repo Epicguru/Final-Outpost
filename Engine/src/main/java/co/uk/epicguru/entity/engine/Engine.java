@@ -1,6 +1,11 @@
 package co.uk.epicguru.entity.engine;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -12,14 +17,19 @@ import com.badlogic.gdx.utils.Disposable;
 
 import box2dLight.RayHandler;
 import co.uk.epicguru.API.Base;
+import co.uk.epicguru.IO.JIO;
+import co.uk.epicguru.entity.Component;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.Group;
 import co.uk.epicguru.entity.physics.DeadBody;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.TiledMap;
 
 public class Engine extends Base implements Disposable{
 
+	private static final String TAG = "Entity Engine";
+	
 	private World world;
 	private Splitter splitter;
 	
@@ -61,31 +71,25 @@ public class Engine extends Base implements Disposable{
 		return RAYS_PER_LIGHT;
 	}
 	
-
 	public void setRaysPerLight(int rays){
 		this.RAYS_PER_LIGHT = rays;
 	}
 	
-
 	public float getLightResolutionScale(){
 		return LIGHT_RESOLUTION_SCALE;
 	}
 	
-
 	public void setLightResolutionScale(float scale){
 		this.LIGHT_RESOLUTION_SCALE = scale;
 	}
 	
-
 	public int getLightBlurPasses(){
 		return LIGHT_BLUR_PASSES;
 	}
 	
-
 	public void setLightBlurPasses(int passes){
 		LIGHT_BLUR_PASSES = passes;
 	}
-	
 	
 	public Splitter getSplitter(){
 		return this.splitter;
@@ -147,11 +151,14 @@ public class Engine extends Base implements Disposable{
 	 * Removes all entities from the world.
 	 */
 	public void clearEntities(){
-		this.addNew();
+		this.addNew(false);
 		for(Entity e : entities){
 			bin.add(e);
 		}
-		this.flush();	
+		this.flush();
+		if(this.splitter != null){
+			this.splitter.clearEntities();
+		}
 	}
 
 	/**
@@ -172,10 +179,58 @@ public class Engine extends Base implements Disposable{
 			this.bin.add(e);
 	}
 	
-	protected void addNew(){
+	public void saveEntities(){
+		// Step 1: Put all entities in a data structure. EDIT - Just use the arraylist.
+		// Step 2: Serialize
+		// Step 3: Save to file.
+		
+		String serialized = JIO.toJson(this.entities, false);
+		
+		File file = new File(FOE.gameDirectory + "Testing/" + "Entities.txt");
+		
+		try {
+			FileUtils.write(file, serialized, Charset.defaultCharset());
+		} catch (IOException e) {
+			Log.error(TAG, "Error saving entities!", e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void loadEntities(){
+		this.clearEntities();
+		
+		File file = new File(FOE.gameDirectory + "Testing/" + "Entities.txt");
+		String data = null;
+		try {
+			data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		} catch (IOException e) {
+			Log.error(TAG, "Error loading entities!", e);
+			return;
+		}		
+		
+		ArrayList<Entity> newEntities = new ArrayList<Entity>();
+		newEntities = (ArrayList<Entity>)JIO.fromJson(data, newEntities.getClass());	
+		
+		this.add = newEntities;
+		
+		// Tell components that they were loaded.
+		for(Entity e : this.add){
+			for(Component c : e.getComponents()){
+				c.loaded();
+			}
+		}		
+		
+		this.addNew(true);
+		this.flush();		
+		if(this.splitter != null){
+			this.splitter.placeEntities();
+		}
+	}
+	
+	protected void addNew(boolean loaded){
 		for(Entity e : add){
 			entities.add(e);
-			e.added();
+			e.added(loaded);
 		}
 		add.clear();
 	}
@@ -211,7 +266,7 @@ public class Engine extends Base implements Disposable{
 	 * @param delta The delta-time value.
 	 */
 	public void update(float delta){
-		this.addNew();
+		this.addNew(false);
 		this.flush();
 		
 		for(Entity e : entities){

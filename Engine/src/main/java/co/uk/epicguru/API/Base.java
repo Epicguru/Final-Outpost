@@ -1,12 +1,14 @@
 package co.uk.epicguru.API;
 
 import co.uk.epicguru.logging.Log;
+import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.ExtensionPoint;
 
 /**
  * The utility class that also acts as an ExtensionPoint. Includes functions to debug and log.
  * @author Billy
  */
+@Extension
 public class Base implements ExtensionPoint {
 	
 	private String _TAG = getClass().getSimpleName();

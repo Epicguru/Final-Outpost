@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.Base;
+import co.uk.epicguru.API.plugins.Serializable;
+import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.FOE;
 
@@ -18,12 +20,14 @@ import co.uk.epicguru.main.FOE;
  * Find Ashley on Github for more info.
  * @author James Billy
  */
+@Serializable
 public class Entity extends Base{
 
 	private Vector2 position;
 	private String name;
 	private ArrayList<Component> components = new ArrayList<Component>();
-	private Component[] componentsArray = new Component[0];
+	@NotSerialized private boolean serialize = true;
+	@NotSerialized private Component[] componentsArray = new Component[0];
 	
 	/**
 	 * Creates a new Entity given a name. The name can be anything you want, but preferably will be user friendly.
@@ -44,6 +48,21 @@ public class Entity extends Base{
 			return;
 		}
 		this.name = name;
+	}
+	
+	/**
+	 * Does this entity serialize? If false, this object is ignored when saving, so will not be loaded later.
+	 * Defaults to true, so the default entity will save.
+	 */
+	public boolean doesSerialize(){
+		return this.serialize;
+	}
+	
+	/**
+	 * See {@link #doesSerialize()}.
+	 */
+	public void setSerializes(boolean serialize){
+		this.serialize = serialize;
 	}
 	
 	/**
@@ -132,6 +151,18 @@ public class Entity extends Base{
 		if(offset == null)
 			return null;
 		return this.offset(offset.x, offset.y);
+	}
+	
+	/**
+	 * Moves this entity by a given amount.
+	 * @param offset The value to add to the current position. If null, null is returned and nothing is done to position.
+	 * @param delta The delta time value that the offset is multiplied by.
+	 * @return The new position, for chaining.
+	 */
+	public Vector2 offset(Vector2 offset, float delta){
+		if(offset == null)
+			return null;
+		return this.offset(offset.x * delta, offset.y * delta);
 	}
 	
 	/**
@@ -301,8 +332,9 @@ public class Entity extends Base{
 	/**
 	 * Called when this entity is added to the world, and is ready for use.
 	 * By default does nothing.
+	 * @param loaded True if this entity has just been loaded, false if this has been added dynamically.
 	 */
-	public void added(){
+	public void added(boolean loaded){
 		// Callback
 	}
 	

@@ -3,6 +3,7 @@ package co.uk.epicguru.entity.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.entity.Component;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.main.FOE;
@@ -14,9 +15,14 @@ import co.uk.epicguru.main.FOE;
  */
 public class EntityBody extends Component {
 
-	public Vector2 offset = new Vector2();
+	public Vector2 offset = new Vector2();	
+	@NotSerialized private Body body;
 	
-	private Body body;
+	@NotSerialized private boolean hasBeenLoaded;
+	
+	// For serialization only.
+	private Vector2 position, velocity;
+	private float angularVelocity, angle;
 	
 	public EntityBody() { }
 	
@@ -63,6 +69,15 @@ public class EntityBody extends Component {
 		this.body = body;
 		if(body != null)
 			body.setUserData(this); // TEST TODO MAKE SOMETHING USEFUL LIKE COLLISION.
+		
+		if(this.body != null && hasBeenLoaded){
+			// We have been loaded and the body has been built again...
+			// Now we need to apply the previous state!
+			
+			this.applyLoadedValues();
+			hasBeenLoaded = false;
+		}
+		
 		return old;
 	}
 	
@@ -83,10 +98,29 @@ public class EntityBody extends Component {
 			e.setPosition(0, e.getPosition().y);
 		
 		e.setPosition(body.getPosition().x + offX, body.getPosition().y + offY);
+		
+		if(!hasBeenLoaded){			
+			position = body.getPosition();
+			angle = body.getAngle();
+			velocity = body.getLinearVelocity();
+			angularVelocity = body.getAngularVelocity();
+		}
 	}
 	
 	public String toString(){
 		return "Physics Body";
+	}
+	
+	private void applyLoadedValues(){
+		body.setTransform(position, angle);
+		body.setLinearVelocity(velocity);
+		body.setAngularVelocity(angularVelocity);
+	}
+	
+	public void loaded(){
+		if(body != null)
+			applyLoadedValues();
+		hasBeenLoaded = true;
 	}
 	
 }

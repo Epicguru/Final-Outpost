@@ -107,6 +107,7 @@ public class InGameScreen extends GameScreen {
 	
 	public void update(float delta){
 		
+		
 		// Update in-game time.
 		GameTime.addMinutes(delta * 20f); // Means that every second a whole minute is added.
 		Timers.startEntities();
@@ -122,6 +123,15 @@ public class InGameScreen extends GameScreen {
 		if(Input.isKeyJustDown(Keys.ESCAPE)){
 			FOE.INSTANCE.setScreen(new MainMenu());
 		}
+		
+		if(Input.isKeyJustDown(Keys.SPACE)){
+			FOE.engine.saveEntities();
+		}
+		
+		if(Input.isKeyJustDown(Keys.L)){
+			FOE.engine.loadEntities();
+		}
+		
 		
 		super.update(delta);		
 	}

@@ -67,8 +67,6 @@ public class DebugHook extends ScreenHook {
 		ArrayList<Entity> entities = FOE.engine.getSplitter().getInPoint(Input.getMouseWorldPos());
 		drawRight(batch, "Entities in mouse region : " + (entities == null ? "NOT IN REGION" : entities.size()), Color.ORANGE);
 		drawRight(batch, "Splitter region size : " + FOE.engine.getSplitter().getRegionSize(), Color.ORANGE);
-		drawRight(batch, "Within 2 chunks of origin : " + FOE.engine.getSplitter().getInRect(0, 0, 32, 32), Color.ORANGE);
-		drawRight(batch, "Within 1.5 round chunks : " + FOE.engine.getSplitter().getInRange(32, 32, 19f), Color.ORANGE);
 		
 		drawTimers(batch);
 		
@@ -106,12 +104,6 @@ public class DebugHook extends ScreenHook {
 			shapes.line(0, y * size, FOE.map.getWidth(), y * size);
 		}
 		
-		shapes.setColor(0, 1, 0, 1);
-		shapes.circle(32, 32, 19f, 100);
-		
-		shapes.setColor(0.9f, 0.9f, 0.9f, 1);
-		shapes.rect(13, 13, 38, 38);
-		
 		shapes.end();
 		
 		batch.begin();
@@ -134,7 +126,7 @@ public class DebugHook extends ScreenHook {
 		final float y = Gdx.graphics.getHeight() - 120;
 		final float totalRadius = 100f;
 		
-		shapes.setColor(Color.WHITE);
+		shapes.setColor(Color.BLACK);
 		shapes.circle(x, y, totalRadius * 1.1f, (int)(totalSegments * 1.1f));
 		
 		for(int i = 0; i < parts; i++){
