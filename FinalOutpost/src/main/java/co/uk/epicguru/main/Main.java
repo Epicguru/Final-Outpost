@@ -128,6 +128,9 @@ public class Main extends FinalOutpostPlugin{
 			// TEST			
 			loadAsset("Textures/Player/TestEntity.png", TextureRegion.class);
 			
+			// Entities
+			loadAsset("Textures/Entities/Bonfire.png", TextureRegion.class);
+			
 			break;
 
 		case INIT_CORE:

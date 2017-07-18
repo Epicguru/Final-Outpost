@@ -26,6 +26,7 @@ public class Entity extends Base{
 	private Vector2 position;
 	private String name;
 	private ArrayList<Component> components = new ArrayList<Component>();
+	@NotSerialized private boolean serialize = true;
 	@NotSerialized private Component[] componentsArray = new Component[0];
 	
 	/**
@@ -47,6 +48,21 @@ public class Entity extends Base{
 			return;
 		}
 		this.name = name;
+	}
+	
+	/**
+	 * Does this entity serialize? If false, this object is ignored when saving, so will not be loaded later.
+	 * Defaults to true, so the default entity will save.
+	 */
+	public boolean doesSerialize(){
+		return this.serialize;
+	}
+	
+	/**
+	 * See {@link #doesSerialize()}.
+	 */
+	public void setSerializes(boolean serialize){
+		this.serialize = serialize;
 	}
 	
 	/**
