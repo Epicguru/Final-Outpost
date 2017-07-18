@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.Base;
+import co.uk.epicguru.API.plugins.Serializable;
+import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.main.FOE;
 
@@ -18,12 +20,13 @@ import co.uk.epicguru.main.FOE;
  * Find Ashley on Github for more info.
  * @author James Billy
  */
+@Serializable
 public class Entity extends Base{
 
 	private Vector2 position;
 	private String name;
 	private ArrayList<Component> components = new ArrayList<Component>();
-	private Component[] componentsArray = new Component[0];
+	@NotSerialized private Component[] componentsArray = new Component[0];
 	
 	/**
 	 * Creates a new Entity given a name. The name can be anything you want, but preferably will be user friendly.

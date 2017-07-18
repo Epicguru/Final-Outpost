@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import box2dLight.PointLight;
+import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.components.ArmouredHealth;
 import co.uk.epicguru.entity.physics.EntityBody;
@@ -20,15 +21,16 @@ import co.uk.epicguru.main.Main;
 
 public class PlayerEntity extends Entity {
 
-	public PlayerRenderer renderer;
+	@NotSerialized public PlayerRenderer renderer;
 	
-	private ArmouredHealth health;
-	private EntityBody body;
-	private PointLight flashlight;
-	private float timer;
+	@NotSerialized private ArmouredHealth health;
+	@NotSerialized private EntityBody body;
+	@NotSerialized private PointLight flashlight;
+	@NotSerialized private float timer;
 	
 	public PlayerEntity() {
 		super("Player");		
+		// SAVE/LOAD with this = not gud
 		super.addComponents(health = new ArmouredHealth(100f, 100f, 0f));
 	}
 	
