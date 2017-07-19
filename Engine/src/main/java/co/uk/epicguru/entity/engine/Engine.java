@@ -184,7 +184,14 @@ public class Engine extends Base implements Disposable{
 		// Step 2: Serialize
 		// Step 3: Save to file.
 		
-		String serialized = JIO.toJson(this.entities, false);
+		ArrayList<Entity> real = new ArrayList<Entity>();
+		
+		for(Entity e : entities){
+			if(e.doesSerialize())
+				real.add(e);
+		}
+		
+		String serialized = JIO.toJson(real, false);
 		
 		File file = new File(FOE.gameDirectory + "Testing/" + "Entities.txt");
 		

@@ -21,7 +21,8 @@ public class Bonfire extends Entity {
 	public Color lightColour = new Color(0.1f, 0, 0.05f, 1f);
 	
 	@NotSerialized private PointLight light;
-	@NotSerialized private float timer;
+	@NotSerialized private float timer, timer2;
+	@NotSerialized private final float particlesPerSecond = 120f;
 	
 	public Bonfire() {
 		super("Bonfire");
@@ -46,6 +47,27 @@ public class Bonfire extends Entity {
 		FOE.engine.remove(this);
 	}
 	
+	public void spawnParticles(float delta){
+		
+		timer2 += delta;
+		float interval = 1f / this.particlesPerSecond;
+		
+		while(timer2 >= interval){
+			
+			FireParticle fire = new FireParticle();
+			
+			float width = texture.getRegionWidth() / Constants.PPM;
+			
+			fire.setPosition(this.getX() + width * MathUtils.random() - 0.25f, this.getY() + MathUtils.random(0.25f, 0.9f));
+			
+			FOE.engine.add(fire);
+			
+			timer2 -= interval;
+			
+		}
+		
+	}
+	
 	public void update(float delta){
 		
 		// Check if dead
@@ -61,11 +83,18 @@ public class Bonfire extends Entity {
 		light.setPosition(this.getX() + texture.getRegionWidth() / Constants.PPM / 2f, this.getY()  + texture.getRegionHeight() / Constants.PPM / 2f);		
 		
 		// Set light 'intensity'
-		float intensity = MathUtils.clamp(0.9f + MathUtils.sinDeg(timer * 200f) * 0.05f, 0.5f, 1);		
+		float intensity = 0.9f + MathUtils.cosDeg(timer * 200f) * 0.035f;	
 		this.lightColour.a = intensity;
 		
 		// Apply light colour
 		this.light.setColor(this.lightColour);
+		
+		// Spawn particles if burning
+		if(burning)
+			spawnParticles(delta);
+		
+		// Activate light if burning
+		light.setActive(burning);
 	}
 	
 	public void removed(){

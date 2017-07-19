@@ -10,6 +10,9 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
+
 import co.uk.epicguru.logging.Log;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.progress.ProgressMonitor;
@@ -17,6 +20,8 @@ import net.lingala.zip4j.progress.ProgressMonitor;
 public final class U {
 	private U() {}	
 	private static final String TAG = "Utilities";
+	private static Color colour = new Color();
+	private static Interpolation interpolation = Interpolation.linear;
 	private static HashMap<String, Long> timers = new HashMap<>();
 	
 	/**
@@ -279,5 +284,40 @@ public final class U {
 			return -1;
 		}
 		return (System.nanoTime() - l);
+	}
+
+	/**
+	 * Gets the type of interpolation used in lerp methods.
+	 * Defaults to linear interpolation.
+	 * @see {@link #setInterpolation(Interpolation)}
+	 */
+	public static Interpolation getInterpolation(){
+		return interpolation;
+	}
+	
+	/**
+	 * Sets the type of interpolation used in lerp methods.
+	 */
+	public static void setInterpolation(Interpolation interpolation){
+		if(interpolation != null)
+			U.interpolation = interpolation;
+	}
+	
+	/**
+	 * Lerps between two colours using the {@link #getInterpolation() current interpolation}.
+	 * @param a The first colour.
+	 * @param b The second colour.
+	 * @param p The percentage between the first and the second colour.
+	 * @return The interpolated colour. Same instance returned every time.
+	 */
+	public static Color lerp(Color a, Color b, float p){
+		
+		colour.r = interpolation.apply(a.r, b.r, p);
+		colour.g = interpolation.apply(a.g, b.g, p);
+		colour.b = interpolation.apply(a.b, b.b, p);
+		colour.a = interpolation.apply(a.a, b.a, p);
+		
+		return colour;
+		
 	}
 }

@@ -156,7 +156,7 @@ public class Splitter {
 		Rectangle found = getRectFromPos(posX, posY);
 		
 		if(found == null){
-			Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition());
+			//Log.error("Splitter", "Unable to map entity to system with entity at " + e.getPosition());
 			return;
 		}
 		
