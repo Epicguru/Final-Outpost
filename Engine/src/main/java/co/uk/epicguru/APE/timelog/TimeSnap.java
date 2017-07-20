@@ -1,7 +1,10 @@
 package co.uk.epicguru.APE.timelog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.badlogic.gdx.graphics.Color;
 
@@ -65,6 +68,19 @@ public class TimeSnap {
 		for(int x = 0; x < percentages.length; x++){
 			percentages[x] /= array.size();
 		}
+		
+		int i = 0;
+		for(String s : object.names){
+			String test = (int)(percentages[i] * 100f) + "";
+			if(test.length() < 2){
+				test = "0" + test;
+			}
+			test += "%: ";
+			object.names[i++] = test + s;
+		}
+//		
+//		Arrays.sort(object.names);
+//		ArrayUtils.reverse(object.names);
 		
 		object.percentages = percentages;		
 	}
