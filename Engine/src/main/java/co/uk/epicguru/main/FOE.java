@@ -51,6 +51,7 @@ public class FOE extends Game{
 	 */
 	public static FOE INSTANCE;
 	public static final String TAG = "Final Outpost Engine";
+	public static final boolean DEV_MODE = true;
 
 	public static SpriteBatch batch;
 	public static OrthographicCamera camera;
@@ -349,9 +350,11 @@ public class FOE extends Game{
 			donePluginCheck = true;
 		}
 
-		Gdx.graphics.setTitle("FPS : " + Gdx.graphics.getFramesPerSecond());
+		if(FOE.DEV_MODE)
+			Gdx.graphics.setTitle("Final Outpost - DEV MODE");
 
-		if(getScreen() != null && getScreen() instanceof GameScreen) ((GameScreen)getScreen()).update(delta);
+		if(getScreen() != null && getScreen() instanceof GameScreen)
+			((GameScreen)getScreen()).update(delta);
 		camera.update();
 	}
 
