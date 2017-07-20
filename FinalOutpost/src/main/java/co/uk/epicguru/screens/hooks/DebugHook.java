@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+import co.uk.epicguru.APE.timelog.TimeLog;
+import co.uk.epicguru.APE.timelog.TimeSnap;
 import co.uk.epicguru.API.Allocator;
-import co.uk.epicguru.API.Timers;
-import co.uk.epicguru.API.TimersRenderOutput;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.API.time.TimeStyle;
@@ -111,12 +111,16 @@ public class DebugHook extends ScreenHook {
 	
 	private void drawTimers(Batch batch){
 		
+		if(TimeLog.current == null)
+			return;
+		
+		TimeSnap snap = TimeLog.current;
+		
 		batch.end();
 		shapes.setProjectionMatrix(batch.getProjectionMatrix());
 		shapes.begin(ShapeType.Filled);		
 		
-		TimersRenderOutput out = Timers.getOutput();
-		int parts = out.percentages.length;
+		int parts = snap.percentages.length;
 		float currentAngle = 0;
 		
 		
@@ -131,41 +135,25 @@ public class DebugHook extends ScreenHook {
 		
 		for(int i = 0; i < parts; i++){
 			
-			float degrees = degInCircle * out.percentages[i] + 2f;
-			int segments = (int)(totalSegments * out.percentages[i] * out.radi[i]);
+			float degrees = degInCircle * snap.percentages[i] + 2f;
+			int segments = (int)(totalSegments * snap.percentages[i] * snap.radi[i]);
 			if(segments <= 0)
 				segments = 1;
-			float radius = out.radi[i] * totalRadius;
+			float radius = snap.radi[i] * totalRadius;
 			
-			shapes.setColor(out.colours[i]);
+			shapes.setColor(snap.colours[i]);
 			shapes.arc(x, y, radius, currentAngle - 1, degrees, segments);
 			
 			currentAngle += degrees;
 		}
 		
 		shapes.end();
-		batch.begin();
-//		t,
-//		er,
-//		l,
-//		rUI,
-//		e,
-//		p,
-//		o
-		String[] names = new String[]{
-			"Render - Tiles",
-			"Render - Entities",
-			"Render - Light",
-			"Render - UI",
-			"Update - Entities",
-			"Update - Physics",
-			"Other"
-		};
+		batch.begin();		
 		
 		int i = 0;
-		for(String s : names){
+		for(String s : snap.names){
 			
-			font.setColor(out.colours[i]);
+			font.setColor(snap.colours[i]);
 			font.draw(batch, s, 10, (y - totalRadius * 1.3f) - (i * 20f));
 			
 			i++;

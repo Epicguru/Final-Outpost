@@ -1,10 +1,11 @@
 package co.uk.epicguru.screens;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 
-import co.uk.epicguru.API.Timers;
+import co.uk.epicguru.APE.timelog.TimeLog;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.entities.Bonfire;
@@ -112,15 +113,23 @@ public class InGameScreen extends GameScreen {
 		
 		// Update in-game time.
 		GameTime.addMinutes(delta * 20f); // Means that every second a whole minute is added.
-		Timers.startEntities();
+		
+		TimeLog.startLog("Update - Physics");
 		FOE.engine.flushBodies(); // Physics bodies bin #1
+		TimeLog.endLog("Update - Physics", Color.CHARTREUSE);
+		
+		TimeLog.startLog("Update - Map");
 		FOE.map.update(delta); // Map
+		TimeLog.endLog("Update - Map", Color.YELLOW);
+		
+		TimeLog.startLog("Update - Entities");
 		FOE.engine.update(delta); // Entities
-		Timers.endEntities();
-		Timers.startPhysics();
+		TimeLog.endLog("Update - Entities", Color.GREEN);
+		
+		TimeLog.startLog("Update - Physics");
 		PhysicsWorldUtils.update(delta); // Physics
 		FOE.engine.flushBodies(); // Physics bodies bin #2
-		Timers.endPhysics();
+		TimeLog.endLog("Update - Physics", Color.CHARTREUSE);
 		
 		if(Input.isKeyJustDown(Keys.ESCAPE)){
 			FOE.INSTANCE.setScreen(new MainMenu());
@@ -149,8 +158,7 @@ public class InGameScreen extends GameScreen {
 			Bonfire b;
 			FOE.engine.add(b = new Bonfire());
 			b.setPosition(Input.getMouseWorldPos());			
-		}
-		
+		}		
 		
 		super.update(delta);		
 	}
@@ -163,14 +171,17 @@ public class InGameScreen extends GameScreen {
 		FOE.camera.update();
 		FOE.camera.zoom = 1f;
 		
-		Timers.startTiles();
+		TimeLog.startLog("Render - Map");
 		FOE.map.render(); // Map
-		Timers.endTiles();
-		Timers.startEntitiesRender();
+		TimeLog.endLog("Render - Map", Color.PINK);
+
+		TimeLog.startLog("Render - Entities");
 		FOE.engine.render(batch, delta); // Entities
-		Timers.endEntitiesRender();
+		TimeLog.endLog("Render - Entities", Color.BLUE);
 		
+		TimeLog.startLog("Render - Game Hooks");
 		super.render(delta, batch);
+		TimeLog.endLog("Render - Game Hooks", Color.FOREST);
 		
 		// Render light now...
 		FOE.engine.getRayHandler().setAmbientLight(GameTime.getAmbientLightRedLevel(), 0, 0, GameTime.getAmbientLightAlphaLevel());
@@ -178,14 +189,16 @@ public class InGameScreen extends GameScreen {
 		if(DebugHook.active){
 			FOE.engine.getRayHandler().setAmbientLight(0, 0, 0, 1);
 		}
-		Timers.startLight();
-		FOE.engine.renderLights(batch, delta);
-		Timers.endLight();
+
+		TimeLog.startLog("Render - Lighting");
+		FOE.engine.renderLights(batch, delta);	
+		TimeLog.endLog("Render - Lighting", Color.CYAN);
 		
-		
+		TimeLog.startLog("Render - Physics Debug");
 		if(DebugHook.active){
 			PhysicsWorldUtils.render(batch);
 		}
+		TimeLog.endLog("Render - Physics Debug", Color.BROWN);
 	}
 	
 	public void renderUI(float delta, Batch batch){	

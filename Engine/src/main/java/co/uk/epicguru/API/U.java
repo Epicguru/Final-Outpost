@@ -255,7 +255,7 @@ public final class U {
 	/**
 	 * Gets the time elapsed since the timer was started. (In MILLISECONDS. 1000 millis = 1 second)
 	 * @param timerName The name of the timer.
-	 * @return The time in seconds since the timer was started.
+	 * @return The time in milliseconds since the timer was started.
 	 */
 	public static long endTimerMillis(final String timerName){
 		Long l = timers.remove(timerName);
@@ -275,7 +275,7 @@ public final class U {
 	 * <li>
 	 * Now you know. You're welcome.
 	 * @param timerName The name of the timer.
-	 * @return The time in seconds since the timer was started.
+	 * @return The time in nanoseconds since the timer was started.
 	 */
 	public static long endTimerNanos(final String timerName){
 		Long l = timers.remove(timerName);
