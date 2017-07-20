@@ -1,6 +1,5 @@
 package co.uk.epicguru.player;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -125,15 +124,6 @@ public class PlayerEntity extends Entity {
 		
 		// Check for death again, in case we were killed by movement.
 		checkForDeath();
-		
-		// TEST
-		if(Input.isKeyDown(Keys.F)){
-			TestEntity e;
-			FOE.engine.add(e = new TestEntity());
-			e.setPosition(Input.getMouseWorldPos());
-			
-			
-		}
 	}
 	
 	public void added(boolean loaded){
@@ -160,7 +150,7 @@ public class PlayerEntity extends Entity {
 	}
 	
 	public void removed(){
-		FOE.engine.getRayHandler().removeAll(); // LOL FIXME 
+		this.flashlight.remove();
 		this.body.destroyBody();
 		FOE.player = null;
 		print("Player removed.");		

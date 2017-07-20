@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import co.uk.epicguru.API.Timers;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.time.GameTime;
+import co.uk.epicguru.entities.Bonfire;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
@@ -15,6 +16,7 @@ import co.uk.epicguru.map.tiles.Tile;
 import co.uk.epicguru.map.tiles.TileFactory;
 import co.uk.epicguru.physics.PhysicsWorldUtils;
 import co.uk.epicguru.player.PlayerEntity;
+import co.uk.epicguru.player.TestEntity;
 import co.uk.epicguru.screens.hooks.DebugHook;
 import co.uk.epicguru.screens.hooks.InputHook;
 import ro.fortsoft.pf4j.Extension;
@@ -124,12 +126,29 @@ public class InGameScreen extends GameScreen {
 			FOE.INSTANCE.setScreen(new MainMenu());
 		}
 		
+		// TESTS BELOW
 		if(Input.isKeyJustDown(Keys.SPACE)){
 			FOE.engine.saveEntities();
 		}
 		
 		if(Input.isKeyJustDown(Keys.L)){
 			FOE.engine.loadEntities();
+		}
+		
+		if(Input.isKeyJustDown(Keys.I)){
+			FOE.engine.clearEntities();
+		}
+		
+		if(Input.isKeyDown(Keys.F)){
+			TestEntity e;
+			FOE.engine.add(e = new TestEntity());
+			e.setPosition(Input.getMouseWorldPos());			
+		}
+		
+		if(Input.isKeyJustDown(Keys.G)){
+			Bonfire b;
+			FOE.engine.add(b = new Bonfire());
+			b.setPosition(Input.getMouseWorldPos());			
 		}
 		
 		
@@ -139,7 +158,8 @@ public class InGameScreen extends GameScreen {
 	public void render(float delta, Batch batch){
 		
 		// Camera position
-		FOE.camera.position.set(FOE.player.getX(), FOE.player.getY(), 1);
+		if(FOE.player != null)
+			FOE.camera.position.set(FOE.player.getX(), FOE.player.getY(), 1);
 		FOE.camera.update();
 		FOE.camera.zoom = 1f;
 		

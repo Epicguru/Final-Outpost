@@ -2,6 +2,7 @@ package co.uk.epicguru.main;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +13,8 @@ import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.entity.components.ArmouredHealth;
+import co.uk.epicguru.entity.components.Health;
 import co.uk.epicguru.languages.Lan;
 import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
@@ -130,6 +133,7 @@ public class Main extends FinalOutpostPlugin{
 			
 			// Entities
 			loadAsset("Textures/Entities/Bonfire.png", TextureRegion.class);
+			loadAsset("Textures/Entities/Fire Particle.png", TextureRegion.class);
 			
 			break;
 
@@ -186,6 +190,8 @@ public class Main extends FinalOutpostPlugin{
 	}
 
 	public void addClassTags(AddTag tag) {
-
+		tag.add(ArmouredHealth.class, "ArmouredHealth");
+		tag.add(Health.class, "Health");
+		tag.add(Color.class, "Colour");
 	}	
 }

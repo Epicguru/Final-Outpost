@@ -24,3 +24,7 @@ multi
 serializable
 classloader
 args
+lerp
+colours
+lerps
+colour
