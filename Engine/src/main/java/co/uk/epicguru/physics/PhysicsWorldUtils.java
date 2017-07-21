@@ -51,6 +51,6 @@ public final class PhysicsWorldUtils {
 	}
 
 	public static void dispose() {
-		debug = null;		
+		debug = null;	
 	}
 }

@@ -137,7 +137,7 @@ public class Main extends FinalOutpostPlugin{
 			
 			break;
 
-		case INIT_CORE:
+		case MENUS:
 			
 			// Main menu content
 			loadAsset("Textures/UI/TitleBackground.png", TextureRegion.class);

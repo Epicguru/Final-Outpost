@@ -16,7 +16,9 @@ import co.uk.epicguru.main.Main;
 
 public class Bonfire extends Entity {
 
+	private static int loadCycle;
 	private static TextureRegion texture;
+	
 	public boolean burning = true;
 	public Color lightColour = new Color(0.1f, 0, 0.05f, 1f);
 	
@@ -38,8 +40,10 @@ public class Bonfire extends Entity {
 		
 		light = new PointLight(FOE.engine.getRayHandler(), FOE.engine.getRaysPerLight(), lightColour, 25f, getX(), getY());
 		
-		if(texture == null){
+		if(loadCycle != FOE.loadCycle){
 			texture = Main.INSTANCE.getAsset("Textures/Entities/Bonfire.png", TextureRegion.class);
+			
+			loadCycle = FOE.loadCycle;
 		}
 	}
 	

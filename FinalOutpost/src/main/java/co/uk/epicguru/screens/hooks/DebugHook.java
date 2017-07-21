@@ -132,6 +132,8 @@ public class DebugHook extends ScreenHook {
 		
 		shapes.setColor(Color.BLACK);
 		shapes.circle(x, y, totalRadius * 1.1f, (int)(totalSegments * 1.1f));
+		shapes.setColor(Color.WHITE);
+		shapes.rect(0, y - snap.names.length * 21f - totalRadius * 1.1f - 10, 210, snap.names.length * 21f);
 		
 		for(int i = 0; i < parts; i++){
 			

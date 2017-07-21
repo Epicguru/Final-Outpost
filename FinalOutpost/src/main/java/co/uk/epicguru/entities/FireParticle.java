@@ -14,7 +14,9 @@ import co.uk.epicguru.main.Main;
 
 public class FireParticle extends Entity {
 
+	private static int loadCycle;
 	private static TextureRegion texture;
+	
 	private Vector2 velocity;
 	private float timeRemaining, topTime;
 	private float p;
@@ -33,8 +35,10 @@ public class FireParticle extends Entity {
 			p = MathUtils.random();
 		}
 		
-		if(texture == null){
+		if(loadCycle != FOE.loadCycle){
 			texture = Main.INSTANCE.getAsset("Textures/Entities/Fire Particle.png", TextureRegion.class);
+			
+			loadCycle = FOE.loadCycle;
 		}
 		
 	}

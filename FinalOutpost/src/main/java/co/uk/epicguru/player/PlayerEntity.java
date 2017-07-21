@@ -150,10 +150,10 @@ public class PlayerEntity extends Entity {
 	}
 	
 	public void removed(){
+		print("Player removed.");		
 		this.flashlight.remove();
 		this.body.destroyBody();
 		FOE.player = null;
-		print("Player removed.");		
 	}
 	
 	public void render(Batch batch, float delta){	
