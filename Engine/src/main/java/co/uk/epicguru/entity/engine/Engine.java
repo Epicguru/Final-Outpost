@@ -25,6 +25,7 @@ import co.uk.epicguru.entity.physics.DeadBody;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import co.uk.epicguru.map.TiledMap;
+import co.uk.epicguru.physics.PhysicsWorldUtils;
 
 public class Engine extends Base implements Disposable{
 
@@ -151,7 +152,7 @@ public class Engine extends Base implements Disposable{
 	 * Removes all entities from the world.
 	 */
 	public void clearEntities(){
-		this.addNew(false);
+		this.add.clear();
 		for(Entity e : entities){
 			bin.add(e);
 		}
@@ -429,12 +430,14 @@ public class Engine extends Base implements Disposable{
 	 * Disposes the whole Engine.
 	 */
 	public void dispose(){
-		if(this.getRayHandler() != null)
-			this.getRayHandler().dispose();
-		this.clearEntities();
 		this.flushBodies();
-		this.disposeWorld();
+		PhysicsWorldUtils.removeWorld();
+		PhysicsWorldUtils.dispose();
+		this.clearEntities();
 		splitter.clearEntities();
 		splitter = null;
+		if(this.getRayHandler() != null)
+			this.getRayHandler().dispose();
+		this.disposeWorld();
 	}
 }

@@ -77,6 +77,7 @@ public class FOE extends Game{
 	public static boolean donePluginCheck = false;
 	public static boolean postDone = false;
 	public static boolean gameJustStarted = true;
+	public static int loadCycle;
 
 	public static PluginsLoader pluginsLoader;
 	public static PluginAssetLoader pluginsAssetsLoader;
@@ -197,7 +198,7 @@ public class FOE extends Game{
 			// Load initial assets before init and post init.
 			U.startTimer(assetsLoad);
 			loading("Loading core content", "");
-			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
+			pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.MENUS);
 
 			postDone = false;
 			while(!postDone){
@@ -248,10 +249,14 @@ public class FOE extends Game{
 
 	public void setScreen(Screen screen){
 
+		// TODO FIXME -> Make assets dispose and reload like they did previously.
+		
 		// Custom implementation (WIP)
 		Gdx.app.postRunnable(() -> {
 			if(screen.getClass().getName().equals(screen_Game)){
 
+				loadCycle++;
+				
 				// Entering game screen (world not loaded yet!)
 				// Need to load tiles and assets here
 
@@ -282,20 +287,23 @@ public class FOE extends Game{
 				
 				// Only run after first time
 				if(!gameJustStarted){
+					loadCycle++;
+					
 					Log.info(TAG, "Switched to menu screen, loading assets...");
 					
 					// Clear all game assets
 					pluginsAssetsLoader.clear();
 					
-					// Dispose them
+					// Clean up
 					System.gc();
 					
 					// Load game starting assets, for menus
-					pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.INIT_CORE);
+					pluginsAssetsLoader.loadAllAssets(pluginsLoader, AssetLoadType.MENUS);
 					
 					// Finish loading now, TODO
 					pluginsAssetsLoader.finishLoading();
 					Log.info(TAG, "Finished quick-load of assets.");
+					
 				}
 				gameJustStarted = false;
 			}

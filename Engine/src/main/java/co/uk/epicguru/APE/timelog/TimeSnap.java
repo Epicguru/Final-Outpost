@@ -1,10 +1,7 @@
 package co.uk.epicguru.APE.timelog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import com.badlogic.gdx.graphics.Color;
 

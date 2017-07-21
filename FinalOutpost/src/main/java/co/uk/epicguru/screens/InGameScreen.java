@@ -82,17 +82,11 @@ public class InGameScreen extends GameScreen {
 		FOE.map = null;
 		
 		// Dispose player
-		FOE.player = null;
+		FOE.player = null;		
 		
-		// Physics
-		PhysicsWorldUtils.removeWorld();
-		
-		// Clear entities
-		FOE.engine.clearEntities();
+		// Clear entities and physics
+		FOE.engine.dispose();
 		FOE.engine = null;
-		
-		// Physics utils
-		PhysicsWorldUtils.dispose();
 		
 		// Clean up
 		System.gc();

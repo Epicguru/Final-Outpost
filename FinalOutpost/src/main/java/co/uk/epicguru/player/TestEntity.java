@@ -13,6 +13,7 @@ import co.uk.epicguru.main.Main;
 public class TestEntity extends Entity {
 
 	private static TextureRegion texture;
+	private static int loadCycle = 0;
 	
 	public Vector2 velocity;
 	public float timeRemaining;
@@ -35,8 +36,11 @@ public class TestEntity extends Entity {
 	
 	public void added(boolean loaded){
 		
-		if(texture == null){
+		if(loadCycle != FOE.loadCycle){
 			texture = Main.INSTANCE.getAsset("Textures/Player/TestEntity.png", TextureRegion.class);
+			
+			loadCycle = FOE.loadCycle;
+			print("Loaded texture!");
 		}
 		
 		if(loaded) // Stop here if we have loaded, all these values will be set for us.
