@@ -21,8 +21,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import box2dLight.RayHandler;
+import co.uk.epicguru.APE.timelog.TimeLog;
 import co.uk.epicguru.API.Allocator;
-import co.uk.epicguru.API.Timers;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
 import co.uk.epicguru.API.plugins.PluginsLoader;
@@ -369,7 +369,7 @@ public class FOE extends Game{
 	public void render(){
 
 		// Start timer logging
-		Timers.startAll();
+		TimeLog.start();
 		
 		// Update
 		update(Gdx.graphics.getDeltaTime());
@@ -382,16 +382,16 @@ public class FOE extends Game{
 		// Render current screen, normal mode
 		super.render();		
 		batch.end();		
-		Timers.startRenderUI();
+		TimeLog.startLog("Render - UI");
 		batch.setProjectionMatrix(UIcamera.combined);
 		batch.begin();	
 		// Render current screen, UI mode
 		renderUI();	
 		batch.end();
-		Timers.endRenderUI();
+		TimeLog.endLog("Render - UI", Color.PURPLE);
 		
 		// End timer logging
-		Timers.endAll();
+		TimeLog.end();
 	}
 
 	public void renderUI(){
