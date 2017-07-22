@@ -1,8 +1,10 @@
 package co.uk.epicguru.API;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -319,5 +321,86 @@ public final class U {
 		
 		return colour;
 		
+	}
+
+	/**
+	 * Converts a list of files to a list of AlphaFile objects.
+	 * @param files The list of files. NO NULL FILES ALLOWED, OR ELSE!
+	 * @return The list of alpha files.
+	 */
+	public static AlphaFile[] convertFilesToAlphaFiles(File... files){
+		
+		AlphaFile[] alphas = new AlphaFile[files.length];
+		
+		int i = 0;
+		for(File file : files){
+			if(file == null)
+				throw new IllegalArgumentException("A file in the array was null! (index " + i + ")");
+			
+			alphas[i++] = new AlphaFile(file);
+		}
+		
+		return alphas;
+		
+	}
+	
+	/**
+	 * Checks for equality between two directories. Checks file name, file size, and actual byte data.
+	 * @param a The first directory.
+	 * @param b The second directory.
+	 * @param extensions The file endings for which files to include in the comparison.
+	 * @return False if either directory is null, does not exist or or is a file.
+	 * False if the files that are compared are not equal. True if all files compared are equal.
+	 */
+	public static boolean filesEqual(File a, File b, String... extensions){
+		if(a == null || b == null){
+			//Log.info(TAG, "Null error.");
+			return false;
+		}
+		if(!a.exists() || !b.exists()){
+			//Log.info(TAG, "Not existing.");
+			return false;
+		}
+		if(!a.isDirectory() || !b.isDirectory()){
+			//Log.info(TAG, "Not directory.");
+			return false;
+		}
+		
+		AlphaFile[] afiles = U.convertFilesToAlphaFiles(U.getFilesWithEnding(a, extensions));
+		AlphaFile[] bfiles = U.convertFilesToAlphaFiles(U.getFilesWithEnding(b, extensions));
+		
+		Arrays.sort(afiles);
+		Arrays.sort(bfiles);
+		
+		if(afiles.length != bfiles.length){
+			//Log.debug(TAG, "Diffirent file length. " + afiles.length + " " + bfiles.length);
+			return false;
+		}
+		
+		// TO CHECK:
+		// 1. Name
+		// 2. Extension
+		// 3. Size?
+		// 4. Date written.
+		for(int i = 0; i < afiles.length; i++){
+			
+			File x = afiles[i];
+			File y = bfiles[i];
+			
+			
+			try {
+				System.out.print(x.getName() + " == " + y.getName() + "? ... ");
+				boolean equal = FileUtils.contentEquals(x, y);
+				System.out.println(equal ? "Yes" : "No");
+				if(!equal){					
+					Log.info(TAG, afiles.length - i + " files left unscanned.");
+					return false;
+				}
+			} catch (IOException e) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
