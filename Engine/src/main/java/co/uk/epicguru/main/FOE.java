@@ -64,6 +64,7 @@ public class FOE extends Game{
 	public static final String gamePluginsExtracted = "Extracted/";
 	public static final String pluginsDirectory = "Plugins/";
 	public static final String configsDirectory = "Configs/";
+	public static final String devDirectory = "Development/";
 	public static final String configsExtension = ".FOConfig";
 	public static final String logsDirectory = "Logs/";
 	public static final String logsExtension = ".FO_Log";

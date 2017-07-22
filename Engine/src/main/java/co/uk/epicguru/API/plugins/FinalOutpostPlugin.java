@@ -5,9 +5,12 @@ import java.io.File;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
+import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
+import co.uk.epicguru.languages.Lan;
+import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -24,7 +27,6 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 	 * <p>
 	 * Things that ARE auto loaded (Assuming @Extension annotation): 
 	 * <ul>
-	 * <li>All JLineIO parsers.
 	 * <li>Kryonet messages that inherit from BaseMessage
 	 * <li>Tile Factories and Tiles
 	 * </ul>
@@ -91,9 +93,48 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 	
 	/**
 	 * A call to {@link #packTextures()} will be triggered if this returns true.
+	 * By default, this returns true if any of the following are true:
+	 * <li>
+	 * The 'Packed' folder does not exist for this plugin.
+	 * <li>
+	 * The textures in the extracted assets do not match the textures in the assets folder. Only works in dev mode.
 	 */
 	public boolean needsToPack(){
-		return !new File(new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).getParentFile().getAbsolutePath() + "\\Packed").exists();
+		boolean packedFolderExists = new File(new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).getParentFile().getAbsolutePath() + "\\Packed").exists();
+	
+		if(!packedFolderExists){
+			return true;
+		}else if(FOE.DEV_MODE){
+			
+			File a = new File(Gdx.files.getExternalStoragePath() + this.assetsFolder); // Extracted assets.
+			String preB = new File("#\\").getAbsolutePath();
+			preB = preB.replace("Engine\\#", "");
+			preB += this.getGradleProjectName() + "\\" + "assets\\";
+			File b = new File(preB);
+			
+			boolean equal = U.filesEqual(a, b, "png");			
+			
+			if(!equal){
+				super.copyAssets(); // Copy assets so that changes take place.
+			}
+			
+			return !equal;
+			
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Gets the name of the gradle project within the development environment.
+	 * This is used when checking for texture packing in development mode only.
+	 * By default, this returns this plugin's ID.
+	 * You should override this and implement the real project name, if it is not the same as the plugin ID.
+	 * NOTE: If your plugin is packing textures every time the game opens, this might be why.
+	 * @return
+	 */
+	public String getGradleProjectName(){
+		return this.getWrapper().getPluginId();
 	}
 	
 	/**

@@ -229,6 +229,26 @@ public abstract class PluginBackend extends Plugin {
 	}
 
 	/**
+	 * DEVELOPER MODE ONLY! Copies assets from local folder to game folder.
+	 */
+	public void copyAssets(){
+		
+		Log.info("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "Copying assets for packing...");
+		
+		File a = new File(Gdx.files.getExternalStoragePath() + this.assetsFolder); // Extracted assets.
+		String preB = new File("#\\").getAbsolutePath();
+		preB = preB.replace("Engine\\#", "");
+		preB += ((FinalOutpostPlugin)this).getGradleProjectName() + "\\" + "assets\\";
+		File b = new File(preB);
+		
+		try {
+			FileUtils.copyDirectory(b, a);
+		} catch (IOException e) {
+			Log.error("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "Failed to copy assets!", e);
+		}
+	}
+	
+	/**
 	 * Called only once when all textures are packed.
 	 */
 	public void packTextures(){
