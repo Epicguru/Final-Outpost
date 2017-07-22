@@ -49,7 +49,7 @@ public class Entity extends Base{
 		}
 		this.name = name;
 	}
-	
+
 	/**
 	 * Does this entity serialize? If false, this object is ignored when saving, so will not be loaded later.
 	 * Defaults to true, so the default entity will save.
@@ -327,6 +327,13 @@ public class Entity extends Base{
 	 */
 	public Component[] getComponentsOrdered(){
 		return this.components.toArray(new Component[0]);
+	}
+	
+	/**
+	 * Removes all null components, which only happens during loading.
+	 */
+	public void removeNullComponents(){
+		this.components.removeIf((c) -> { return c == null; });
 	}
 	
 	/**

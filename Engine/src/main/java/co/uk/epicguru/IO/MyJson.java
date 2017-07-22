@@ -910,7 +910,9 @@ public class MyJson {
 						try {
 							type = (Class<T>)ClassReflection.forName(className);
 						} catch (ReflectionException ex) {
-							throw new SerializationException(ex);
+							//throw new SerializationException(ex);
+							Log.error("JIO", "No loaded or found class for '" + className + "', skipping...");
+							return null;
 						}
 					}
 				}
