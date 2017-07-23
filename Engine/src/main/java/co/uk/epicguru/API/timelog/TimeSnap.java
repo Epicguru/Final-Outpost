@@ -1,4 +1,4 @@
-package co.uk.epicguru.APE.timelog;
+package co.uk.epicguru.API.timelog;
 
 import java.util.ArrayList;
 import java.util.HashMap;

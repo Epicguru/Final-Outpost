@@ -21,7 +21,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import box2dLight.RayHandler;
-import co.uk.epicguru.APE.timelog.TimeLog;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
@@ -34,6 +33,7 @@ import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.NoPluginsScreen;
+import co.uk.epicguru.API.timelog.TimeLog;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.engine.Engine;
@@ -96,7 +96,9 @@ public class FOE extends Game{
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Final Outpost - Loading...");
-
+		config.setInitialBackgroundColor(Color.GREEN);
+		config.setWindowIcon("Icon_128.png", "Icon_64.png", "Icon_32.png", "Icon_16.png");
+		
 		new Lwjgl3Application(INSTANCE, config);
 
 		// Done

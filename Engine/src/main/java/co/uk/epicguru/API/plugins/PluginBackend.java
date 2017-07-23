@@ -294,10 +294,19 @@ public abstract class PluginBackend extends Plugin {
 	}
 
 	/**
+	 * Gets the file of an asset in the extracted folder.
+	 * @param asset The name of the asset, relative to the root asset folder, such as 'Textures/Something/Picture.png'.
+	 * @return The new file object.
+	 */
+	public File getAssetFile(String asset){
+		return new File(Gdx.files.getExternalStoragePath() + assetsFolder + asset.replaceAll("/", "\\\\"));
+	}
+	
+	/**
 	 * Finds the file that the assets comes from and checks to see if it exists.
 	 */
 	private boolean assetExists(String asset){
-		File file = new File(Gdx.files.getExternalStoragePath() + assetsFolder + asset.replaceAll("/", "\\\\"));
+		File file = this.getAssetFile(asset);
 		return file.exists();
 	}
 	

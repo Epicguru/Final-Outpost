@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import co.uk.epicguru.APE.timelog.TimeLog;
-import co.uk.epicguru.APE.timelog.TimeSnap;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.screens.ScreenHook;
 import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.API.time.TimeStyle;
+import co.uk.epicguru.API.timelog.TimeLog;
+import co.uk.epicguru.API.timelog.TimeSnap;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.languages.Lan;

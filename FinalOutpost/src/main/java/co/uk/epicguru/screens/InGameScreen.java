@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 
-import co.uk.epicguru.APE.timelog.TimeLog;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.time.GameTime;
+import co.uk.epicguru.API.timelog.TimeLog;
 import co.uk.epicguru.entities.Bonfire;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.logging.Log;
