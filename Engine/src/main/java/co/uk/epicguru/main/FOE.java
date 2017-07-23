@@ -100,6 +100,7 @@ public class FOE extends Game{
 		config.setInitialBackgroundColor(Color.GREEN);
 		config.setWindowIcon("Icon_128.png", "Icon_64.png", "Icon_32.png", "Icon_16.png");
 		config.setWindowListener(new WindowListener());
+		config.setBackBufferConfig(8, 8, 8, 8, 16, 8, 8);
 		new Lwjgl3Application(INSTANCE, config);
 
 		// Done
@@ -393,7 +394,9 @@ public class FOE extends Game{
 		batch.begin();		
 		// Render current screen, normal mode
 		super.render();		
-		batch.end();		
+		batch.end();	
+		
+		
 		TimeLog.startLog("Render - UI");
 		batch.setProjectionMatrix(UIcamera.combined);
 		batch.begin();	

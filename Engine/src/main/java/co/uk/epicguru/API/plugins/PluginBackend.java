@@ -240,8 +240,10 @@ public abstract class PluginBackend extends Plugin {
 		preB = preB.replace("Engine\\#", "");
 		preB += ((FinalOutpostPlugin)this).getGradleProjectName() + "\\" + "assets\\";
 		File b = new File(preB);
+		Log.info("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "\n\tFROM:\n\t\t" + b.getAbsolutePath() + "\n\tTO\n\t\t" + a.getAbsolutePath());
 		
 		try {
+			FileUtils.deleteDirectory(a);
 			FileUtils.copyDirectory(b, a);
 		} catch (IOException e) {
 			Log.error("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "Failed to copy assets!", e);
