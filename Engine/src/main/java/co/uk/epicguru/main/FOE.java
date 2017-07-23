@@ -56,7 +56,7 @@ public class FOE extends Game{
 	public static SpriteBatch batch;
 	public static OrthographicCamera camera;
 	public static OrthographicCamera UIcamera;
-	public static Color BG_Colour = new Color(0.2f, 0.3f, 0.7f, 1f); // BRITAIN TILL THE END!!!!
+	public static Color BG_Colour = new Color(0.3f, 0.3f, 0.3f, 1f); // BRITAIN TILL THE END!!!!
 
 	public static final boolean prettyConfigs = true;
 	public static final String gameDirectory = "Game Data/";
