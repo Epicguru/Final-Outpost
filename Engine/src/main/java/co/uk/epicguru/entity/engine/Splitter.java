@@ -116,7 +116,8 @@ public class Splitter {
 	 */
 	public void placeEntities(){
 		for(Entity e : engine.getAllEntities()){
-			placeEntity(e);
+			if(e != null)
+				placeEntity(e);
 		}
 	}
 	

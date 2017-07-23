@@ -11,6 +11,7 @@ import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
 import co.uk.epicguru.configs.Config;
 import co.uk.epicguru.languages.Lan;
 import co.uk.epicguru.languages.utils.LanguagePack;
+import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.main.FOE;
 import ro.fortsoft.pf4j.PluginWrapper;
 
@@ -103,6 +104,7 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 		boolean packedFolderExists = new File(new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).getParentFile().getAbsolutePath() + "\\Packed").exists();
 	
 		if(!packedFolderExists){
+			Log.info(this.getWrapper().getPluginId(), "Packed folder does not exist! Requesting to pack.");
 			return true;
 		}else if(FOE.DEV_MODE){
 			

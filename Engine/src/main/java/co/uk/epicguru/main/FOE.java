@@ -21,7 +21,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import box2dLight.RayHandler;
-import co.uk.epicguru.APE.timelog.TimeLog;
 import co.uk.epicguru.API.Allocator;
 import co.uk.epicguru.API.U;
 import co.uk.epicguru.API.plugins.FinalOutpostPlugin;
@@ -34,10 +33,12 @@ import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
 import co.uk.epicguru.API.screens.core.NoPluginsScreen;
+import co.uk.epicguru.API.timelog.TimeLog;
 import co.uk.epicguru.configs.ConfigLoader;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.engine.Engine;
 import co.uk.epicguru.input.Input;
+import co.uk.epicguru.input.WindowListener;
 import co.uk.epicguru.languages.utils.LanguagePack;
 import co.uk.epicguru.logging.Log;
 import co.uk.epicguru.map.GameMap;
@@ -56,7 +57,7 @@ public class FOE extends Game{
 	public static SpriteBatch batch;
 	public static OrthographicCamera camera;
 	public static OrthographicCamera UIcamera;
-	public static Color BG_Colour = new Color(0.2f, 0.3f, 0.7f, 1f); // BRITAIN TILL THE END!!!!
+	public static Color BG_Colour = new Color(0.3f, 0.3f, 0.3f, 1f); // BRITAIN TILL THE END!!!!
 
 	public static final boolean prettyConfigs = true;
 	public static final String gameDirectory = "Game Data/";
@@ -96,7 +97,10 @@ public class FOE extends Game{
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Final Outpost - Loading...");
-
+		config.setInitialBackgroundColor(Color.GREEN);
+		config.setWindowIcon("Icon_128.png", "Icon_64.png", "Icon_32.png", "Icon_16.png");
+		config.setWindowListener(new WindowListener());
+		config.setBackBufferConfig(8, 8, 8, 8, 16, 8, 8);
 		new Lwjgl3Application(INSTANCE, config);
 
 		// Done
@@ -390,7 +394,9 @@ public class FOE extends Game{
 		batch.begin();		
 		// Render current screen, normal mode
 		super.render();		
-		batch.end();		
+		batch.end();	
+		
+		
 		TimeLog.startLog("Render - UI");
 		batch.setProjectionMatrix(UIcamera.combined);
 		batch.begin();	

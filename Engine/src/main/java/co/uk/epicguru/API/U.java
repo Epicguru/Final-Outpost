@@ -373,7 +373,7 @@ public final class U {
 		Arrays.sort(bfiles);
 		
 		if(afiles.length != bfiles.length){
-			//Log.debug(TAG, "Diffirent file length. " + afiles.length + " " + bfiles.length);
+			//Log.debug(TAG, "Diffirent file length. " + afiles.length + " " + bfiles.length);			
 			return false;
 		}
 		
@@ -397,6 +397,7 @@ public final class U {
 					return false;
 				}
 			} catch (IOException e) {
+				e.printStackTrace();
 				return false;
 			}
 		}

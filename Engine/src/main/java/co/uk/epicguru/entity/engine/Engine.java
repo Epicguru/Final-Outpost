@@ -223,6 +223,11 @@ public class Engine extends Base implements Disposable{
 		
 		// Tell components that they were loaded.
 		for(Entity e : this.add){
+			if(e == null)
+				continue;
+			
+			e.removeNullComponents();
+			
 			for(Component c : e.getComponents()){
 				c.loaded();
 			}
@@ -237,6 +242,8 @@ public class Engine extends Base implements Disposable{
 	
 	protected void addNew(boolean loaded){
 		for(Entity e : add){
+			if(e == null)
+				continue;
 			entities.add(e);
 			e.added(loaded);
 		}

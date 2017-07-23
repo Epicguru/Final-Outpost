@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import box2dLight.PointLight;
-import co.uk.epicguru.API.time.GameTime;
 import co.uk.epicguru.IO.NotSerialized;
 import co.uk.epicguru.entity.Entity;
 import co.uk.epicguru.entity.components.Health;
@@ -80,8 +79,6 @@ public class Bonfire extends Entity {
 		}
 		
 		timer += delta;
-		
-		GameTime.add(-GameTime.getTime());
 		
 		// Set light position
 		light.setPosition(this.getX() + texture.getRegionWidth() / Constants.PPM / 2f, this.getY()  + texture.getRegionHeight() / Constants.PPM / 2f);		

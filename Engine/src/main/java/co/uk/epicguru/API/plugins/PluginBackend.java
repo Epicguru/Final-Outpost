@@ -240,8 +240,10 @@ public abstract class PluginBackend extends Plugin {
 		preB = preB.replace("Engine\\#", "");
 		preB += ((FinalOutpostPlugin)this).getGradleProjectName() + "\\" + "assets\\";
 		File b = new File(preB);
+		Log.info("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "\n\tFROM:\n\t\t" + b.getAbsolutePath() + "\n\tTO\n\t\t" + a.getAbsolutePath());
 		
 		try {
+			FileUtils.deleteDirectory(a);
 			FileUtils.copyDirectory(b, a);
 		} catch (IOException e) {
 			Log.error("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "Failed to copy assets!", e);
@@ -294,10 +296,19 @@ public abstract class PluginBackend extends Plugin {
 	}
 
 	/**
+	 * Gets the file of an asset in the extracted folder.
+	 * @param asset The name of the asset, relative to the root asset folder, such as 'Textures/Something/Picture.png'.
+	 * @return The new file object.
+	 */
+	public File getAssetFile(String asset){
+		return new File(Gdx.files.getExternalStoragePath() + assetsFolder + asset.replaceAll("/", "\\\\"));
+	}
+	
+	/**
 	 * Finds the file that the assets comes from and checks to see if it exists.
 	 */
 	private boolean assetExists(String asset){
-		File file = new File(Gdx.files.getExternalStoragePath() + assetsFolder + asset.replaceAll("/", "\\\\"));
+		File file = this.getAssetFile(asset);
 		return file.exists();
 	}
 	
