@@ -13,8 +13,9 @@ public final class Dirt extends Tile {
 		super(parent);
 	}
 
-	public void render(Batch batch){		
+	public void render(Batch batch){	
+		
 		batch.draw(getParent().getDefaultTexture(), getX(), getY(), ONE, ONE);
-	}
-	
+		
+	}	
 }

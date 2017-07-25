@@ -1,0 +1,25 @@
+in vec4 v_color;
+in vec2 v_texCoord;
+
+uniform sampler2D u_sampler2D0;
+uniform sampler2D u_sampler2D1;
+
+uniform vec2 atlasSize;
+uniform vec2 regionSize;
+vec2 unproject(vec2 uv){
+
+	float topX = uv.x + (regionSize.x / atlasSize.x);
+	float topY = uv.y + (regionSize.y / atlasSize.y);
+	float x = uv.x / topX;
+	float y = uv.y / topY;
+
+	return vec2(x, y);
+}
+
+void main() {
+	vec4 color = texture2D(u_sampler2D0, v_texCoord) * v_color;
+
+	vec2 internal = unproject(v_texCoord);
+
+	gl_FragColor = vec4(vec3(internal.x), 0.5);
+}

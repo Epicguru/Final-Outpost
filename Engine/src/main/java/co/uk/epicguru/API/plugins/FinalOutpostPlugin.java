@@ -103,6 +103,10 @@ public abstract class FinalOutpostPlugin extends PluginBackend{
 	public boolean needsToPack(){
 		boolean packedFolderExists = new File(new File(Gdx.files.getExternalStoragePath() + this.assetsFolder).getParentFile().getAbsolutePath() + "\\Packed").exists();
 	
+		// TEMP TEST ->
+		if(FOE.DEV_MODE) super.copyAssets();
+		// END TEMP TEST
+		
 		if(!packedFolderExists){
 			Log.info(this.getWrapper().getPluginId(), "Packed folder does not exist! Requesting to pack.");
 			return true;

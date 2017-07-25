@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import box2dLight.RayHandler;
 import co.uk.epicguru.API.Allocator;
@@ -29,6 +30,7 @@ import co.uk.epicguru.API.plugins.assets.AssetLoadType;
 import co.uk.epicguru.API.plugins.assets.LanguagePackAssetLoader;
 import co.uk.epicguru.API.plugins.assets.NinePatchAssetLoader;
 import co.uk.epicguru.API.plugins.assets.PluginAssetLoader;
+import co.uk.epicguru.API.plugins.assets.ShaderAssetLoader;
 import co.uk.epicguru.API.plugins.assets.TextureRegionAssetLoader;
 import co.uk.epicguru.API.screens.GameScreen;
 import co.uk.epicguru.API.screens.core.LoadingScreen;
@@ -69,6 +71,8 @@ public class FOE extends Game{
 	public static final String configsExtension = ".FOConfig";
 	public static final String logsDirectory = "Logs/";
 	public static final String logsExtension = ".FO_Log";
+	public static final String vertexShaderExtension = ".vsh";
+	public static final String fragmentShaderExtension = ".fragx";
 	public static final String screen_Game = "co.uk.epicguru.screens.InGameScreen";
 	public static final String screen_Menu = "co.uk.epicguru.screens.MainMenu";
 
@@ -196,6 +200,7 @@ public class FOE extends Game{
 			pluginsAssetsLoader.setLoader(TextureRegion.class, ".png", new TextureRegionAssetLoader(new ExternalFileHandleResolver()));
 			pluginsAssetsLoader.setLoader(NinePatch.class, "9.png", new NinePatchAssetLoader(new ExternalFileHandleResolver()));
 			pluginsAssetsLoader.setLoader(LanguagePack.class, ".lan", new LanguagePackAssetLoader(new ExternalFileHandleResolver()));
+			pluginsAssetsLoader.setLoader(ShaderProgram.class, "", new ShaderAssetLoader(new ExternalFileHandleResolver()));
 			
 			pluginsAssetsLoader.packAllTextures(pluginsLoader);
 			Log.info(TAG, "Packed all textures in " + U.endTimer(packing));

@@ -404,4 +404,10 @@ public final class U {
 		
 		return true;
 	}
+
+	public static String normalize(String path){
+		
+		return path.replace("/", "\\");
+		
+	}
 }

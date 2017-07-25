@@ -175,7 +175,7 @@ public class InGameScreen extends GameScreen {
 		
 		TimeLog.startLog("Render - Game Hooks");
 		super.render(delta, batch);
-		TimeLog.endLog("Render - Game Hooks", Color.FOREST);
+		TimeLog.endLog("Render - Game Hooks", Color.FOREST);		
 		
 		// Render light now...
 		FOE.engine.getRayHandler().setAmbientLight(GameTime.getAmbientLightRedLevel(), 0, 0, GameTime.getAmbientLightAlphaLevel());

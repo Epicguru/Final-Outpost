@@ -242,6 +242,9 @@ public abstract class PluginBackend extends Plugin {
 		File b = new File(preB);
 		Log.info("Plugin Backend (" + this.getWrapper().getPluginId() + ")", "\n\tFROM:\n\t\t" + b.getAbsolutePath() + "\n\tTO\n\t\t" + a.getAbsolutePath());
 		
+		if(!b.exists())
+			return;
+		
 		try {
 			FileUtils.deleteDirectory(a);
 			FileUtils.copyDirectory(b, a);
@@ -315,7 +318,7 @@ public abstract class PluginBackend extends Plugin {
 	/**
 	 * Loads an asset for the whole program, that is able to be used my this plugin.
 	 * <li>
-	 * NOTE : This DOES NOT get the asset to you, it only loads it ready for use. This should be done in the {@link #loadAssets(PluginAssetLoader, AssetLoadType)}.
+	 * NOTE : This DOES NOT get the asset to you, it only loads it ready for use.
 	 * <li>
 	 * IMPORTANT : Not to be confused with {@link #loadAssets(PluginAssetLoader, AssetLoadType)} which is a plugin callback.
 	 * @see {@link #getAsset(String, Class)} for getting a loaded asset.
@@ -324,7 +327,7 @@ public abstract class PluginBackend extends Plugin {
 	 */
 	public void loadAsset(String path, Class<?> clazz){
 		
-		if(!this.assetExists(path)){
+		if(path.contains(".") && !this.assetExists(path)){
 			throw new IllegalStateException("Asset file for '" + path + "' does not exist! Check spelling and try repacking textures.");
 		}
 		
@@ -333,7 +336,7 @@ public abstract class PluginBackend extends Plugin {
 	}
 
 	/**
-	 * Used to load plugin assets. To load assets/Thing.png, do getAsset("Thing.png").
+	 * Used to load plugin assets. To get assets/Thing.png, do getAsset("Thing.png").
 	 */
 	public FileHandle getFileHandle(String path){
 		return new FileHandle(FOE.gameDirectory + FOE.gamePluginsExtracted + getWrapper().getPluginId() + "/assets/" + path);

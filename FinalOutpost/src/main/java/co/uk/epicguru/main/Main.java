@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.API.plugins.AddTag;
@@ -134,6 +135,10 @@ public class Main extends FinalOutpostPlugin{
 			// Entities
 			loadAsset("Textures/Entities/Bonfire.png", TextureRegion.class);
 			loadAsset("Textures/Entities/Fire Particle.png", TextureRegion.class);
+			
+			// Shaders
+			loadAsset("Shaders/Default", ShaderProgram.class);
+			loadAsset("Shaders/Red", ShaderProgram.class);
 			
 			break;
 
